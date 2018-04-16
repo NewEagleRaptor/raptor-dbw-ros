@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>dbw_pacifica_can</name>
+  <version>1.0.0</version>
+  <description>
+    Drive-by-wire interface to the Chrysler Pacifica DBW kit
+  </description>
+
+  <license>BSD</license>
+
+  <author email="rborchert@neweagle.net">Ryan Borchert</author>
+  <maintainer email="rborchert@neweagle.net">Ryan Borchert</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>rospy</depend>
+  <depend>roscpp</depend>
+  <depend>nodelet</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>can_msgs</depend>
+  <depend>dbw_pacifica_msgs</depend>
+  <depend>dbc</depend>
+
+  <exec_depend>roslaunch</exec_depend>
+  <exec_depend>dbw_pacifica_description</exec_depend>
+  <exec_depend>dbw_mkz_twist_controller</exec_depend>
+
+  <test_depend>roslaunch</test_depend>
+
+  <export>
+    <nodelet plugin="${prefix}/nodelets.xml" />
+  </export>
+
+</package>

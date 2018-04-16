@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>pdu</name>
+  <version>1.0.0</version>
+  <description>
+    Interface for the New Eagle Multiplex Power Distribution Module (MPDM)
+    https://store.neweagle.net/product/multiplexed-power-distribution-module-mpdm/
+  </description>
+
+  <author email="rborchert@neweagle.net">Ryan Borchert</author>
+  <maintainer email="rborchert@neweagle.net">Ryan Borchert</maintainer>
+
+  <license>BSD</license>
+
+  <author email="rborchert@neweagle.net">Ryan Borchert</author>
+  <maintainer email="rborchert@neweagle.net">Ryan Borchert</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <exec_depend>roscpp</exec_depend>
+  <depend>std_msgs</depend>
+  <depend>can_msgs</depend>
+  <depend>pdu_msgs</depend>
+  <depend>dbc</depend>
+
+  <export>
+  </export>
+</package>

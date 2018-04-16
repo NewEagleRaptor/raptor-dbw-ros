@@ -1,0 +1,4 @@
+uint8 value
+
+uint8 JOYSTICK=0
+uint8 STANDARD_AUTONOMOUS=1

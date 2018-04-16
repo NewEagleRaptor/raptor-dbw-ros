@@ -1,0 +1,6 @@
+uint8 value
+
+uint8 NO_REQUEST=0
+uint8 LIFTGATE_TOGGLE=1
+uint8 LR_DOOR_TOGGLE=2
+uint8 RR_DOOR_TOGGLE=3

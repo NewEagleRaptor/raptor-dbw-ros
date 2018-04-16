@@ -1,0 +1,32 @@
+<launch>
+
+  <node
+      pkg="dbw_pacifica_can"
+      type="dbw_node"
+      name="dbw"
+      respawn="true"
+      >
+      <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)Pacifica_AKit_DBW_Comms.dbc" />
+      <remap from="/can_rx" to="/can0/can_rx" />
+      <remap from="/can_tx" to="/can0/can_tx" />
+  </node>
+
+  <node
+    pkg="socketcan_bridge"
+    type="socketcan_to_topic_node"
+    name="socketcan_to_topic"
+    respawn="true"
+    ns="can0">
+    <param name="can_device" value="can0" />
+  </node>
+
+  <node
+    pkg="socketcan_bridge"
+    type="topic_to_socketcan_node"
+    name="topic_to_socketcan"
+    respawn="true"
+    ns="can0">
+    <param name="can_device" value="can0" />
+  </node>
+
+</launch>

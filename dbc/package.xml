@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>dbc</name>
+  <version>1.0.0</version>
+  <description>
+    DBC file interface.  Read a DBC file, unpack CAN messages and convert to engineering units, pack values into CAN messages for publishing.
+  </description>
+
+  <author email="rborchert@neweagle.net">Ryan Borchert</author>
+  <maintainer email="rborchert@neweagle.net">Ryan Borchert</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <exec_depend>roscpp</exec_depend>
+
+
+  <export>
+  </export>
+</package>

@@ -1,0 +1,11 @@
+uint8 status
+
+uint8 OFF=0
+uint8 INTERVAL_1 = 1
+uint8 INTERVAL_2 = 2
+uint8 INTERVAL_3 = 3
+uint8 INTERVAL_4 = 4
+uint8 INTERVAL_5 = 5
+uint8 INTERVAL_6 = 6
+uint8 CONSTANT_LOW = 13
+uint8 CONSTANT_HIGH = 14
