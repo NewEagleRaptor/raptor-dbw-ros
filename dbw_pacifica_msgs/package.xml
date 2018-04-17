@@ -7,8 +7,9 @@
   </description>
 
   <license>BSD</license>
-  <author email="jane.doe@example.com">Jane Doe</author>
-  <maintainer email="jane.doe@example.com">Jane Doe</maintainer>
+
+  <author email="rborchert@neweagle.net">Ryan Borchert</author>
+  <maintainer email="rborchert@neweagle.net">Ryan Borchert</maintainer>
 
   <buildtool_depend>catkin</buildtool_depend>
 
