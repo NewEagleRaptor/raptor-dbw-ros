@@ -54,4 +54,4 @@ CATKIN_IGNORE
 # Uncompressed meshes and textures
 *.dae
 *.stl
-*.png
+*.pngnode_modules/
