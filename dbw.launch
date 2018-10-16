@@ -5,7 +5,7 @@
       type="dbw_node"
       name="dbw"
       output="screen">
-    <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)Pacifica_AKit_DBW_Comms.dbc" />
+    <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)New_Eagle_DBW.dbc" />
   </node>
 
   <node
