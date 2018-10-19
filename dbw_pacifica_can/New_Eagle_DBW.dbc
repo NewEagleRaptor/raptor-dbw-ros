@@ -47,9 +47,94 @@ BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
  SG_ NewSignal_0004 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ NewSignal_0001 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ NewSignal_0008 : 32|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ AKit_SpeedModeAccelLim m2 : 16|8@1+ (0.1,0) [0|25.5] "m/s^2" Vector__XXX
- SG_ AKit_SpeedModeDecelLim m2 : 24|8@1+ (0.1,0) [0|25.5] "m/s^2" Vector__XXX
  SG_ NewSignal_0006 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NewSignal_0002 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NewSignal_0003 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ DBW_Mdpm2Fuse01 : 0|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse02 : 2|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse03 : 4|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse04 : 6|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse05 : 8|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse06 : 10|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse07 : 12|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse08 : 14|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse09 : 16|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse10 : 18|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse11 : 20|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse12 : 22|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse13 : 24|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse14 : 26|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse15 : 28|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Fuse16 : 30|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Relay01 : 32|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Relay02 : 36|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Relay03 : 40|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Relay04 : 44|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Relay05 : 48|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Relay06 : 52|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Relay07 : 56|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_Mdpm2Relay08 : 60|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ AKit_Mdpm1Relay01Cmd : 0|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm1Relay02Cmd : 2|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm1Relay03Cmd : 4|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm1Relay04Cmd : 6|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm1Relay05Cmd : 8|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm1Relay06Cmd : 10|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm1Relay07Cmd : 12|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm1Relay08Cmd : 14|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm2Relay01Cmd : 16|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm2Relay02Cmd : 18|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm2Relay03Cmd : 20|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm2Relay04Cmd : 22|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm2Relay05Cmd : 24|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm2Relay06Cmd : 26|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm2Relay07Cmd : 28|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_Mdpm2Relay08Cmd : 30|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ AKit_MdpmCmdWatchdogCntr : 56|4@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ DBW_Mdpm1Fuse01 : 0|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse02 : 2|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse03 : 4|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse04 : 6|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse05 : 8|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse06 : 10|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse07 : 12|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse08 : 14|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse09 : 16|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse10 : 18|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse11 : 20|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse12 : 22|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse13 : 24|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse14 : 26|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse15 : 28|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Fuse16 : 30|2@1+ (1,0) [0|3] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Relay01 : 32|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Relay02 : 36|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Relay03 : 40|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Relay04 : 44|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Relay05 : 48|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Relay06 : 52|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Relay07 : 56|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_Mdpm1Relay08 : 60|4@1+ (1,0) [0|15] "enum" Vector__XXX
+ SG_ DBW_GpsLong : 0|32@1+ (0.301749,0) [-648000000|648000000] "mas" Vector__XXX
+ SG_ DBW_GpsLat : 32|32@1+ (0.301749,0) [-324000000|324000000] "mas" Vector__XXX
+ SG_ VinMultiplexor M : 0|2@1+ (1,0) [0|2] "" Vector__XXX
+ SG_ VinDigit_01 m0 : 8|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_02 m0 : 16|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_03 m0 : 24|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_04 m0 : 32|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_05 m0 : 40|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_06 m0 : 48|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_07 m0 : 56|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_08 m1 : 8|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_09 m1 : 16|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_10 m1 : 24|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_11 m1 : 32|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_12 m1 : 40|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_13 m1 : 48|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_14 m1 : 56|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_15 m2 : 8|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_16 m2 : 16|8@1+ (1,0) [30|90] "ascii" Vector__XXX
+ SG_ VinDigit_17 m2 : 24|8@1+ (1,0) [30|90] "ascii" Vector__XXX
 
 BO_ 2147491585 DBW_Misc: 8 DBW
  SG_ DBW_MiscByWireEnabled : 0|1@1+ (1,0) [0|1] "Bool" Vector__XXX
@@ -71,13 +156,13 @@ BO_ 2147491586 DBW_AccelPdlReport: 8 DBW
  SG_ DBW_AccelPdlFault : 51|1@1+ (1,0) [0|1] "Bool" Vector__XXX
  SG_ DBW_AccelPdlFault_Ch1 : 54|1@1+ (1,0) [0|1] "Bool" Vector__XXX
  SG_ DBW_AccelPdlFault_Ch2 : 55|1@1+ (1,0) [0|1] "Bool" Vector__XXX
- SG_ DBW_AccelTorqueActual : 32|14@1+ (1,0) [0|16384] "Nm" Vector__XXX
+ SG_ DBW_AccelPcntTorqueActual : 32|14@1+ (0.1,0) [0|100] "%" Vector__XXX
  SG_ DBW_AccelCtrlType : 46|2@1+ (1,0) [0|3] "Enum" Vector__XXX
 
 BO_ 2147491587 DBW_SteeringReport: 8 DBW
  SG_ DBW_SteeringWhlAngleAct : 0|14@1- (0.1,0) [-600|600] "deg" Vector__XXX
  SG_ DBW_SteeringWhlAngleDes : 16|14@1- (0.1,0) [-600|600] "deg" Vector__XXX
- SG_ DBW_SteeringWhlTorqueCmd : 32|12@1- (0.0078125,0) [-8|7.99219] "Nm" Vector__XXX
+ SG_ DBW_SteeringWhlPcntTrqCmd : 32|14@1- (0.02,0) [-100|100] "%" Vector__XXX
  SG_ DBW_SteeringEnabled : 48|1@1+ (1,0) [0|1] "Bool" Vector__XXX
  SG_ DBW_SteeringDriverActivity : 49|1@1+ (1,0) [0|1] "Bool" Vector__XXX
  SG_ DBW_SteeringFault : 50|1@1+ (1,0) [0|1] "Bool" Vector__XXX
@@ -93,7 +178,7 @@ BO_ 2147491588 DBW_BrakeReport: 8 DBW
  SG_ DBW_BrakeRollingCntr : 56|4@1+ (1,0) [0|15] "" Vector__XXX
  SG_ DBW_BrakeFault_Ch1 : 54|1@1+ (1,0) [0|1] "Bool" Vector__XXX
  SG_ DBW_BrakeFault_Ch2 : 55|1@1+ (1,0) [0|1] "Bool" Vector__XXX
- SG_ DBW_BrakeTrqActual : 32|14@1+ (1,0) [0|16383] "Nm" Vector__XXX
+ SG_ DBW_BrakePcntTorqueActual : 32|14@1+ (0.1,0) [0|100] "%" Vector__XXX
  SG_ DBW_BrakeParkingBrkStatus : 52|2@1+ (1,0) [0|3] "Enum" Vector__XXX
  SG_ DBW_BrakeInterventionActv : 62|1@1+ (1,0) [0|1] "Bool" Vector__XXX
  SG_ DBW_BrakeInterventionReady : 63|1@1+ (1,0) [0|1] "Bool" Vector__XXX
@@ -119,7 +204,7 @@ BO_ 2147495682 AKit_AccelPdlRequest: 8 AKit
  SG_ Akit_AccelPdlIgnoreDriverOvrd : 50|1@1+ (1,0) [0|1] "Bool" Vector__XXX
  SG_ AKit_AccelPdlRollingCntr : 56|4@1+ (1,0) [0|15] "" Vector__XXX
  SG_ AKit_AccelReqType M : 54|2@1+ (1,0) [0|3] "Enum" Vector__XXX
- SG_ AKit_AccelTorqueReq m1 : 0|14@1+ (1,0) [0|16383] "Nm" Vector__XXX
+ SG_ AKit_AccelPcntTorqueReq m1 : 0|14@1+ (0.1,0) [0|100] "%" Vector__XXX
  SG_ AKit_SpeedReq m2 : 0|14@1+ (0.005,0) [0|81.915] "m/s" Vector__XXX
  SG_ AKit_SpeedModeRoadSlope m2 : 32|8@1- (0.2,0) [-25.5|25.5] "degrees" Vector__XXX
 
@@ -146,7 +231,7 @@ BO_ 2147495683 AKit_SteeringRequest: 8 AKit
  SG_ AKit_SteerCtrlEnblReq : 48|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ AKit_SteerRollingCntr : 56|4@1+ (1,0) [0|15] "" Vector__XXX
  SG_ AKit_SteeringWhlIgnoreDriverOvrd : 50|1@1+ (1,0) [0|1] "" Vector__XXX
- SG_ AKit_SteeringWhlTrqReq m0 : 0|14@1- (0.0078125,0) [-8|7.99219] "Nm" Vector__XXX
+ SG_ AKit_SteeringWhlPcntTrqReq m0 : 0|14@1- (0.02,0) [-100|100] "%" Vector__XXX
  SG_ AKit_SteeringReqType M : 54|2@1+ (1,0) [0|3] "Enum" Vector__XXX
  SG_ AKit_SteeringVehCurvatureReq m2 : 0|14@1- (0.0001,0) [-0.8192|0.8191] "1/m" Vector__XXX
 
@@ -155,7 +240,9 @@ BO_ 2147495684 AKit_BrakeRequest: 8 AKit
  SG_ AKit_BrakeRollingCntr : 56|4@1+ (1,0) [0|15] "" Vector__XXX
  SG_ AKit_BrakeCtrlEnblReq : 48|1@1+ (1,0) [0|1] "Bool" Vector__XXX
  SG_ AKit_BrakeCtrlReqType M : 54|2@1+ (1,0) [0|3] "Enum" Vector__XXX
- SG_ AKit_BrakeTorqueReq m1 : 0|14@1+ (1,0) [0|16383] "Nm" Vector__XXX
+ SG_ AKit_BrakePcntTorqueReq m1 : 0|14@1+ (0.1,0) [0|100] "%" Vector__XXX
+ SG_ AKit_SpeedModeAccelLim m2 : 16|8@1+ (0.1,0) [0|25.5] "m/s^2" Vector__XXX
+ SG_ AKit_SpeedModeDecelLim m2 : 24|8@1+ (0.1,0) [0|25.5] "m/s^2" Vector__XXX
 
 BO_ 2147495685 AKit_PrndRequest: 8 AKit
  SG_ AKit_PrndStateReq : 0|4@1+ (1,0) [0|5] "Enum" Vector__XXX
@@ -204,9 +291,7 @@ BO_ 2147491592 DBW_VinReport: 8 DBW
  SG_ DBW_VinDigit_16 m2 : 16|8@1+ (1,0) [30|90] "ascii" Vector__XXX
  SG_ DBW_VinDigit_17 m2 : 24|8@1+ (1,0) [30|90] "ascii" Vector__XXX
 
-BO_ 2147491593 DBW_GpsReport: 8 DBW
- SG_ DBW_GpsLong : 0|32@1+ (0.301749,0) [-648000000|648000000] "mas" Vector__XXX
- SG_ DBW_GpsLat : 32|32@1+ (0.301749,0) [-324000000|324000000] "mas" Vector__XXX
+BO_ 2147491593 DBW_Reserved1: 8 DBW
 
 BO_ 2147491594 DBW_ImuReport: 8 DBW
  SG_ DBW_ImuYawRate : 0|16@1+ (0.01,-327.68) [-327.68|327.66] "deg/sec" Vector__XXX
@@ -223,97 +308,6 @@ BO_ 2147491595 DBW_WheelSpeedReport: 8 DBW
  SG_ DBW_WhlSpd_RL m2 : 16|17@0- (0.00390625,0) [-250.996|250.996] "km/h" Vector__XXX
  SG_ DBW_WhlSpd_FR m1 : 40|17@0- (0.00390625,0) [-250.996|250.996] "km/h" Vector__XXX
  SG_ DBW_WhlSpd_FL m1 : 16|17@0- (0.00390625,0) [-250.996|250.996] "km/h" Vector__XXX
-
-BO_ 2147491597 Mpdm1Report: 8 MPDM_Master
- SG_ DBW_Mdpm1Fuse01 : 0|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse02 : 2|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse03 : 4|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse04 : 6|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse05 : 8|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse06 : 10|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse07 : 12|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse08 : 14|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse09 : 16|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse10 : 18|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse11 : 20|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse12 : 22|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse13 : 24|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse14 : 26|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse15 : 28|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Fuse16 : 30|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm1Relay01 : 32|4@1+ (1,0) [0|15] "enum" Vector__XXX
- SG_ DBW_Mdpm1Relay02 : 36|4@1+ (1,0) [0|15] "enum" Vector__XXX
- SG_ DBW_Mdpm1Relay03 : 40|4@1+ (1,0) [0|15] "enum" Vector__XXX
- SG_ DBW_Mdpm1Relay04 : 44|4@1+ (1,0) [0|15] "enum" Vector__XXX
- SG_ DBW_Mdpm1Relay05 : 48|4@1+ (1,0) [0|15] "enum" Vector__XXX
- SG_ DBW_Mdpm1Relay06 : 52|4@1+ (1,0) [0|15] "enum" Vector__XXX
- SG_ DBW_Mdpm1Relay07 : 56|4@1+ (1,0) [0|15] "enum" Vector__XXX
- SG_ DBW_Mdpm1Relay08 : 60|4@1+ (1,0) [0|15] "enum" Vector__XXX
-
-BO_ 2147491598 Mpdm2Report: 8 MPDM_Master
- SG_ DBW_Mdpm2Fuse01 : 0|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse02 : 2|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse03 : 4|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse04 : 6|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse05 : 8|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse06 : 10|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse07 : 12|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse08 : 14|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse09 : 16|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse10 : 18|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse11 : 20|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse12 : 22|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse13 : 24|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse14 : 26|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse15 : 28|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Fuse16 : 30|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ DBW_Mdpm2Relay01 : 32|4@1+ (1,0) [0|15] "enum" Vector__XXX
- SG_ DBW_Mdpm2Relay02 : 36|4@1+ (1,0) [0|15] "enum" Vector__XXX
- SG_ DBW_Mdpm2Relay03 : 40|4@1+ (1,0) [0|15] "enum" Vector__XXX
- SG_ DBW_Mdpm2Relay04 : 44|4@1+ (1,0) [0|15] "enum" Vector__XXX
- SG_ DBW_Mdpm2Relay05 : 48|4@1+ (1,0) [0|15] "enum" Vector__XXX
- SG_ DBW_Mdpm2Relay06 : 52|4@1+ (1,0) [0|15] "enum" Vector__XXX
- SG_ DBW_Mdpm2Relay07 : 56|4@1+ (1,0) [0|15] "enum" Vector__XXX
- SG_ DBW_Mdpm2Relay08 : 60|4@1+ (1,0) [0|15] "enum" Vector__XXX
-
-BO_ 2147495686 MdpmCommand: 8 MPDM_Requester
- SG_ AKit_Mdpm1Relay01Cmd : 0|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm1Relay02Cmd : 2|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm1Relay03Cmd : 4|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm1Relay04Cmd : 6|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm1Relay05Cmd : 8|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm1Relay06Cmd : 10|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm1Relay07Cmd : 12|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm1Relay08Cmd : 14|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm2Relay01Cmd : 16|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm2Relay02Cmd : 18|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm2Relay03Cmd : 20|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm2Relay04Cmd : 22|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm2Relay05Cmd : 24|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm2Relay06Cmd : 26|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm2Relay07Cmd : 28|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_Mdpm2Relay08Cmd : 30|2@1+ (1,0) [0|3] "enum" Vector__XXX
- SG_ AKit_MdpmCmdWatchdogCntr : 56|4@1+ (1,0) [0|3] "" Vector__XXX
-
-BO_ 992 PacificaVINmsg: 8 Pacifica
- SG_ VinMultiplexor M : 0|2@1+ (1,0) [0|2] "" Vector__XXX
- SG_ VinDigit_01 m0 : 8|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_02 m0 : 16|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_03 m0 : 24|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_04 m0 : 32|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_05 m0 : 40|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_06 m0 : 48|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_07 m0 : 56|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_08 m1 : 8|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_09 m1 : 16|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_10 m1 : 24|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_11 m1 : 32|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_12 m1 : 40|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_13 m1 : 48|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_14 m1 : 56|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_15 m2 : 8|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_16 m2 : 16|8@1+ (1,0) [30|90] "ascii" Vector__XXX
- SG_ VinDigit_17 m2 : 24|8@1+ (1,0) [30|90] "ascii" Vector__XXX
 
 BO_ 2147491600 DBW_RadarSonar: 8 DBW
  SG_ DBW_RadarFrontObjDist : 0|8@1+ (1,0) [0|253] "m" Vector__XXX
@@ -406,8 +400,9 @@ CM_ SG_ 3221225472 DBW_MiscFault_AccelRpt "Same signal as DBW_MiscFault in the D
 CM_ SG_ 3221225472 DBW_MiscFault_BrkRpt "Same signal as DBW_MiscFault in the DBW_Misc message. Just duplicated here so it's easier to read on-screen in the ROS data viewing utility.";
 CM_ SG_ 3221225472 DBW_MiscFault_SteerRpt "Same signal as DBW_MiscFault in the DBW_Misc message. Just duplicated here so it's easier to read on-screen in the ROS data viewing utility.";
 CM_ SG_ 3221225472 AKit_SteeringWhlQuiet "What does \"quiet\" mean???";
-CM_ SG_ 3221225472 AKit_SpeedModeAccelLim "0 = infinite (no limit). When AKit_AccelReqType = 2 (speed control), the DBW will limit acceleration to this value.";
-CM_ SG_ 3221225472 AKit_SpeedModeDecelLim "0 = infinite (no limit). When AKit_AccelReqType = 2 (speed control), the DBW will limit decceleration to this value.";
+CM_ SG_ 3221225472 AKit_MdpmCmdWatchdogCntr "Watchdog alive rolling counter";
+CM_ SG_ 3221225472 DBW_GpsLong "need to determing what \"mas\" scaling is. negative means west.";
+CM_ SG_ 3221225472 DBW_GpsLat "need to determing what \"mas\" scaling is. negative means south.";
 CM_ SG_ 2147491585 DBW_MiscByWireEnabled "Actual mode of the Drive-By-Wire system. THis is NOT read by the ROS system, it's only here so its in CAN logs for debugging purposes";
 CM_ SG_ 2147491585 DBW_MiscVehicleSpeed "scaled to match Pacifica's vehicle speed message";
 CM_ SG_ 2147491585 DBW_MiscFuelLvl "DBW will have to read IC_A1:AvgFuelLvl (liters) from the Pacifica and divide it by VehCfg3:VC_FUEL_CAP";
@@ -427,13 +422,14 @@ CM_ SG_ 2147491586 DBW_AccelPdlRollingCntr "Watchdog alive rolling counter";
 CM_ SG_ 2147491586 DBW_AccelPdlFault "AccelPdl system has a fault, either from the vehicle itself or from an error in the request message from the AKit";
 CM_ SG_ 2147491586 DBW_AccelPdlFault_Ch1 "VCU has detected hardware fault on accel pedal sig 1";
 CM_ SG_ 2147491586 DBW_AccelPdlFault_Ch2 "VCU has detected hardware fault on accel pedal sig 2";
+CM_ SG_ 2147491586 DBW_AccelPcntTorqueActual "This value is in % of a fixed reference value. This reference value depends only on the type of vehicle. Contact New Eagle to determine the reference value for your vehicle make/model.";
 CM_ SG_ 2147491586 DBW_AccelCtrlType "Indicates whether the DBW kit is set to apply an open loop command (AKit responsible for performing all PID control),
  or requesting the DBW to apply PID control at the actuator level (turn wheel to a certain angle, or apply a certain amount of accel/brake torque & let AKit perform PID control on vehicle curvature/speed)
 or requesting the DBW to perform all PID control at the vehicle level (control to a vehicle curvature and speed). If ReqType is 2, the requested speed will be taken from the signal AKit_SpeedReq in the AKit_AccelRequest message.
 Some vehicles may not support all types!";
 CM_ SG_ 2147491587 DBW_SteeringWhlAngleAct "Actual position of the steering wheel. counterclockwise = positive";
 CM_ SG_ 2147491587 DBW_SteeringWhlAngleDes "Position that the DBW is trying to acheive. counterclockwise = positive";
-CM_ SG_ 2147491587 DBW_SteeringWhlTorqueCmd "Torque requested by the DBW to acheive the desired position. counterclockwise = positive";
+CM_ SG_ 2147491587 DBW_SteeringWhlPcntTrqCmd "Torque requested by the DBW to acheive the desired position. counterclockwise = positive";
 CM_ SG_ 2147491587 DBW_SteeringDriverActivity "Driver is turning the steering wheel, which will switch the DBW system to Manual mode. This flag latches and will unlatch when AKit_SteerCtrlEnblCmd goes back to false.";
 CM_ SG_ 2147491587 DBW_SteeringFault "Brake system has a fault, either from the vehicle itself or from an error in the request message from the AKit";
 CM_ SG_ 2147491587 DBW_SteeringCtrlType "Indicates whether the DBW kit is set to apply an open loop command (AKit responsible for performing all PID control),
@@ -449,7 +445,7 @@ CM_ SG_ 2147491588 DBW_BrakeFault "Brake system has a fault, either from the veh
 CM_ SG_ 2147491588 DBW_BrakeRollingCntr "Watchdog alive rolling counter";
 CM_ SG_ 2147491588 DBW_BrakeFault_Ch1 "VCU has detected hardware fault on brake sig 1";
 CM_ SG_ 2147491588 DBW_BrakeFault_Ch2 "VCU has detected hardware fault on brake sig 2";
-CM_ SG_ 2147491588 DBW_BrakeTrqActual "actual brake torque";
+CM_ SG_ 2147491588 DBW_BrakePcntTorqueActual "actual brake torque. This value is in % of a fixed reference value. This reference value depends only on the type of vehicle. Contact New Eagle to determine the reference value for your vehicle make/model.";
 CM_ SG_ 2147491588 DBW_BrakeInterventionActv "indicates traction control or ABS on the OEM vehicle is active";
 CM_ SG_ 2147491588 DBW_BrakeInterventionReady "indicates traction control or ABS on the OEM vehicle is ready (not disabled but not currently active either)";
 CM_ SG_ 2147491588 DBW_BrakeCtrlType "Indicates whether the DBW kit is set to apply an open loop command (AKit responsible for performing all PID control),
@@ -476,10 +472,15 @@ CM_ SG_ 2147495682 AKit_AccelReqType "Indicates whether the AKit is requesting t
  or requesting the DBW to apply PID control at the actuator level (turn wheel to a certain angle, or apply a certain amount of accel/brake torque & let AKit perform PID control on vehicle curvature/speed)
 or requesting the DBW to perform all PID control at the vehicle level (control to a vehicle curvature and speed)
 Some vehicles may not support all types! Refer to the **CtrlType feedback from the DBW module to ensure your vehicle supports a given mode";
-CM_ SG_ 2147495682 AKit_AccelTorqueReq "Used when AKit_AccelReqType = 1.";
+CM_ SG_ 2147495682 AKit_AccelPcntTorqueReq "Used when AKit_AccelReqType = 1. This mode allows the AKit to request a constant torque value and let the DBW system adjust the pedal position to meet that torque. 
+
+This value is in % of a fixed reference value. This reference value depends only on the type of vehicle. Contact New Eagle to determine the reference value for your vehicle make/model.
+
+Note that the reference value is the same in the braking and AccelPdl control logic. Because any given vehicle's braking system is usually more powerful than it's acceleration system (powertrain), the DBW system will typically reach the max pedal position when only roughly 50% accel torque is requested, again depending on the make/model of the vehicle.";
 CM_ SG_ 2147495682 AKit_SpeedReq "Used when AKit_AccelReqType = 2 AND Kit_BrakeCtrllReqType = 2. Both must be 2 because speed control will use both the gas and brake (although a test engineer can leave one of those 2 actuators in manual mode by setting it's ***EnbReq flag to zero, just like in other ***ReqType modes)";
 CM_ SG_ 2147495682 AKit_SpeedModeRoadSlope "positive = traveling uphill. Used to adjust the torque requested to meet a given speed (steeper slope requires more torque to hold a constant speed). If this signal is not available, you can send a constant value of zero and speed control will still function but the speed controller will have greater error on sloped surfaces. 
-The steepest grades in the world are 21 degrees, so this scaling will encompass all real-world roads.";
+The steepest grades in the world are 21 degrees, so this scaling will encompass all real-world roads.
+If vehicle is traveling uphil in reverse, this should still be a positive value so that the speed controller can apply more accelerator pedal";
 CM_ BO_ 2147495681 "";
 CM_ SG_ 2147495681 AKit_TurnSignalReq "can't do hazards on pacifica currently";
 CM_ SG_ 2147495681 AKit_MiscCmdRollingCntr "0-15 rolling counter";
@@ -501,7 +502,9 @@ CM_ SG_ 2147495683 AKit_SteeringWhlAngleVelocityLim "0 = infinite rate limit. co
 CM_ SG_ 2147495683 AKit_SteerCtrlEnblReq "AKit_GlobalByWireEnblReq must also be true before the DBW system will look at this signal.";
 CM_ SG_ 2147495683 AKit_SteerRollingCntr "0-15 rolling counter";
 CM_ SG_ 2147495683 AKit_SteeringWhlIgnoreDriverOvrd "";
-CM_ SG_ 2147495683 AKit_SteeringWhlTrqReq "request steering wheel torque. Used in lieu of AKit_SteeringWhlAnglReq if the AKit is going to handle the PID control to acheive a desired position.";
+CM_ SG_ 2147495683 AKit_SteeringWhlPcntTrqReq "requested steering wheel torque as a percent of a fixed reference value. This reference value depends only on the type of vehicle. Contact New Eagle to determine the reference value for your vehicle make/model.
+
+Used in lieu of AKit_SteeringWhlAnglReq if the AKit is going to handle the PID control to acheive a desired position.";
 CM_ SG_ 2147495683 AKit_SteeringReqType "Indicates whether the AKit is requesting the DBW kit to apply an open loop command (AKit responsible for performing all PID control),
  or requesting the DBW to apply PID control at the actuator level (turn wheel to a certain angle, or apply a certain amount of accel/brake torque & let AKit perform PID control on vehicle curvature/speed)
 or requesting the DBW to perform all PID control at the vehicle level (control to a vehicle curvature and speed)
@@ -514,7 +517,14 @@ CM_ SG_ 2147495684 AKit_BrakeCtrlReqType "Indicates whether the AKit is requesti
  or requesting the DBW to apply PID control at the actuator level (turn wheel to a certain angle, or apply a certain amount of accel/brake torque & let AKit perform PID control on vehicle curvature/speed)
 or requesting the DBW to perform all PID control at the vehicle level (control to a vehicle curvature and speed). If ReqType is 2, the requested speed will be taken from the signal AKit_SpeedReq in the AKit_AccelRequest message.
 Some vehicles may not support all types!";
-CM_ SG_ 2147495684 AKit_BrakeTorqueReq "Used when AKit_BrakeCtrlReqType = 1";
+CM_ SG_ 2147495684 AKit_BrakePcntTorqueReq "Used when AKit_BrakeCtrlReqType = 1. This mode allows the AKit to request a constant torque value and let the DBW system adjust the pedal position to meet that torque. 
+
+This value is in % of a fixed reference value. This reference value depends only on the type of vehicle. Contact New Eagle to determine the reference value for your vehicle make/model.";
+CM_ SG_ 2147495684 AKit_SpeedModeAccelLim "0 = infinite (no limit). When AKit_AccelReqType = 2 (speed control), the DBW will limit acceleration to this value.
+If vehicle is in reverse, this signal will still limit the accelerator pedal value (not the brake)";
+CM_ SG_ 2147495684 AKit_SpeedModeDecelLim "0 = infinite (no limit). When AKit_AccelReqType = 2 (speed control), the DBW will limit decceleration to this value.
+If vehicle is in reverse, this signal will still limit the brake pedal value (not the accelerator).
+Overshoot & settling time requirements cannot be guaranteed with a limit above 7.5m/s^2. the no-limit value, or anything above 7.5m/s^2 should only be used for emergency braking.";
 CM_ SG_ 2147495685 AKit_PrndStateReq "PRND shifter position request";
 CM_ SG_ 2147495685 AKit_PrndRollingCntr "0-15 rolling counter";
 CM_ SG_ 2147495685 AKit_PrndCtrlEnblReq "AKit_GlobalByWireEnblReq must also be true before the DBW system will look at this signal.";
@@ -534,9 +544,7 @@ CM_ SG_ 2147491591 DBW_TirePressRL "pacifica TPM_A2 scaling goes from 0 to 126, 
 CM_ SG_ 2147491591 DBW_TirePressFR "pacifica TPM_A2 scaling goes from 0 to 126, 1 psi per bit. convert to kpa for standard units here.";
 CM_ SG_ 2147491591 DBW_TirePressFL "pacifica TPM_A2 scaling goes from 0 to 126, 1 psi per bit. convert to kpa for standard units here.";
 CM_ SG_ 2147491592 DBW_VinMultiplexor "message multiplexor";
-CM_ BO_ 2147491593 "";
-CM_ SG_ 2147491593 DBW_GpsLong "need to determing what \"mas\" scaling is. negative means west.";
-CM_ SG_ 2147491593 DBW_GpsLat "need to determing what \"mas\" scaling is. negative means south.";
+CM_ BO_ 2147491593 "Message ID reserved for future addiiton of a GPS sensor.";
 CM_ BO_ 2147491594 "IMU = Intertial Measurement Unit";
 CM_ SG_ 2147491594 DBW_ImuYawRate "postive = left.";
 CM_ SG_ 2147491594 DBW_ImuAccelX "postive = forward.";
@@ -551,8 +559,6 @@ CM_ SG_ 2147491595 DBW_WhlSpd_RR "Positive is forward. Used on Volvo.";
 CM_ SG_ 2147491595 DBW_WhlSpd_RL "Positive is forward. Used on Volvo.";
 CM_ SG_ 2147491595 DBW_WhlSpd_FR "Positive is forward. Used on Volvo.";
 CM_ SG_ 2147491595 DBW_WhlSpd_FL "Positive is forward. Used on Volvo.";
-CM_ SG_ 2147495686 AKit_MdpmCmdWatchdogCntr "Watchdog alive rolling counter";
-CM_ BO_ 992 "";
 CM_ SG_ 2147491600 DBW_RadarFrontObjDistVld "indicates if the value of front object distance is valid. This will be false when the Radar module is disabled or faulted.";
 CM_ SG_ 2147491600 DBW_SonarVld "indicates if the values from the ultrasonic parking sensors are valid. This will be false when the Park Assist module is disabled or faulted.";
 CM_ SG_ 2147491600 DBW_SonarArcNumRR "";
@@ -604,26 +610,6 @@ VAL_ 2147491599 DBW_DrvInptHiBeam 0 "Off" 1 "On" 2 "Flash" ;
 VAL_ 2147491599 DBW_DrvInptTurnSignal 0 "Off" 1 "Left" 2 "Right" ;
 VAL_ 2147491599 DBW_DrvInptWiper 0 "Off" 1 "Wiper_Intermittent1" 2 "Wiper_Intermittent2" 3 "Wiper_Intermittent3" 4 "Wiper_Intermittent4" 5 "Wiper_Intermittent5" 6 "Wiper_Intermittent6" 11 "Wiper_ConstantLowSpd" 12 "Wiper_ConstantHighSpd" 13 "Wiper_WashBrief" 14 "Wiper_WashContinuous" ;
 VAL_ 2147491595 DBW_WhlSpdType 0 "RPM" 1 "km/h (Front)" 2 "km/h (Rear)" ;
-VAL_ 2147491597 DBW_Mdpm1Fuse01 0 "No Fault" 1 "Blown" 2 "Not Powered" 3 "Not Used" ;
-VAL_ 2147491597 DBW_Mdpm1Relay01 0 "OK" 1 "Coil Open" 2 "Coil Shorted" 3 "Normally Open contact is open but it should be connected to the Common Terminal" 4 "Normally Closed contact is open but it should be connected to the Common Terminal" 5 "Coil Not Receiving Power" 6 "Normally Open contact is shorted when it should not be connected to the Common Terminal" 7 "Normally Closed contact is shorted when it should not be connected to the Common Terminal" 8 "Reserved" 9 "Reserved" 10 "Reserved" 11 "High-side driver is reporting a fault condition" 12 "High-side driver has an open-load" 13 "High-side driver is over-voltage" 14 "Reserved" 15 "Relay location not used" ;
-VAL_ 2147491598 DBW_Mdpm2Fuse01 0 "No Fault" 1 "Blown" 2 "Not Powered" 3 "Not Used" ;
-VAL_ 2147491598 DBW_Mdpm2Relay01 0 "OK" 1 "Coil Open" 2 "Coil Shorted" 3 "Normally Open contact is open but it should be connected to the Common Terminal" 4 "Normally Closed contact is open but it should be connected to the Common Terminal" 5 "Coil Not Receiving Power" 6 "Normally Open contact is shorted when it should not be connected to the Common Terminal" 7 "Normally Closed contact is shorted when it should not be connected to the Common Terminal" 8 "Reserved" 9 "Reserved" 10 "Reserved" 11 "High-side driver is reporting a fault condition" 12 "High-side driver has an open-load" 13 "High-side driver is over-voltage" 14 "Reserved" 15 "Relay location not used" ;
-VAL_ 2147495686 AKit_Mdpm1Relay01Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm1Relay02Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm1Relay03Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm1Relay04Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm1Relay05Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm1Relay06Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm1Relay07Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm1Relay08Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm2Relay01Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm2Relay02Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm2Relay03Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm2Relay04Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm2Relay05Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm2Relay06Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm2Relay07Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
-VAL_ 2147495686 AKit_Mdpm2Relay08Cmd 0 "Turn relay off" 1 "Turn relay on" 2 "Do not change relay state" 3 "Do not change relay state" ;
 VAL_ 2147491600 DBW_SonarArcNumRR 15 "No ARC" 8 "ARC8" 7 "ARC7" 6 "ARC6" 5 "ARC5" 4 "ARC4" 3 "ARC3" 2 "ARC2" 1 "ARC1" 0 "NODist" ;
 VAL_ 2147491600 DBW_SonarArcNumRL 15 "No ARC" 8 "ARC8" 7 "ARC7" 6 "ARC6" 5 "ARC5" 4 "ARC4" 3 "ARC3" 2 "ARC2" 1 "ARC1" 0 "NODist" ;
 VAL_ 2147491600 DBW_SonarArcNumRC 15 "No ARC" 8 "ARC8" 7 "ARC7" 6 "ARC6" 5 "ARC5" 4 "ARC4" 3 "ARC3" 2 "ARC2" 1 "ARC1" 0 "NODist" ;
