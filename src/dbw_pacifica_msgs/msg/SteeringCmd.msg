@@ -20,5 +20,3 @@ uint8 count
 SteeringCommandType command_type
 
 float32 steering_wheel_torque_cmd
-
-ControlMode control_mode

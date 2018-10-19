@@ -12,5 +12,3 @@ uint8 count
 
 float32 TORQUE_BOO=520  # Nm, brake lights threshold
 float32 TORQUE_MAX=3412 # Nm, maximum torque
-
-ControlMode control_mode

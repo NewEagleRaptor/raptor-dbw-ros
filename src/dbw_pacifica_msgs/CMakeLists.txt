@@ -13,7 +13,6 @@ add_message_files(DIRECTORY msg FILES
   ActuatorControlMode.msg
   BrakeCmd.msg
   BrakeReport.msg
-  ControlMode.msg
   DoorRequest.msg
   DriverInputReport.msg 
   Gear.msg

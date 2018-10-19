@@ -635,10 +635,10 @@ void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
   NewEagle::DbcSignal* cnt = message->GetSignal("AKit_BrakeWatchdogCntr");
   cnt->SetResult(msg->count);
 
-  if (msg->control_mode.value == 1)
-  {
-    message->GetSignal("AKit_BrakePedalCtrlMode")->SetResult(1);
-  }
+  // if (msg->control_mode.value == 1)
+  // {
+  //   message->GetSignal("AKit_BrakePedalCtrlMode")->SetResult(1);
+  // }
 
   if (clear() || msg->clear) {
     message->GetSignal("AKit_BrakePedalClearDriverOvrd")->SetResult(1);
@@ -711,14 +711,14 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
 {
   NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_SteeringCommand");
 
-  message->GetSignal("AKit_SteerCtrlEnblCmd")->SetResult(0);
-  message->GetSignal("AKit_SteeringWhlAngleCmd")->SetResult(0);
-  message->GetSignal("AKit_SteeringWhlTrqCmd")->SetResult(0);
-  message->GetSignal("AKit_SteeringWhlAngleVelocity")->SetResult(0);
-  message->GetSignal("AKit_SteeringWhlClearDriverOvrd")->SetResult(0);
-  message->GetSignal("AKit_SteeringWhlIgnoreDriverOvrd")->SetResult(0);
-  message->GetSignal("AKit_SteeringWhlQuiet")->SetResult(0);
-  message->GetSignal("AKit_SteeringWhlCtrlMode")->SetResult(0);
+  message->GetSignal("AKit_SteeringWhlAngleReq")->SetResult(0);
+  message->GetSignal("AKit_SteeringWhlAngleVelocityLim")->SetResult(0);
+  message->GetSignal("AKit_SteerCtrlEnblReq")->SetResult(0);  
+
+  message->GetSignal("AKit_SteeringWhlIgnoreDriverOvrd")->SetResult(0);  
+  message->GetSignal("AKit_SteeringWhlPcntTrqReq")->SetResult(0);  
+  message->GetSignal("AKit_SteeringReqType")->SetResult(0);
+  message->GetSignal("AKit_SteeringVehCurvatureReq")->SetResult(0);
 
   if (enabled()) {
     message->GetSignal("AKit_SteeringWhlCmdType")->SetResult(msg->command_type.value);
@@ -755,10 +755,10 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
     message->GetSignal("AKit_SteeringWhlQuiet")->SetResult(1);
   }
 
-  if (msg->control_mode.value == 1)
-  {
-    message->GetSignal("AKit_SteeringWhlCtrlMode")->SetResult(1);
-  }
+  // if (msg->control_mode.value == 1)
+  // {
+  //   message->GetSignal("AKit_SteeringWhlCtrlMode")->SetResult(1);
+  // }
 
   message->GetSignal("AKit_SteerCmdWatchdogCntr")->SetResult(msg->count);
 
