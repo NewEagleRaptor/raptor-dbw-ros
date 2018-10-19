@@ -648,10 +648,6 @@ void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
   NewEagle::DbcSignal* cnt = message->GetSignal("AKit_BrakeRollingCntr");
   cnt->SetResult(msg->count);
 
-  // if (clear() || msg->clear) {
-  //   message->GetSignal("AKit_BrakePedalClearDriverOvrd")->SetResult(1);
-  // } 
-
   can_msgs::Frame frame = message->GetFrame();
 
   pub_can_.publish(frame);
@@ -693,9 +689,6 @@ void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalC
   NewEagle::DbcSignal* cnt = message->GetSignal("AKit_AccelPdlRollingCntr");
   cnt->SetResult(msg->accelerator_pedal_cmd_rolling_counter);
 
-  // if (clear() || msg->clear) {
-  //   message->GetSignal("AKit_AccelPdlClearDriverOvrd")->SetResult(1);
-  // }
   if (msg->ignore) {
     message->GetSignal("Akit_AccelPdlIgnoreDriverOvrd")->SetResult(1);
   }
@@ -755,9 +748,6 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
     message->GetSignal("AKit_SteerCtrlEnblReq")->SetResult(1);
   }
 
-  // if (clear() || msg->clear) {
-  //   message->GetSignal("AKit_SteeringWhlClearDriverOvrd")->SetResult(1);
-  // }
   if (msg->ignore) {
     message->GetSignal("AKit_SteeringWhlIgnoreDriverOvrd")->SetResult(1);
   }
@@ -776,17 +766,14 @@ void DbwNode::recvGearCmd(const dbw_pacifica_msgs::GearCmd::ConstPtr& msg)
 {
   NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_GearCommand");
 
-  message->GetSignal("AKit_PrndStateCmd")->SetResult(0);
-  // message->GetSignal("AKit_PrndClearDriverOvrd")->SetResult(0);
+  message->GetSignal("AKit_PrndEnblReq")->SetResult(0);
+  message->GetSignal("AKit_PrndStateReq")->SetResult(0);
 
   if (enabled()) {
-    message->GetSignal("AKit_PrndStateCmd")->SetResult(msg->cmd.gear);
-  }
-  // if (clear() || msg->clear) {
-  //   message->GetSignal("AKit_PrndClearDriverOvrd")->SetResult(1);
-  // }
+    message->GetSignal("AKit_PrndStateReq")->SetResult(msg->cmd.gear);
+  }  
 
-  message->GetSignal("AKit_PrndCmdWatchdogCntr")->SetResult(msg->gear_cmd_rolling_counter);
+  message->GetSignal("AKit_PrndCmdRollingCntr")->SetResult(msg->gear_cmd_rolling_counter);
 
   can_msgs::Frame frame = message->GetFrame();
 
@@ -838,7 +825,6 @@ void DbwNode::timerCallback(const ros::TimerEvent& event)
       message->GetSignal("AKit_BrakePedalCmd")->SetResult(0);
       message->GetSignal("AKit_BrakeCtrlEnblCmd")->SetResult(0);
       message->GetSignal("AKit_BrakePedalCtrlMode")->SetResult(0);
-      // message->GetSignal("AKit_BrakePedalClearDriverOvrd")->SetResult(1);
       pub_can_.publish(message->GetFrame());
     }
 
@@ -850,7 +836,6 @@ void DbwNode::timerCallback(const ros::TimerEvent& event)
       message->GetSignal("AKit_AccelPdlEnblCmd")->SetResult(0);
       message->GetSignal("Akit_AccelPdlIgnoreDriverOvrd")->SetResult(0);
       message->GetSignal("AKit_AccelPdlCtrlMode")->SetResult(0);
-      // message->GetSignal("AKit_AccelPdlClearDriverOvrd")->SetResult(1);
       pub_can_.publish(message->GetFrame());
     }
 
@@ -864,7 +849,6 @@ void DbwNode::timerCallback(const ros::TimerEvent& event)
       message->GetSignal("AKit_SteeringWhlTrqCmd")->SetResult(0);
       message->GetSignal("AKit_SteeringWhlCtrlMode")->SetResult(0);
       message->GetSignal("AKit_SteeringWhlCmdType")->SetResult(0);
-      // message->GetSignal("AKit_SteeringWhlClearDriverOvrd")->SetResult(1);
 
       pub_can_.publish(message->GetFrame());
     }
@@ -872,7 +856,6 @@ void DbwNode::timerCallback(const ros::TimerEvent& event)
     if (override_gear_) {
       NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_GearCommand");
       message->GetSignal("AKit_PrndStateCmd")->SetResult(0);
-      // message->GetSignal("AKit_PrndClearDriverOvrd")->SetResult(1);
       pub_can_.publish(message->GetFrame());
     }
   }
