@@ -1,0 +1,10 @@
+
+float32 vehicle_battery_volts
+float32 vehicle_battery_current
+float32 vehicle_alternator_current
+
+float32 aux_battery_volts
+float32 aux_dcdc_current
+
+bool aux_battery_contactor
+bool aux_inverter_contactor

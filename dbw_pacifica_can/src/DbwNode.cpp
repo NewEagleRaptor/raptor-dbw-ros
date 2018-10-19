@@ -558,6 +558,32 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
       }
       break;
 
+      case ID_LOW_VOLTAGE_SYSTEM_REPORT:
+      {
+        NewEagle::DbcMessage* message = dbwDbc_.GetMessageById(ID_LOW_VOLTAGE_SYSTEM_REPORT);
+
+        if (msg->dlc >= message->GetDlc()) {
+
+          message->SetFrame(msg);
+
+          dbw_pacifica_msgs::LowVoltageSystemReport lvSystemReport;
+          lvSystemReport.header.stamp = msg->header.stamp;
+
+          lvSystemReport.vehicle_battery_volts = (double)message->GetSignal("DBW_LvVehBattVlt")->GetResult();
+          lvSystemReport.vehicle_battery_current = (double)message->GetSignal("DBW_LvBattCurr")->GetResult();
+          lvSystemReport.vehicle_alternator_current = (double)message->GetSignal("DBW_LvAlternatorCurr")->GetResult();
+
+          lvSystemReport.aux_battery_volts = (double)message->GetSignal("DBW_LvDbwBattVlt")->GetResult();
+          lvSystemReport.aux_dcdc_current = (double)message->GetSignal("DBW_LvDcdcCurr")->GetResult();
+
+          lvSystemReport.aux_battery_contactor = message->GetSignal("DBW_LvBattContactorCmd")->GetResult() ? true : false;
+          lvSystemReport.aux_inverter_contactor = message->GetSignal("DBW_LvInvtrContactorCmd")->GetResult() ? true : false;
+
+          pub_misc_.publish(lvSystemReport);
+        }        
+      }
+      break;
+
       case ID_BRAKE_CMD:
         //ROS_WARN("DBW system: Another node on the CAN bus is commanding the vehicle!!! Subsystem: Brake. Id: 0x%03X", ID_BRAKE_CMD);
         break;
