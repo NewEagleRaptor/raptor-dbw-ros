@@ -21,3 +21,5 @@ bool fault_calibration
 bool fault_power
 
 uint8 steering_report_rolling_counter
+
+SteeringControlMode steering_control_type
