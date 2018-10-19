@@ -1,31 +1,39 @@
 <launch>
 
+
+<node
+  pkg="dbw_pacifica_can"
+  type="dbw_node"
+  name="dbw"
+  respawn="true">
+  <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)New_Eagle_DBW.dbc" />
+</node>
+
   <node
-      pkg="dbw_pacifica_can"
-      type="dbw_node"
-      name="dbw"
-      >
-    <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)Pacifica_AKit_DBW_Comms.dbc" />
-  </node>
+    pkg="socketcan_bridge"
+    type="socketcan_bridge_node"
+    name="socketcan_bridge"
+    respawn="true"
+  />
 
   <node
     pkg="socketcan_bridge"
     type="socketcan_to_topic_node"
-    name="socketcan_to_topic">
-    <param name="can_device" value="can0" />
-  </node>
+    name="socketcan_to_topic"
+    respawn="true"
+  />
 
   <node
     pkg="socketcan_bridge"
     type="topic_to_socketcan_node"
-    name="topic_to_socketcan">
-    <param name="can_device" value="can0" />
-  </node>
+    name="topic_to_socketcan"
+    respawn="true"
+  />
 
   <!-- Joystick demo -->
   <arg name="ignore" default="false"/>
   <arg name="enable" default="true"/>
-  <arg name="count" default="true"/>
+  <arg name="count" default="false"/>
   <arg name="svel" default="0.0"/>
   <node pkg="dbw_joystick_demo" type="joystick_demo" name="joystick_demo" output="screen" >
     <param name="ignore" value="$(arg ignore)" /> <!-- Ignore driver overrides -->
@@ -41,4 +49,5 @@
     <param name="deadzone" value="0.01" />
     <param name="autorepeat_rate" value="50.0" />
   </node>
+
 </launch>

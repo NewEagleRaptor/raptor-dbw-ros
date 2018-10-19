@@ -8,8 +8,6 @@ float32 pedal_output
 bool enabled  # Enabled
 bool driver   # Driver activity
 
-# Watchdog Counter
-WatchdogStatus watchdog_status
 bool fault_brake_system
 bool fault_dbw_system
 
@@ -17,17 +15,15 @@ bool fault_dbw_system
 bool fault_ch1
 bool fault_ch2
 
-uint8 brake_report_rolling_counter
+uint8 rolling_counter
 
-float32 brake_torque_actual # Nm
+float32 brake_torque_actual # 0 to 100%
 
-# Anti-lock Brakes
-bool abs_active
-bool abs_enabled
-
-# Stability Control
-bool trac_active
-bool trac_enabled
+# Anti-lock Brakes and  Stability Control
+bool intervention_active
+bool intervention_ready
 
 # Parking Brake
 ParkingBrake parking_brake
+
+ActuatorControlMode control_type

@@ -45,25 +45,31 @@ typedef enum {
   VIN_MUX_VIN2  = 0x02,
 } VinMux;
 
+typedef enum {
+  WHEEL_SPEED_MUX0  = 0x00,
+  WHEEL_SPEED_MUX1  = 0x01,
+} WheelSpeedMux;
+
 #undef BUILD_ASSERT
 
 enum {
-  ID_BRAKE_CMD              = 0x2F04,
-  ID_BRAKE_REPORT           = 0x1F04,
-  ID_ACCELERATOR_PEDAL_CMD  = 0x2F01,
-  ID_ACCEL_PEDAL_REPORT     = 0x1F02,
-  ID_STEERING_CMD           = 0x2F03,
-  ID_STEERING_REPORT        = 0x1F03,
-  ID_GEAR_CMD               = 0x2F05,
-  ID_GEAR_REPORT            = 0x1F05,
-  ID_REPORT_WHEEL_SPEED     = 0x1F0B,
-  ID_REPORT_IMU             = 0x1F0A,
-  ID_REPORT_TIRE_PRESSURE   = 0x1f07,
-  ID_REPORT_SURROUND        = 0x1f10,
-  ID_VIN                    = 0x1F08,
-  ID_REPORT_DRIVER_INPUT    = 0x1F0F,
-  ID_REPORT_WHEEL_POSITION  = 0x1F06,
-  ID_MISC_REPORT            = 0x1F01,
+  ID_BRAKE_CMD                  = 0x2F04,
+  ID_BRAKE_REPORT               = 0x1F04,
+  ID_ACCELERATOR_PEDAL_CMD      = 0x2F01,
+  ID_ACCEL_PEDAL_REPORT         = 0x1F02,
+  ID_STEERING_CMD               = 0x2F03,
+  ID_STEERING_REPORT            = 0x1F03,
+  ID_GEAR_CMD                   = 0x2F05,
+  ID_GEAR_REPORT                = 0x1F05,
+  ID_REPORT_WHEEL_SPEED         = 0x1F0B,
+  ID_REPORT_IMU                 = 0x1F0A,
+  ID_REPORT_TIRE_PRESSURE       = 0x1f07,
+  ID_REPORT_SURROUND            = 0x1f10,
+  ID_VIN                        = 0x1F08,
+  ID_REPORT_DRIVER_INPUT        = 0x1F0F,
+  ID_REPORT_WHEEL_POSITION      = 0x1F06,
+  ID_MISC_REPORT                = 0x1F01,
+  ID_LOW_VOLTAGE_SYSTEM_REPORT  = 0x1F11,
 
 };
 

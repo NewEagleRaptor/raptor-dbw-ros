@@ -162,35 +162,37 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
           bool faultCh1 = message->GetSignal("DBW_BrakeFault_Ch1")->GetResult() ? true : false;
           bool faultCh2 = message->GetSignal("DBW_BrakeFault_Ch2")->GetResult() ? true : false;
-          bool dbwSystemFault = message->GetSignal("DBW_MiscFault_BrkRpt")->GetResult() ? true : false;
-          uint8_t watchdog_status = message->GetSignal("DBW_BrakeWatchdogStatus")->GetResult();
           bool brakeSystemFault = message->GetSignal("DBW_BrakeFault")->GetResult() ? true : false;
+          bool dbwSystemFault = brakeSystemFault;
 
           faultBrakes(faultCh1 && faultCh2);
-          faultWatchdog(dbwSystemFault, watchdog_status, brakeSystemFault);
+          faultWatchdog(dbwSystemFault, brakeSystemFault);
+
           overrideBrake(message->GetSignal("DBW_BrakeDriverActivity")->GetResult());
-          dbw_pacifica_msgs::BrakeReport out;
-          out.header.stamp = msg->header.stamp;
-          out.pedal_position  = message->GetSignal("DBW_BrakePedalDriverInput")->GetResult();
-          out.pedal_output = message->GetSignal("DBW_BrakePedalOutput")->GetResult();
+          dbw_pacifica_msgs::BrakeReport brakeReport;
+          brakeReport.header.stamp = msg->header.stamp;
+          brakeReport.pedal_position  = message->GetSignal("DBW_BrakePedalDriverInput")->GetResult();
+          brakeReport.pedal_output = message->GetSignal("DBW_BrakePedalPosnFdbck")->GetResult();
 
-          out.enabled = message->GetSignal("DBW_BrakeEnabled")->GetResult() ? true : false;
-          out.driver = message->GetSignal("DBW_BrakeDriverActivity")->GetResult() ? true : false;
-          out.watchdog_status.source = watchdog_status;
-          out.fault_brake_system = brakeSystemFault;
-          out.fault_dbw_system =  dbwSystemFault;
-          out.fault_ch2 = faultCh2;
+          brakeReport.enabled = message->GetSignal("DBW_BrakeEnabled")->GetResult() ? true : false;
+          brakeReport.driver = message->GetSignal("DBW_BrakeDriverActivity")->GetResult() ? true : false;
+          //brakeReport.watchdog_status.source = watchdog_status;
+          brakeReport.fault_brake_system = brakeSystemFault;
+          brakeReport.fault_dbw_system =  dbwSystemFault;
+          brakeReport.fault_ch2 = faultCh2;
 
-          out.brake_report_rolling_counter =  message->GetSignal("DBW_BrakeWatchdogCntr")->GetResult();
+          brakeReport.rolling_counter =  message->GetSignal("DBW_BrakeRollingCntr")->GetResult();
 
-          out.brake_torque_actual = message->GetSignal("DBW_BrakeTrqActual")->GetResult();
-          out.abs_active = message->GetSignal("DBW_BrakeAntiLockBrkActv")->GetResult() ? true : false;
-          out.abs_enabled = message->GetSignal("DBW_BrakeAntiLockBrkEnbld")->GetResult() ? true : false;
-          out.trac_active = message->GetSignal("DBW_BrakeTracCtrlActv")->GetResult() ? true : false;
-          out.trac_enabled = message->GetSignal("DBW_BrakeTracCtrlEnbld")->GetResult() ? true : false;
-          out.parking_brake.status = message->GetSignal("DBW_BrakeParkingBrkStatus")->GetResult();
+          brakeReport.brake_torque_actual = message->GetSignal("DBW_BrakePcntTorqueActual")->GetResult();
 
-          pub_brake_.publish(out);
+          brakeReport.intervention_active = message->GetSignal("DBW_BrakeInterventionActv")->GetResult() ? true : false;
+          brakeReport.intervention_ready = message->GetSignal("DBW_BrakeInterventionReady")->GetResult() ? true : false;
+
+          brakeReport.parking_brake.status = message->GetSignal("DBW_BrakeParkingBrkStatus")->GetResult();
+
+          brakeReport.control_type.value = message->GetSignal("DBW_BrakeCtrlType")->GetResult();
+
+          pub_brake_.publish(brakeReport);
           if (faultCh1 || faultCh2) {
             ROS_WARN_THROTTLE(5.0, "Brake fault.    FLT1: %s FLT2: %s",
                 faultCh1 ? "true, " : "false,",
@@ -210,28 +212,34 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           bool faultCh1 = message->GetSignal("DBW_AccelPdlFault_Ch1")->GetResult() ? true : false;
           bool faultCh2 = message->GetSignal("DBW_AccelPdlFault_Ch2")->GetResult() ? true : false;
           bool accelPdlSystemFault = message->GetSignal("DBW_AccelPdlFault")->GetResult() ? true : false;
-          bool dbwSystemFault = message->GetSignal("DBW_MiscFault_AccelRpt")->GetResult() ? true : false;
-          uint8_t watchdog_status = message->GetSignal("DBW_AccelPdlWatchdogStatus")->GetResult();
+          bool dbwSystemFault = accelPdlSystemFault;
+
+          uint16_t positionFeedback = message->GetSignal("DBW_AccelPdlPosnFdbck")->GetResult(); 
 
           faultAcceleratorPedal(faultCh1 && faultCh2);
-          faultWatchdog(dbwSystemFault, watchdog_status);
+          faultWatchdog(dbwSystemFault, accelPdlSystemFault);
 
           overrideAcceleratorPedal(message->GetSignal("DBW_AccelPdlDriverActivity")->GetResult());
 
-          dbw_pacifica_msgs::AcceleratorPedalReport out;
-          out.header.stamp = msg->header.stamp;
-          out.pedal_input  = message->GetSignal("DBW_AccelPdlDriverInput")->GetResult();
-          out.pedal_output = message->GetSignal("DBW_AccelPdlOutput")->GetResult();
-          out.enabled = message->GetSignal("DBW_AccelPdlEnabled")->GetResult() ? true : false;
-          out.ignore_driver = message->GetSignal("DBW_AccelPdlIgnoreDriver")->GetResult() ? true : false;
-          out.driver = message->GetSignal("DBW_AccelPdlDriverActivity")->GetResult() ? true : false;
-          out.watchdog_status.source = watchdog_status;
-          out.fault_accel_pedal_system = accelPdlSystemFault;
-          out.fault_dbw_system = dbwSystemFault;
-          out.fault_ch1 = faultCh1;
-          out.fault_ch2 = faultCh2;
+          dbw_pacifica_msgs::AcceleratorPedalReport accelPedalReprt;
+          accelPedalReprt.header.stamp = msg->header.stamp;
+          accelPedalReprt.pedal_input  = message->GetSignal("DBW_AccelPdlDriverInput")->GetResult();
+          accelPedalReprt.pedal_output = message->GetSignal("DBW_AccelPdlPosnFdbck")->GetResult();
+          accelPedalReprt.enabled = message->GetSignal("DBW_AccelPdlEnabled")->GetResult() ? true : false;
+          accelPedalReprt.ignore_driver = message->GetSignal("DBW_AccelPdlIgnoreDriver")->GetResult() ? true : false;
+          accelPedalReprt.driver = message->GetSignal("DBW_AccelPdlDriverActivity")->GetResult() ? true : false;
+          accelPedalReprt.torque_actual = message->GetSignal("DBW_AccelPcntTorqueActual")->GetResult();
 
-          pub_accel_pedal_.publish(out);
+          accelPedalReprt.control_type.value = message->GetSignal("DBW_AccelCtrlType")->GetResult();
+
+          accelPedalReprt.rolling_counter =  message->GetSignal("DBW_AccelPdlRollingCntr")->GetResult();
+
+          accelPedalReprt.fault_accel_pedal_system = accelPdlSystemFault;
+          accelPedalReprt.fault_dbw_system = dbwSystemFault;
+          accelPedalReprt.fault_ch1 = faultCh1;
+          accelPedalReprt.fault_ch2 = faultCh2;
+
+          pub_accel_pedal_.publish(accelPedalReprt);
 
           if (faultCh1 || faultCh2) {
             ROS_WARN_THROTTLE(5.0, "Accelerator Pedal fault. FLT1: %s FLT2: %s",
@@ -250,39 +258,31 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           message->SetFrame(msg);
 
           bool steeringSystemFault = message->GetSignal("DBW_SteeringFault")->GetResult() ? true : false;
-          bool dbwSystemFault = message->GetSignal("DBW_MiscFault_SteerRpt")->GetResult() ? true : false;
-          uint8_t watchdog_status = message->GetSignal("DBW_SteeringWatchdogStatus")->GetResult();
+          bool dbwSystemFault = steeringSystemFault;
 
           faultSteering(steeringSystemFault);
 
           faultWatchdog(dbwSystemFault);
           overrideSteering(message->GetSignal("DBW_SteeringDriverActivity")->GetResult() ? true : false);
 
-          dbw_pacifica_msgs::SteeringReport out;
-          out.header.stamp = msg->header.stamp;
-          out.steering_wheel_angle = message->GetSignal("DBW_SteeringWhlAngleAct")->GetResult() * (0.1 * M_PI / 180);
-          out.steering_wheel_angle_cmd = message->GetSignal("DBW_SteeringWhlAngleDes")->GetResult() * (0.1 * M_PI / 180);
-          out.steering_wheel_torque = message->GetSignal("DBW_SteeringWhlTorqueCmd")->GetResult() * 0.0625;
+          dbw_pacifica_msgs::SteeringReport steeringReport;
+          steeringReport.header.stamp = msg->header.stamp;
+          steeringReport.steering_wheel_angle = message->GetSignal("DBW_SteeringWhlAngleAct")->GetResult() * (0.1 * M_PI / 180);
+          steeringReport.steering_wheel_angle_cmd = message->GetSignal("DBW_SteeringWhlAngleDes")->GetResult() * (0.1 * M_PI / 180);
+          steeringReport.steering_wheel_torque = message->GetSignal("DBW_SteeringWhlTorqueCmd")->GetResult() * 0.0625;
 
-          out.enabled = message->GetSignal("DBW_SteeringEnabled")->GetResult() ? true : false;
-          out.driver_override = message->GetSignal("DBW_SteeringDriverActivity")->GetResult() ? true : false;
+          steeringReport.enabled = message->GetSignal("DBW_SteeringEnabled")->GetResult() ? true : false;
+          steeringReport.driver_override = message->GetSignal("DBW_SteeringDriverActivity")->GetResult() ? true : false;
 
-          out.fault_dbw_system = dbwSystemFault;
+          steeringReport.fault_dbw_system = dbwSystemFault;
 
-          out.watchdog_status.source = watchdog_status;
+          steeringReport.rolling_counter =  message->GetSignal("DBW_SteeringRollingCntr")->GetResult();
 
-          out.steering_report_rolling_counter =  message->GetSignal("DBW_SteeringWatchdogCntr")->GetResult();
+          steeringReport.control_type.value =  message->GetSignal("DBW_SteeringCtrlType")->GetResult();
 
-          pub_steering_.publish(out);
+          pub_steering_.publish(steeringReport);
 
-          // Borchert - Leaving this code... in case it is needed.
-          //geometry_msgs::TwistStamped twist;
-          //twist.header.stamp = out.header.stamp;
-          //twist.header.frame_id = frame_id_;
-          //twist.twist.linear.x = out.speed;
-          //twist.twist.angular.z = out.speed * tan(out.steering_wheel_angle / steering_ratio_) / acker_wheelbase_;
-          //pub_twist_.publish(twist);
-          publishJointStates(msg->header.stamp, NULL, &out);
+          publishJointStates(msg->header.stamp, NULL, &steeringReport);
 
           if (steeringSystemFault) {
             ROS_WARN_THROTTLE(5.0, "Steering fault: %s",
@@ -306,34 +306,35 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           dbw_pacifica_msgs::GearReport out;
           out.header.stamp = msg->header.stamp;
 
+          out.enabled = message->GetSignal("DBW_PrndCtrlEnabled")->GetResult() ? true : false;
           out.state.gear = message->GetSignal("DBW_PrndStateActual")->GetResult();
           out.driver_override = driverActivity;
           out.gear_select_system_fault = message->GetSignal("DBW_PrndFault")->GetResult() ? true : false;
 
           if (msg->dlc >= message->GetDlc()) {
-            out.reject.value = message->GetSignal("DBW_PrndStateReject")->GetResult();
-            if (out.reject.value == dbw_pacifica_msgs::GearReject::NONE) {
-              gear_warned_ = false;
-            } else if (!gear_warned_) {
-              gear_warned_ = true;
-              switch (out.reject.value) {
-                case dbw_pacifica_msgs::GearReject::SHIFT_IN_PROGRESS:
-                  ROS_WARN("Gear shift rejected: Shift in progress");
-                  break;
-                case dbw_pacifica_msgs::GearReject::OVERRIDE:
-                  ROS_WARN("Gear shift rejected: Override on brake, Accelerator Pedal, or steering");
-                  break;
-                case dbw_pacifica_msgs::GearReject::ROTARY_LOW:
-                  ROS_WARN("Gear shift rejected: Rotary shifter can't shift to Low");
-                  break;
-                case dbw_pacifica_msgs::GearReject::ROTARY_PARK:
-                  ROS_WARN("Gear shift rejected: Rotary shifter can't shift out of Park");
-                  break;
-                case dbw_pacifica_msgs::GearReject::VEHICLE:
-                  ROS_WARN("Gear shift rejected: Rejected by vehicle, try pressing the brakes");
-                  break;
-              }
-            }
+            out.reject = message->GetSignal("DBW_PrndStateReject")->GetResult() ? true : false;
+            // if (out.reject.value == dbw_pacifica_msgs::GearReject::NONE) {
+            //   gear_warned_ = false;
+            // } else if (!gear_warned_) {
+            //   gear_warned_ = true;
+            //   switch (out.reject.value) {
+            //     case dbw_pacifica_msgs::GearReject::SHIFT_IN_PROGRESS:
+            //       ROS_WARN("Gear shift rejected: Shift in progress");
+            //       break;
+            //     case dbw_pacifica_msgs::GearReject::OVERRIDE:
+            //       ROS_WARN("Gear shift rejected: Override on brake, Accelerator Pedal, or steering");
+            //       break;
+            //     case dbw_pacifica_msgs::GearReject::ROTARY_LOW:
+            //       ROS_WARN("Gear shift rejected: Rotary shifter can't shift to Low");
+            //       break;
+            //     case dbw_pacifica_msgs::GearReject::ROTARY_PARK:
+            //       ROS_WARN("Gear shift rejected: Rotary shifter can't shift out of Park");
+            //       break;
+            //     case dbw_pacifica_msgs::GearReject::VEHICLE:
+            //       ROS_WARN("Gear shift rejected: Rejected by vehicle, try pressing the brakes");
+            //       break;
+            //   }
+            // }
           }
           pub_gear_.publish(out);
         }
@@ -349,10 +350,19 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
           dbw_pacifica_msgs::WheelSpeedReport out;
           out.header.stamp = msg->header.stamp;
-          out.front_left  = message->GetSignal("DBW_WhlSpd_FL")->GetResult();
-          out.front_right = message->GetSignal("DBW_WhlSpd_FR")->GetResult();
-          out.rear_left   = message->GetSignal("DBW_WhlSpd_RL")->GetResult();
-          out.rear_right  = message->GetSignal("DBW_WhlSpd_RR")->GetResult();
+
+          if (message->GetSignal("DBW_WhlSpdType")->GetResult() == WHEEL_SPEED_MUX0) {
+            out.front_left  = message->GetSignal("DBW_WhlRpm_FL")->GetResult();
+            out.front_right = message->GetSignal("DBW_WhlRpm_FR")->GetResult();
+            out.rear_left   = message->GetSignal("DBW_WhlRpm_RL")->GetResult();
+            out.rear_right  = message->GetSignal("DBW_WhlRpm_RR")->GetResult();
+          } else if (message->GetSignal("DBW_WhlSpdType")->GetResult() == WHEEL_SPEED_MUX1) {
+            out.front_left  = message->GetSignal("DBW_WhlSpd_FL")->GetResult();
+            out.front_right = message->GetSignal("DBW_WhlSpd_FR")->GetResult();
+            out.rear_left   = message->GetSignal("DBW_WhlSpd_RL")->GetResult();
+            out.rear_right  = message->GetSignal("DBW_WhlSpd_RR")->GetResult();
+          }
+
           pub_wheel_speeds_.publish(out);
           publishJointStates(msg->header.stamp, &out, NULL);
         }
@@ -511,12 +521,6 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           out.adaptive_cruise_increase_distance_button = message->GetSignal("DBW_DrvInptAccIncDistBtn")->GetResult() ? true : false;
           out.adaptive_cruise_decrease_distance_button = message->GetSignal("DBW_DrvInptAccDecDistBtn")->GetResult() ? true : false;
 
-          out.driver_door_ajar = message->GetSignal("DBW_OccupDrvDoorAjar")->GetResult() ? true : false;
-          out.passenger_door_ajar = message->GetSignal("DBW_OccupPsgDoorAjar")->GetResult() ? true : false;
-          out.rear_left_door_ajar = message->GetSignal("DBW_OccupRlDoorAjar")->GetResult() ? true : false;
-          out.rear_right_door_ajar = message->GetSignal("DBW_OccupRrDoorAjar")->GetResult() ? true : false;
-          out.liftgate_ajar = message->GetSignal("DBW_OccupLiftgateAjar")->GetResult() ? true : false;
-
           out.door_or_hood_ajar = message->GetSignal("DBW_OccupAnyDoorOrHoodAjar")->GetResult() ? true : false;
 
           out.airbag_deployed = message->GetSignal("DBW_OccupAnyAirbagDeployed")->GetResult() ? true : false;
@@ -540,11 +544,43 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
           out.fuel_level = (double)message->GetSignal("DBW_MiscFuelLvl")->GetResult();
 
-          out.drive_by_wire_enabled = (double)message->GetSignal("DBW_MiscByWireEnbl")->GetResult();
+          out.drive_by_wire_enabled = (double)message->GetSignal("DBW_MiscByWireEnbled")->GetResult();
           out.vehicle_speed = (double)message->GetSignal("DBW_MiscVehicleSpeed")->GetResult();
+
+          out.software_build_number = message->GetSignal("DBW_SoftwareBuildNumber")->GetResult();
+          out.general_actuator_fault = message->GetSignal("DBW_MiscFault")->GetResult() ? true : false;
+          out.by_wire_ready = message->GetSignal("DBW_MiscByWireReady")->GetResult() ? true : false;
+          out.general_driver_activity = message->GetSignal("DBW_MiscDriverActivity")->GetResult() ? true : false;
+          out.comms_fault = message->GetSignal("DBW_MiscAKitCommFault")->GetResult() ? true : false;        
 
           pub_misc_.publish(out);
         }
+      }
+      break;
+
+      case ID_LOW_VOLTAGE_SYSTEM_REPORT:
+      {
+        NewEagle::DbcMessage* message = dbwDbc_.GetMessageById(ID_LOW_VOLTAGE_SYSTEM_REPORT);
+
+        if (msg->dlc >= message->GetDlc()) {
+
+          message->SetFrame(msg);
+
+          dbw_pacifica_msgs::LowVoltageSystemReport lvSystemReport;
+          lvSystemReport.header.stamp = msg->header.stamp;
+
+          lvSystemReport.vehicle_battery_volts = (double)message->GetSignal("DBW_LvVehBattVlt")->GetResult();
+          lvSystemReport.vehicle_battery_current = (double)message->GetSignal("DBW_LvBattCurr")->GetResult();
+          lvSystemReport.vehicle_alternator_current = (double)message->GetSignal("DBW_LvAlternatorCurr")->GetResult();
+
+          lvSystemReport.aux_battery_volts = (double)message->GetSignal("DBW_LvDbwBattVlt")->GetResult();
+          lvSystemReport.aux_dcdc_current = (double)message->GetSignal("DBW_LvDcdcCurr")->GetResult();
+
+          lvSystemReport.aux_battery_contactor = message->GetSignal("DBW_LvBattContactorCmd")->GetResult() ? true : false;
+          lvSystemReport.aux_inverter_contactor = message->GetSignal("DBW_LvInvtrContactorCmd")->GetResult() ? true : false;
+
+          pub_misc_.publish(lvSystemReport);
+        }        
       }
       break;
 
@@ -577,29 +613,33 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
 {
   NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_BrakeCommand");
-
-  message->GetSignal("AKit_BrakeCtrlEnblCmd")->SetResult(0);
-  message->GetSignal("AKit_BrakePedalCmd")->SetResult(0);
+  
+  message->GetSignal("AKit_BrakePedalReq")->SetResult(0);
   message->GetSignal("AKit_BrakePedalCtrlMode")->SetResult(0);
-  message->GetSignal("AKit_BrakePedalClearDriverOvrd")->SetResult(0);
+  message->GetSignal("AKit_BrakeCtrlEnblReq")->SetResult(0);
+  message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(0);
+  message->GetSignal("AKit_BrakePcntTorqueReq")->SetResult(0);
+  message->GetSignal("AKit_SpeedModeAccelLim")->SetResult(0);
+  message->GetSignal("AKit_SpeedModeDecelLim")->SetResult(0);
 
   if (enabled()) {
-    message->GetSignal("AKit_BrakePedalCmd")->SetResult(msg->pedal_cmd);
-
-    message->GetSignal("AKit_BrakeCtrlEnblCmd")->SetResult(1);
+    if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::open_loop) {
+      message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(1);
+      message->GetSignal("AKit_BrakePcntTorqueReq")->SetResult(0);      
+    } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_actuator) {
+      message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(2);      
+      message->GetSignal("AKit_SpeedModeAccelLim")->SetResult(0);
+      message->GetSignal("AKit_SpeedModeDecelLim")->SetResult(0);
+    } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle) {
+      message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(3);      
+    } else {
+      message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(0);
+      message->GetSignal("AKit_BrakePedalReq")->SetResult(0);
+    }    
   }
 
-  NewEagle::DbcSignal* cnt = message->GetSignal("AKit_BrakeWatchdogCntr");
+  NewEagle::DbcSignal* cnt = message->GetSignal("AKit_BrakeRollingCntr");
   cnt->SetResult(msg->count);
-
-  if (msg->control_mode.value == 1)
-  {
-    message->GetSignal("AKit_BrakePedalCtrlMode")->SetResult(1);
-  }
-
-  if (clear() || msg->clear) {
-    message->GetSignal("AKit_BrakePedalClearDriverOvrd")->SetResult(1);
-  }
 
   can_msgs::Frame frame = message->GetFrame();
 
@@ -610,36 +650,36 @@ void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalC
 {
   NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_AccelPdlCommand");
 
-  message->GetSignal("AKit_AccelPdlEnblCmd")->SetResult(0);
-  message->GetSignal("AKit_AccelPdlCmd")->SetResult(0);
-
-  message->GetSignal("AKit_AccelPdlWatchdogCntr")->SetResult(0);
-  message->GetSignal("AKit_AccelPdlCtrlMode")->SetResult(0);
-  message->GetSignal("AKit_AccelPdlClearDriverOvrd")->SetResult(0);
+  message->GetSignal("AKit_AccelPdlReq")->SetResult(0);
+  message->GetSignal("AKit_AccelPdlEnblReq")->SetResult(0);
   message->GetSignal("Akit_AccelPdlIgnoreDriverOvrd")->SetResult(0);
+  message->GetSignal("AKit_AccelPdlRollingCntr")->SetResult(0);
+  message->GetSignal("AKit_AccelReqType")->SetResult(0);
+  message->GetSignal("AKit_AccelPcntTorqueReq")->SetResult(0);
+  message->GetSignal("AKit_SpeedReq")->SetResult(0);
+  message->GetSignal("AKit_SpeedModeRoadSlope")->SetResult(0);
 
   if (enabled()) {
-    message->GetSignal("AKit_AccelPdlCmd")->SetResult(msg->pedal_cmd);
 
-    message->GetSignal("AKit_AccelPdlEnblCmd")->SetResult(1);
+    if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::open_loop) {
+      message->GetSignal("AKit_AccelReqType")->SetResult(1);
+      message->GetSignal("AKit_AccelPcntTorqueReq")->SetResult(0);
+    } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_actuator) {
+      message->GetSignal("AKit_AccelReqType")->SetResult(2);
+      message->GetSignal("AKit_SpeedReq")->SetResult(0);
+    } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle) {
+      message->GetSignal("AKit_AccelReqType")->SetResult(3);      
+    } else {
+      message->GetSignal("AKit_AccelReqType")->SetResult(0);
+      message->GetSignal("AKit_AccelPdlReq")->SetResult(0);
+    }
+
+    message->GetSignal("AKit_AccelPdlEnblReq")->SetResult(1);
   }
 
-  NewEagle::DbcSignal* cnt = message->GetSignal("AKit_AccelPdlWatchdogCntr");
+  NewEagle::DbcSignal* cnt = message->GetSignal("AKit_AccelPdlRollingCntr");
   cnt->SetResult(msg->accelerator_pedal_cmd_rolling_counter);
 
-  if (msg->control_mode.value == 1)
-  message->GetSignal("AKit_AccelPdlWatchdogCntr")->SetResult(1);
-  {
-  }
-
-  if (msg->control_mode.value == 1)
-  {
-    message->GetSignal("AKit_AccelPdlCtrlMode")->SetResult(1);
-  }
-
-  if (clear() || msg->clear) {
-    message->GetSignal("AKit_AccelPdlClearDriverOvrd")->SetResult(1);
-  }
   if (msg->ignore) {
     message->GetSignal("Akit_AccelPdlIgnoreDriverOvrd")->SetResult(1);
   }
@@ -653,43 +693,52 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
 {
   NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_SteeringCommand");
 
-  message->GetSignal("AKit_SteerCtrlEnblCmd")->SetResult(0);
-  message->GetSignal("AKit_SteeringWhlAngleCmd")->SetResult(0);
-  message->GetSignal("AKit_SteeringWhlTrqCmd")->SetResult(0);
-  message->GetSignal("AKit_SteeringWhlAngleVelocity")->SetResult(0);
-  message->GetSignal("AKit_SteeringWhlClearDriverOvrd")->SetResult(0);
-  message->GetSignal("AKit_SteeringWhlIgnoreDriverOvrd")->SetResult(0);
-  message->GetSignal("AKit_SteeringWhlQuiet")->SetResult(0);
-  message->GetSignal("AKit_SteeringWhlCtrlMode")->SetResult(0);
+  message->GetSignal("AKit_SteeringWhlAngleReq")->SetResult(0);
+  message->GetSignal("AKit_SteeringWhlAngleVelocityLim")->SetResult(0);
+  message->GetSignal("AKit_SteerCtrlEnblReq")->SetResult(0);  
+
+  message->GetSignal("AKit_SteeringWhlIgnoreDriverOvrd")->SetResult(0);  
+  message->GetSignal("AKit_SteeringWhlPcntTrqReq")->SetResult(0);  
+  message->GetSignal("AKit_SteeringReqType")->SetResult(0);
+  message->GetSignal("AKit_SteeringVehCurvatureReq")->SetResult(0);
 
   if (enabled()) {
     message->GetSignal("AKit_SteeringWhlCmdType")->SetResult(msg->command_type.value);
 
-    if (0 == msg->command_type.value)
-    {
-      double scmd = std::max((float)-5000, std::min((float)5000, (float)(msg->steering_wheel_angle_cmd * (180 / M_PI * 10))));
+    // if (0 == msg->command_type.value)
+    // {
+    //   double scmd = std::max((float)-5000, std::min((float)5000, (float)(msg->steering_wheel_angle_cmd * (180 / M_PI * 10))));
 
-      scmd /= 10;
-      message->GetSignal("AKit_SteeringWhlAngleCmd")->SetResult(scmd);
-    }
-    else // torque mode
-    {
-      message->GetSignal("AKit_SteeringWhlTrqCmd")->SetResult(msg->steering_wheel_torque_cmd);
-    }
+    //   scmd /= 10;
+    //   message->GetSignal("AKit_SteeringWhlAngleCmd")->SetResult(scmd);
+    // }
+    // else // torque mode
+    // {
+    //   message->GetSignal("AKit_SteeringWhlTrqCmd")->SetResult(msg->steering_wheel_torque_cmd);
+    // }
+    if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::open_loop) {
+      message->GetSignal("AKit_SteeringReqType")->SetResult(1);
+      message->GetSignal("AKit_SteeringWhlAngleReq")->SetResult(0);      
+    } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_actuator) {
+      message->GetSignal("AKit_SteeringReqType")->SetResult(2);      
+      message->GetSignal("AKit_SteeringVehCurvatureReq")->SetResult(0);
+    } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle) {
+      message->GetSignal("AKit_SteeringReqType")->SetResult(3);      
+    } else {
+      message->GetSignal("AKit_SteeringReqType")->SetResult(0);
+      message->GetSignal("AKit_SteeringWhlPcntTrqReq")->SetResult(0);
+    }    
 
     if (fabsf(msg->steering_wheel_angle_velocity) > 0)
     {
       uint16_t vcmd =  std::max((float)1, std::min((float)254, (float)roundf(fabsf(msg->steering_wheel_angle_velocity) * 180 / M_PI / 2)));
 
-      message->GetSignal("AKit_SteeringWhlAngleVelocity")->SetResult(vcmd);
+      message->GetSignal("AKit_SteeringWhlAngleVelocityLim")->SetResult(vcmd);
     }
 
-    message->GetSignal("AKit_SteerCtrlEnblCmd")->SetResult(1);
+    message->GetSignal("AKit_SteerCtrlEnblReq")->SetResult(1);
   }
 
-  if (clear() || msg->clear) {
-    message->GetSignal("AKit_SteeringWhlClearDriverOvrd")->SetResult(1);
-  }
   if (msg->ignore) {
     message->GetSignal("AKit_SteeringWhlIgnoreDriverOvrd")->SetResult(1);
   }
@@ -697,12 +746,7 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
     message->GetSignal("AKit_SteeringWhlQuiet")->SetResult(1);
   }
 
-  if (msg->control_mode.value == 1)
-  {
-    message->GetSignal("AKit_SteeringWhlCtrlMode")->SetResult(1);
-  }
-
-  message->GetSignal("AKit_SteerCmdWatchdogCntr")->SetResult(msg->count);
+  message->GetSignal("AKit_SteerCmdRollingCntr")->SetResult(msg->count);
 
   can_msgs::Frame frame = message->GetFrame();
 
@@ -713,17 +757,14 @@ void DbwNode::recvGearCmd(const dbw_pacifica_msgs::GearCmd::ConstPtr& msg)
 {
   NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_GearCommand");
 
-  message->GetSignal("AKit_PrndStateCmd")->SetResult(0);
-  message->GetSignal("AKit_PrndClearDriverOvrd")->SetResult(0);
+  message->GetSignal("AKit_PrndEnblReq")->SetResult(0);
+  message->GetSignal("AKit_PrndStateReq")->SetResult(0);
 
   if (enabled()) {
-    message->GetSignal("AKit_PrndStateCmd")->SetResult(msg->cmd.gear);
-  }
-  if (clear() || msg->clear) {
-    message->GetSignal("AKit_PrndClearDriverOvrd")->SetResult(1);
-  }
+    message->GetSignal("AKit_PrndStateReq")->SetResult(msg->cmd.gear);
+  }  
 
-  message->GetSignal("AKit_PrndCmdWatchdogCntr")->SetResult(msg->gear_cmd_rolling_counter);
+  message->GetSignal("AKit_PrndCmdRollingCntr")->SetResult(msg->gear_cmd_rolling_counter);
 
   can_msgs::Frame frame = message->GetFrame();
 
@@ -734,15 +775,27 @@ void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
 {
   NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_Misc");
 
-  message->GetSignal("AKit_TurnSignalCmd")->SetResult(0);
+  message->GetSignal("AKit_TurnSignalReq")->SetResult(0);
+  message->GetSignal("AKit_RightRearDoorReq")->SetResult(0);
+  message->GetSignal("AKit_GlobalByWireEnblReq")->SetResult(0);
+  message->GetSignal("AKit_EnblJoystickLimits")->SetResult(0);
+  message->GetSignal("AKit_HighBeamReq")->SetResult(0);
+  message->GetSignal("AKit_FrontWiperReq")->SetResult(0);
+  message->GetSignal("AKit_RearWiperReq")->SetResult(0);
+  message->GetSignal("AKit_IgnitionReq")->SetResult(0);
+  message->GetSignal("AKit_LeftRearDoorReq")->SetResult(0);
+  message->GetSignal("AKit_LiftgateDoorReq")->SetResult(0);
+  message->GetSignal("AKit_SoftwareBuildNumber")->SetResult(0);
+  message->GetSignal("AKit_BlockBasicCruiseCtrlBtns")->SetResult(0);
+  message->GetSignal("AKit_BlockAdapCruiseCtrlBtns")->SetResult(0);
+  message->GetSignal("AKit_BlockTurnSigStalkInpts")->SetResult(0);
 
   if (enabled()) {
-    message->GetSignal("AKit_TurnSignalCmd")->SetResult(msg->cmd.value);
+    message->GetSignal("AKit_GlobalByWireEnblReq")->SetResult(1);
+    message->GetSignal("AKit_TurnSignalReq")->SetResult(msg->cmd.value);
   }
 
-  message->GetSignal("AKit_DoorToggleReq")->SetResult(msg->door_request.value);
-
-  message->GetSignal("AKit_MiscCmdWatchdogCntr")->SetResult(msg->misc_cmd_rolling_counter);
+  message->GetSignal("AKit_MiscCmdRollingCntr")->SetResult(msg->misc_cmd_rolling_counter);
 
   can_msgs::Frame frame = message->GetFrame();
 
@@ -775,7 +828,6 @@ void DbwNode::timerCallback(const ros::TimerEvent& event)
       message->GetSignal("AKit_BrakePedalCmd")->SetResult(0);
       message->GetSignal("AKit_BrakeCtrlEnblCmd")->SetResult(0);
       message->GetSignal("AKit_BrakePedalCtrlMode")->SetResult(0);
-      message->GetSignal("AKit_BrakePedalClearDriverOvrd")->SetResult(1);
       pub_can_.publish(message->GetFrame());
     }
 
@@ -787,7 +839,6 @@ void DbwNode::timerCallback(const ros::TimerEvent& event)
       message->GetSignal("AKit_AccelPdlEnblCmd")->SetResult(0);
       message->GetSignal("Akit_AccelPdlIgnoreDriverOvrd")->SetResult(0);
       message->GetSignal("AKit_AccelPdlCtrlMode")->SetResult(0);
-      message->GetSignal("AKit_AccelPdlClearDriverOvrd")->SetResult(1);
       pub_can_.publish(message->GetFrame());
     }
 
@@ -801,7 +852,6 @@ void DbwNode::timerCallback(const ros::TimerEvent& event)
       message->GetSignal("AKit_SteeringWhlTrqCmd")->SetResult(0);
       message->GetSignal("AKit_SteeringWhlCtrlMode")->SetResult(0);
       message->GetSignal("AKit_SteeringWhlCmdType")->SetResult(0);
-      message->GetSignal("AKit_SteeringWhlClearDriverOvrd")->SetResult(1);
 
       pub_can_.publish(message->GetFrame());
     }
@@ -809,7 +859,6 @@ void DbwNode::timerCallback(const ros::TimerEvent& event)
     if (override_gear_) {
       NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_GearCommand");
       message->GetSignal("AKit_PrndStateCmd")->SetResult(0);
-      message->GetSignal("AKit_PrndClearDriverOvrd")->SetResult(1);
       pub_can_.publish(message->GetFrame());
     }
   }
@@ -1038,53 +1087,54 @@ void DbwNode::faultWatchdog(bool fault, uint8_t src, bool braking)
     ROS_INFO("Watchdog event: Driver has successfully taken control.");
   }
   if (fault && src && !fault_watchdog_warned_) {
-      switch (src) {
-        case dbw_pacifica_msgs::WatchdogStatus::OTHER_BRAKE:
-          ROS_WARN("Watchdog event: Fault determined by brake controller");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::OTHER_ACCELERATOR_PEDAL:
-          ROS_WARN("Watchdog event: Fault determined by Accelerator Pedal controller");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::OTHER_STEERING:
-          ROS_WARN("Watchdog event: Fault determined by steering controller");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::BRAKE_COUNTER:
-          ROS_WARN("Watchdog event: Brake command counter failed to increment");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::BRAKE_DISABLED:
-          ROS_WARN("Watchdog event: Brake transition to disabled while in gear or moving");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::BRAKE_COMMAND:
-          ROS_WARN("Watchdog event: Brake command timeout after 100ms");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::BRAKE_REPORT:
-          ROS_WARN("Watchdog event: Brake report timeout after 100ms");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_COUNTER:
-          ROS_WARN("Watchdog event: Accelerator Pedal command counter failed to increment");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_DISABLED:
-          ROS_WARN("Watchdog event: Accelerator Pedal transition to disabled while in gear or moving");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_COMMAND:
-          ROS_WARN("Watchdog event: Accelerator Pedal command timeout after 100ms");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_REPORT:
-          ROS_WARN("Watchdog event: Accelerator Pedal report timeout after 100ms");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::STEERING_COUNTER:
-          ROS_WARN("Watchdog event: Steering command counter failed to increment");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::STEERING_DISABLED:
-          ROS_WARN("Watchdog event: Steering transition to disabled while in gear or moving");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::STEERING_COMMAND:
-          ROS_WARN("Watchdog event: Steering command timeout after 100ms");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::STEERING_REPORT:
-          ROS_WARN("Watchdog event: Steering report timeout after 100ms");
-          break;
-      }
+    ROS_WARN("Watchdog event: Unknown Fault!");
+      // switch (src) {
+      //   case dbw_pacifica_msgs::WatchdogStatus::OTHER_BRAKE:
+      //     ROS_WARN("Watchdog event: Fault determined by brake controller");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::OTHER_ACCELERATOR_PEDAL:
+      //     ROS_WARN("Watchdog event: Fault determined by Accelerator Pedal controller");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::OTHER_STEERING:
+      //     ROS_WARN("Watchdog event: Fault determined by steering controller");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::BRAKE_COUNTER:
+      //     ROS_WARN("Watchdog event: Brake command counter failed to increment");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::BRAKE_DISABLED:
+      //     ROS_WARN("Watchdog event: Brake transition to disabled while in gear or moving");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::BRAKE_COMMAND:
+      //     ROS_WARN("Watchdog event: Brake command timeout after 100ms");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::BRAKE_REPORT:
+      //     ROS_WARN("Watchdog event: Brake report timeout after 100ms");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_COUNTER:
+      //     ROS_WARN("Watchdog event: Accelerator Pedal command counter failed to increment");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_DISABLED:
+      //     ROS_WARN("Watchdog event: Accelerator Pedal transition to disabled while in gear or moving");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_COMMAND:
+      //     ROS_WARN("Watchdog event: Accelerator Pedal command timeout after 100ms");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_REPORT:
+      //     ROS_WARN("Watchdog event: Accelerator Pedal report timeout after 100ms");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::STEERING_COUNTER:
+      //     ROS_WARN("Watchdog event: Steering command counter failed to increment");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::STEERING_DISABLED:
+      //     ROS_WARN("Watchdog event: Steering transition to disabled while in gear or moving");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::STEERING_COMMAND:
+      //     ROS_WARN("Watchdog event: Steering command timeout after 100ms");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::STEERING_REPORT:
+      //     ROS_WARN("Watchdog event: Steering report timeout after 100ms");
+      //     break;
+      // }
       fault_watchdog_warned_ = true;
   } else if (!fault) {
     fault_watchdog_warned_ = false;

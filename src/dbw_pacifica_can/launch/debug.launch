@@ -6,7 +6,7 @@
       name="dbw"
       respawn="true"
       >
-      <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)Pacifica_AKit_DBW_Comms.dbc" />
+      <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)New_Eagle_DBW.dbc" />
       <remap from="/can_rx" to="/can0/can_rx" />
       <remap from="/can_tx" to="/can0/can_tx" />
   </node>
