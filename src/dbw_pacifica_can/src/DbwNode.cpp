@@ -664,9 +664,9 @@ void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalC
       message->GetSignal("AKit_AccelPcntTorqueReq")->SetResult(0);
     } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_actuator) {
       message->GetSignal("AKit_AccelReqType")->SetResult(2);
-    } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle) {
-      message->GetSignal("AKit_AccelReqType")->SetResult(3);
       message->GetSignal("AKit_SpeedReq")->SetResult(0);
+    } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle) {
+      message->GetSignal("AKit_AccelReqType")->SetResult(3);      
     } else {
       message->GetSignal("AKit_AccelReqType")->SetResult(0);
       message->GetSignal("AKit_AccelPdlReq")->SetResult(0);
@@ -708,26 +708,38 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
   if (enabled()) {
     message->GetSignal("AKit_SteeringWhlCmdType")->SetResult(msg->command_type.value);
 
-    if (0 == msg->command_type.value)
-    {
-      double scmd = std::max((float)-5000, std::min((float)5000, (float)(msg->steering_wheel_angle_cmd * (180 / M_PI * 10))));
+    // if (0 == msg->command_type.value)
+    // {
+    //   double scmd = std::max((float)-5000, std::min((float)5000, (float)(msg->steering_wheel_angle_cmd * (180 / M_PI * 10))));
 
-      scmd /= 10;
-      message->GetSignal("AKit_SteeringWhlAngleCmd")->SetResult(scmd);
-    }
-    else // torque mode
-    {
-      message->GetSignal("AKit_SteeringWhlTrqCmd")->SetResult(msg->steering_wheel_torque_cmd);
-    }
+    //   scmd /= 10;
+    //   message->GetSignal("AKit_SteeringWhlAngleCmd")->SetResult(scmd);
+    // }
+    // else // torque mode
+    // {
+    //   message->GetSignal("AKit_SteeringWhlTrqCmd")->SetResult(msg->steering_wheel_torque_cmd);
+    // }
+    if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::open_loop) {
+      message->GetSignal("AKit_SteeringReqType")->SetResult(1);
+      message->GetSignal("AKit_SteeringWhlAngleReq")->SetResult(0);      
+    } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_actuator) {
+      message->GetSignal("AKit_SteeringReqType")->SetResult(2);      
+      message->GetSignal("AKit_SteeringVehCurvatureReq")->SetResult(0);
+    } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle) {
+      message->GetSignal("AKit_SteeringReqType")->SetResult(3);      
+    } else {
+      message->GetSignal("AKit_AccelReqType")->SetResult(0);
+      message->GetSignal("AKit_SteeringWhlPcntTrqReq")->SetResult(0);
+    }    
 
     if (fabsf(msg->steering_wheel_angle_velocity) > 0)
     {
       uint16_t vcmd =  std::max((float)1, std::min((float)254, (float)roundf(fabsf(msg->steering_wheel_angle_velocity) * 180 / M_PI / 2)));
 
-      message->GetSignal("AKit_SteeringWhlAngleVelocity")->SetResult(vcmd);
+      message->GetSignal("AKit_SteeringWhlAngleVelocityLim")->SetResult(vcmd);
     }
 
-    message->GetSignal("AKit_SteerCtrlEnblCmd")->SetResult(1);
+    message->GetSignal("AKit_SteerCtrlEnblReq")->SetResult(1);
   }
 
   if (clear() || msg->clear) {
@@ -740,7 +752,7 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
     message->GetSignal("AKit_SteeringWhlQuiet")->SetResult(1);
   }
 
-  message->GetSignal("AKit_SteerCmdWatchdogCntr")->SetResult(msg->count);
+  message->GetSignal("AKit_SteerCmdRollingCntr")->SetResult(msg->count);
 
   can_msgs::Frame frame = message->GetFrame();
 
