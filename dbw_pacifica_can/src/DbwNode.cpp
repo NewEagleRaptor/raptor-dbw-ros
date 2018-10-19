@@ -553,6 +553,12 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           out.drive_by_wire_enabled = (double)message->GetSignal("DBW_MiscByWireEnbled")->GetResult();
           out.vehicle_speed = (double)message->GetSignal("DBW_MiscVehicleSpeed")->GetResult();
 
+          out.software_build_number = message->GetSignal("DBW_SoftwareBuildNumber")->GetResult();
+          out.general_actuator_fault = message->GetSignal("DBW_MiscFault")->GetResult() ? true : false;
+          out.by_wire_ready = message->GetSignal("DBW_MiscByWireReady")->GetResult() ? true : false;
+          out.general_driver_activity = message->GetSignal("DBW_MiscDriverActivity")->GetResult() ? true : false;
+          out.comms_fault = message->GetSignal("DBW_MiscAKitCommFault")->GetResult() ? true : false;        
+
           pub_misc_.publish(out);
         }
       }
