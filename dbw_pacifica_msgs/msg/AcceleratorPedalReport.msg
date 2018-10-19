@@ -19,3 +19,9 @@ bool fault_dbw_system
 # Faults
 bool fault_ch1
 bool fault_ch2
+
+uint8 rolling_counter
+
+float32 torque_actual #Nm
+
+ActuatorControlMode control_type

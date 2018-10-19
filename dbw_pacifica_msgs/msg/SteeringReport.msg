@@ -20,6 +20,6 @@ bool fault_bus2
 bool fault_calibration
 bool fault_power
 
-uint8 steering_report_rolling_counter
+uint8 rolling_counter
 
-SteeringControlMode steering_control_type
+ActuatorControlMode control_type

@@ -210,28 +210,37 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           bool faultCh1 = message->GetSignal("DBW_AccelPdlFault_Ch1")->GetResult() ? true : false;
           bool faultCh2 = message->GetSignal("DBW_AccelPdlFault_Ch2")->GetResult() ? true : false;
           bool accelPdlSystemFault = message->GetSignal("DBW_AccelPdlFault")->GetResult() ? true : false;
-          bool dbwSystemFault = message->GetSignal("DBW_MiscFault_AccelRpt")->GetResult() ? true : false;
-          uint8_t watchdog_status = message->GetSignal("DBW_AccelPdlWatchdogStatus")->GetResult();
+          //uint8_t watchdog_status = message->GetSignal("DBW_AccelPdlWatchdogStatus")->GetResult();
+          //bool dbwSystemFault = message->GetSignal("DBW_MiscFault_AccelRpt")->GetResult() ? true : false;
+
+          uint16_t positionFeedback = message->GetSignal("DBW_AccelPdlPosnFdbck")->GetResult(); 
+
 
           faultAcceleratorPedal(faultCh1 && faultCh2);
-          faultWatchdog(dbwSystemFault, watchdog_status);
+          faultWatchdog(dbwSystemFault, accelPdlSystemFault);
 
           overrideAcceleratorPedal(message->GetSignal("DBW_AccelPdlDriverActivity")->GetResult());
 
-          dbw_pacifica_msgs::AcceleratorPedalReport out;
-          out.header.stamp = msg->header.stamp;
-          out.pedal_input  = message->GetSignal("DBW_AccelPdlDriverInput")->GetResult();
-          out.pedal_output = message->GetSignal("DBW_AccelPdlOutput")->GetResult();
-          out.enabled = message->GetSignal("DBW_AccelPdlEnabled")->GetResult() ? true : false;
-          out.ignore_driver = message->GetSignal("DBW_AccelPdlIgnoreDriver")->GetResult() ? true : false;
-          out.driver = message->GetSignal("DBW_AccelPdlDriverActivity")->GetResult() ? true : false;
-          out.watchdog_status.source = watchdog_status;
-          out.fault_accel_pedal_system = accelPdlSystemFault;
-          out.fault_dbw_system = dbwSystemFault;
-          out.fault_ch1 = faultCh1;
-          out.fault_ch2 = faultCh2;
+          dbw_pacifica_msgs::AcceleratorPedalReport accelPedalReprt;
+          accelPedalReprt.header.stamp = msg->header.stamp;
+          accelPedalReprt.pedal_input  = message->GetSignal("DBW_AccelPdlDriverInput")->GetResult();
+          accelPedalReprt.pedal_output = message->GetSignal("DBW_AccelPdlPosnFdbck")->GetResult();
+          accelPedalReprt.enabled = message->GetSignal("DBW_AccelPdlEnabled")->GetResult() ? true : false;
+          accelPedalReprt.ignore_driver = message->GetSignal("DBW_AccelPdlIgnoreDriver")->GetResult() ? true : false;
+          accelPedalReprt.driver = message->GetSignal("DBW_AccelPdlDriverActivity")->GetResult() ? true : false;
+          accelPedalReprt.torque_actual = message->GetSignal("DBW_AccelTorqueActual")->GetResult();
 
-          pub_accel_pedal_.publish(out);
+          accelPedalReprt.control_type.value = message->GetSignal("DBW_AccelTorqueActual")->GetResult();
+
+          accelPedalReprt.rolling_counter =  message->GetSignal("DBW_AccelPdlRollingCntr")->GetResult();
+
+          accelPedalReprt.watchdog_status.source = watchdog_status;
+          accelPedalReprt.fault_accel_pedal_system = accelPdlSystemFault;
+          accelPedalReprt.fault_dbw_system = dbwSystemFault;
+          accelPedalReprt.fault_ch1 = faultCh1;
+          accelPedalReprt.fault_ch2 = faultCh2;
+
+          pub_accel_pedal_.publish(accelPedalReprt);
 
           if (faultCh1 || faultCh2) {
             ROS_WARN_THROTTLE(5.0, "Accelerator Pedal fault. FLT1: %s FLT2: %s",
@@ -250,7 +259,6 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           message->SetFrame(msg);
 
           bool steeringSystemFault = message->GetSignal("DBW_SteeringFault")->GetResult() ? true : false;
-          bool dbwSystemFault = message->GetSignal("DBW_MiscFault_SteerRpt")->GetResult() ? true : false;
           uint8_t watchdog_status = message->GetSignal("DBW_SteeringWatchdogStatus")->GetResult();
 
           faultSteering(steeringSystemFault);
@@ -258,30 +266,25 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           faultWatchdog(dbwSystemFault);
           overrideSteering(message->GetSignal("DBW_SteeringDriverActivity")->GetResult() ? true : false);
 
-          dbw_pacifica_msgs::SteeringReport out;
-          out.header.stamp = msg->header.stamp;
-          out.steering_wheel_angle = message->GetSignal("DBW_SteeringWhlAngleAct")->GetResult() * (0.1 * M_PI / 180);
-          out.steering_wheel_angle_cmd = message->GetSignal("DBW_SteeringWhlAngleDes")->GetResult() * (0.1 * M_PI / 180);
-          out.steering_wheel_torque = message->GetSignal("DBW_SteeringWhlTorqueCmd")->GetResult() * 0.0625;
+          dbw_pacifica_msgs::SteeringReport steeringReport;
+          steeringReport.header.stamp = msg->header.stamp;
+          steeringReport.steering_wheel_angle = message->GetSignal("DBW_SteeringWhlAngleAct")->GetResult() * (0.1 * M_PI / 180);
+          steeringReport.steering_wheel_angle_cmd = message->GetSignal("DBW_SteeringWhlAngleDes")->GetResult() * (0.1 * M_PI / 180);
+          steeringReport.steering_wheel_torque = message->GetSignal("DBW_SteeringWhlTorqueCmd")->GetResult() * 0.0625;
 
-          out.enabled = message->GetSignal("DBW_SteeringEnabled")->GetResult() ? true : false;
-          out.driver_override = message->GetSignal("DBW_SteeringDriverActivity")->GetResult() ? true : false;
+          steeringReport.enabled = message->GetSignal("DBW_SteeringEnabled")->GetResult() ? true : false;
+          steeringReport.driver_override = message->GetSignal("DBW_SteeringDriverActivity")->GetResult() ? true : false;
 
-          out.fault_dbw_system = dbwSystemFault;
+          steeringReport.fault_dbw_system = dbwSystemFault;
 
-          out.watchdog_status.source = watchdog_status;
+          steeringReport.watchdog_status.source = watchdog_status;
 
-          out.steering_report_rolling_counter =  message->GetSignal("DBW_SteeringWatchdogCntr")->GetResult();
+          steeringReport.rolling_counter =  message->GetSignal("DBW_SteeringRollingCntr")->GetResult();
+
+          steeringReport.control_type.value =  message->GetSignal("DBW_SteeringCtrlType")->GetResult();
 
           pub_steering_.publish(out);
 
-          // Borchert - Leaving this code... in case it is needed.
-          //geometry_msgs::TwistStamped twist;
-          //twist.header.stamp = out.header.stamp;
-          //twist.header.frame_id = frame_id_;
-          //twist.twist.linear.x = out.speed;
-          //twist.twist.angular.z = out.speed * tan(out.steering_wheel_angle / steering_ratio_) / acker_wheelbase_;
-          //pub_twist_.publish(twist);
           publishJointStates(msg->header.stamp, NULL, &out);
 
           if (steeringSystemFault) {
@@ -540,7 +543,7 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
           out.fuel_level = (double)message->GetSignal("DBW_MiscFuelLvl")->GetResult();
 
-          out.drive_by_wire_enabled = (double)message->GetSignal("DBW_MiscByWireEnbl")->GetResult();
+          out.drive_by_wire_enabled = (double)message->GetSignal("DBW_MiscByWireEnbled")->GetResult();
           out.vehicle_speed = (double)message->GetSignal("DBW_MiscVehicleSpeed")->GetResult();
 
           pub_misc_.publish(out);
