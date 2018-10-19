@@ -55,6 +55,7 @@
 #include <dbw_pacifica_msgs/TirePressureReport.h>
 #include <dbw_pacifica_msgs/SurroundReport.h>
 #include <dbw_pacifica_msgs/DriverInputReport.h>
+#include <dbw_pacifica_msgs/LowVoltageSystemReport.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/JointState.h>
 #include <geometry_msgs/TwistStamped.h>

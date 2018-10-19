@@ -8,8 +8,6 @@ float32 pedal_output
 bool enabled  # Enabled
 bool driver   # Driver activity
 
-# Watchdog Counter
-WatchdogStatus watchdog_status
 bool fault_brake_system
 bool fault_dbw_system
 

@@ -179,7 +179,7 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
           brakeReport.enabled = message->GetSignal("DBW_BrakeEnabled")->GetResult() ? true : false;
           brakeReport.driver = message->GetSignal("DBW_BrakeDriverActivity")->GetResult() ? true : false;
-          brakeReport.watchdog_status.source = watchdog_status;
+          //brakeReport.watchdog_status.source = watchdog_status;
           brakeReport.fault_brake_system = brakeSystemFault;
           brakeReport.fault_dbw_system =  dbwSystemFault;
           brakeReport.fault_ch2 = faultCh2;
@@ -237,7 +237,7 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
           accelPedalReprt.rolling_counter =  message->GetSignal("DBW_AccelPdlRollingCntr")->GetResult();
 
-          accelPedalReprt.watchdog_status.source = watchdog_status;
+          //accelPedalReprt.watchdog_status.source = watchdog_status;
           accelPedalReprt.fault_accel_pedal_system = accelPdlSystemFault;
           accelPedalReprt.fault_dbw_system = dbwSystemFault;
           accelPedalReprt.fault_ch1 = faultCh1;
@@ -262,7 +262,8 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           message->SetFrame(msg);
 
           bool steeringSystemFault = message->GetSignal("DBW_SteeringFault")->GetResult() ? true : false;
-          uint8_t watchdog_status = message->GetSignal("DBW_SteeringWatchdogStatus")->GetResult();
+          //uint8_t watchdog_status = message->GetSignal("DBW_SteeringWatchdogStatus")->GetResult();
+          bool dbwSystemFault = steeringSystemFault;
 
           faultSteering(steeringSystemFault);
 
@@ -280,15 +281,15 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
           steeringReport.fault_dbw_system = dbwSystemFault;
 
-          steeringReport.watchdog_status.source = watchdog_status;
+          //steeringReport.watchdog_status.source = watchdog_status;
 
           steeringReport.rolling_counter =  message->GetSignal("DBW_SteeringRollingCntr")->GetResult();
 
           steeringReport.control_type.value =  message->GetSignal("DBW_SteeringCtrlType")->GetResult();
 
-          pub_steering_.publish(out);
+          pub_steering_.publish(steeringReport);
 
-          publishJointStates(msg->header.stamp, NULL, &out);
+          publishJointStates(msg->header.stamp, NULL, &steeringReport);
 
           if (steeringSystemFault) {
             ROS_WARN_THROTTLE(5.0, "Steering fault: %s",
@@ -319,28 +320,28 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
           if (msg->dlc >= message->GetDlc()) {
             out.reject = message->GetSignal("DBW_PrndStateReject")->GetResult() ? true : false;
-            if (out.reject.value == dbw_pacifica_msgs::GearReject::NONE) {
-              gear_warned_ = false;
-            } else if (!gear_warned_) {
-              gear_warned_ = true;
-              switch (out.reject.value) {
-                case dbw_pacifica_msgs::GearReject::SHIFT_IN_PROGRESS:
-                  ROS_WARN("Gear shift rejected: Shift in progress");
-                  break;
-                case dbw_pacifica_msgs::GearReject::OVERRIDE:
-                  ROS_WARN("Gear shift rejected: Override on brake, Accelerator Pedal, or steering");
-                  break;
-                case dbw_pacifica_msgs::GearReject::ROTARY_LOW:
-                  ROS_WARN("Gear shift rejected: Rotary shifter can't shift to Low");
-                  break;
-                case dbw_pacifica_msgs::GearReject::ROTARY_PARK:
-                  ROS_WARN("Gear shift rejected: Rotary shifter can't shift out of Park");
-                  break;
-                case dbw_pacifica_msgs::GearReject::VEHICLE:
-                  ROS_WARN("Gear shift rejected: Rejected by vehicle, try pressing the brakes");
-                  break;
-              }
-            }
+            // if (out.reject.value == dbw_pacifica_msgs::GearReject::NONE) {
+            //   gear_warned_ = false;
+            // } else if (!gear_warned_) {
+            //   gear_warned_ = true;
+            //   switch (out.reject.value) {
+            //     case dbw_pacifica_msgs::GearReject::SHIFT_IN_PROGRESS:
+            //       ROS_WARN("Gear shift rejected: Shift in progress");
+            //       break;
+            //     case dbw_pacifica_msgs::GearReject::OVERRIDE:
+            //       ROS_WARN("Gear shift rejected: Override on brake, Accelerator Pedal, or steering");
+            //       break;
+            //     case dbw_pacifica_msgs::GearReject::ROTARY_LOW:
+            //       ROS_WARN("Gear shift rejected: Rotary shifter can't shift to Low");
+            //       break;
+            //     case dbw_pacifica_msgs::GearReject::ROTARY_PARK:
+            //       ROS_WARN("Gear shift rejected: Rotary shifter can't shift out of Park");
+            //       break;
+            //     case dbw_pacifica_msgs::GearReject::VEHICLE:
+            //       ROS_WARN("Gear shift rejected: Rejected by vehicle, try pressing the brakes");
+            //       break;
+            //   }
+            // }
           }
           pub_gear_.publish(out);
         }
@@ -1080,53 +1081,54 @@ void DbwNode::faultWatchdog(bool fault, uint8_t src, bool braking)
     ROS_INFO("Watchdog event: Driver has successfully taken control.");
   }
   if (fault && src && !fault_watchdog_warned_) {
-      switch (src) {
-        case dbw_pacifica_msgs::WatchdogStatus::OTHER_BRAKE:
-          ROS_WARN("Watchdog event: Fault determined by brake controller");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::OTHER_ACCELERATOR_PEDAL:
-          ROS_WARN("Watchdog event: Fault determined by Accelerator Pedal controller");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::OTHER_STEERING:
-          ROS_WARN("Watchdog event: Fault determined by steering controller");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::BRAKE_COUNTER:
-          ROS_WARN("Watchdog event: Brake command counter failed to increment");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::BRAKE_DISABLED:
-          ROS_WARN("Watchdog event: Brake transition to disabled while in gear or moving");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::BRAKE_COMMAND:
-          ROS_WARN("Watchdog event: Brake command timeout after 100ms");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::BRAKE_REPORT:
-          ROS_WARN("Watchdog event: Brake report timeout after 100ms");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_COUNTER:
-          ROS_WARN("Watchdog event: Accelerator Pedal command counter failed to increment");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_DISABLED:
-          ROS_WARN("Watchdog event: Accelerator Pedal transition to disabled while in gear or moving");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_COMMAND:
-          ROS_WARN("Watchdog event: Accelerator Pedal command timeout after 100ms");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_REPORT:
-          ROS_WARN("Watchdog event: Accelerator Pedal report timeout after 100ms");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::STEERING_COUNTER:
-          ROS_WARN("Watchdog event: Steering command counter failed to increment");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::STEERING_DISABLED:
-          ROS_WARN("Watchdog event: Steering transition to disabled while in gear or moving");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::STEERING_COMMAND:
-          ROS_WARN("Watchdog event: Steering command timeout after 100ms");
-          break;
-        case dbw_pacifica_msgs::WatchdogStatus::STEERING_REPORT:
-          ROS_WARN("Watchdog event: Steering report timeout after 100ms");
-          break;
-      }
+    ROS_WARN("Watchdog event: Unknown Fault!");
+      // switch (src) {
+      //   case dbw_pacifica_msgs::WatchdogStatus::OTHER_BRAKE:
+      //     ROS_WARN("Watchdog event: Fault determined by brake controller");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::OTHER_ACCELERATOR_PEDAL:
+      //     ROS_WARN("Watchdog event: Fault determined by Accelerator Pedal controller");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::OTHER_STEERING:
+      //     ROS_WARN("Watchdog event: Fault determined by steering controller");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::BRAKE_COUNTER:
+      //     ROS_WARN("Watchdog event: Brake command counter failed to increment");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::BRAKE_DISABLED:
+      //     ROS_WARN("Watchdog event: Brake transition to disabled while in gear or moving");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::BRAKE_COMMAND:
+      //     ROS_WARN("Watchdog event: Brake command timeout after 100ms");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::BRAKE_REPORT:
+      //     ROS_WARN("Watchdog event: Brake report timeout after 100ms");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_COUNTER:
+      //     ROS_WARN("Watchdog event: Accelerator Pedal command counter failed to increment");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_DISABLED:
+      //     ROS_WARN("Watchdog event: Accelerator Pedal transition to disabled while in gear or moving");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_COMMAND:
+      //     ROS_WARN("Watchdog event: Accelerator Pedal command timeout after 100ms");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::ACCELERATOR_PEDAL_REPORT:
+      //     ROS_WARN("Watchdog event: Accelerator Pedal report timeout after 100ms");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::STEERING_COUNTER:
+      //     ROS_WARN("Watchdog event: Steering command counter failed to increment");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::STEERING_DISABLED:
+      //     ROS_WARN("Watchdog event: Steering transition to disabled while in gear or moving");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::STEERING_COMMAND:
+      //     ROS_WARN("Watchdog event: Steering command timeout after 100ms");
+      //     break;
+      //   case dbw_pacifica_msgs::WatchdogStatus::STEERING_REPORT:
+      //     ROS_WARN("Watchdog event: Steering report timeout after 100ms");
+      //     break;
+      // }
       fault_watchdog_warned_ = true;
   } else if (!fault) {
     fault_watchdog_warned_ = false;

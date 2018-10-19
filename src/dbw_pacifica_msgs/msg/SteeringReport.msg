@@ -9,8 +9,6 @@ float32 steering_wheel_torque     # 0 to 100%
 bool enabled  # Enabled
 bool driver_override
 
-# Watchdog Counter
-WatchdogStatus watchdog_status
 bool fault_steering_system
 bool fault_dbw_system
 

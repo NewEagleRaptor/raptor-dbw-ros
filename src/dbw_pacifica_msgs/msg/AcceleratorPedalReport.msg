@@ -11,8 +11,6 @@ bool ignore_driver
 bool override # Driver override
 bool driver   # Driver activity
 
-# Watchdog Counter
-WatchdogStatus watchdog_status
 bool fault_accel_pedal_system
 bool fault_dbw_system
 
