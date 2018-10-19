@@ -8,33 +8,35 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 add_message_files(DIRECTORY msg FILES
-  BrakeCmd.msg
-  BrakeReport.msg
-  Gear.msg
-  GearCmd.msg
-  GearReject.msg
-  GearReport.msg
-  MiscReport.msg
-  ParkingBrake.msg
-  SteeringCmd.msg
-  SteeringReport.msg
   AcceleratorPedalCmd.msg
   AcceleratorPedalReport.msg
-  TirePressureReport.msg
-  TurnSignal.msg
+  ActuatorControlMode.msg
+  BrakeCmd.msg
+  BrakeReport.msg
+  ControlMode.msg
+  DoorRequest.msg
+  DriverInputReport.msg 
+  Gear.msg
+  GearCmd.msg  
+  GearReport.msg
+  HighBeam.msg
+  LowVoltageSystemReport.msg
   MiscCmd.msg
+  MiscReport.msg  
+  ParkingBrake.msg
+  SonarArcNum.msg  
+  SteeringCmd.msg
+  SteeringCommandType.msg
+  SteeringReport.msg
+  SurroundReport.msg  
+  TirePressureReport.msg
+  TurnSignal.msg  
   TwistCmd.msg
+  WatchdogStatus.msg
   WheelPositionReport.msg
   WheelSpeedReport.msg
-  Wiper.msg
-  SonarArcNum.msg
-  SurroundReport.msg
-  WatchdogStatus.msg
-  DriverInputReport.msg
-  HighBeam.msg
-  ControlMode.msg
-  SteeringCommandType.msg
-  DoorRequest.msg
+  Wiper.msg  
+  
 )
 
 generate_messages(DEPENDENCIES
