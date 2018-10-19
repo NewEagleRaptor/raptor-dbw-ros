@@ -162,13 +162,10 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
           bool faultCh1 = message->GetSignal("DBW_BrakeFault_Ch1")->GetResult() ? true : false;
           bool faultCh2 = message->GetSignal("DBW_BrakeFault_Ch2")->GetResult() ? true : false;
-          //bool dbwSystemFault = message->GetSignal("DBW_MiscFault_BrkRpt")->GetResult() ? true : false;
-          //uint8_t watchdog_status = message->GetSignal("DBW_BrakeWatchdogStatus")->GetResult();
           bool brakeSystemFault = message->GetSignal("DBW_BrakeFault")->GetResult() ? true : false;
           bool dbwSystemFault = brakeSystemFault;
 
           faultBrakes(faultCh1 && faultCh2);
-          //faultWatchdog(dbwSystemFault, watchdog_status, brakeSystemFault);
           faultWatchdog(dbwSystemFault, brakeSystemFault);
 
           overrideBrake(message->GetSignal("DBW_BrakeDriverActivity")->GetResult());
@@ -237,7 +234,6 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
           accelPedalReprt.rolling_counter =  message->GetSignal("DBW_AccelPdlRollingCntr")->GetResult();
 
-          //accelPedalReprt.watchdog_status.source = watchdog_status;
           accelPedalReprt.fault_accel_pedal_system = accelPdlSystemFault;
           accelPedalReprt.fault_dbw_system = dbwSystemFault;
           accelPedalReprt.fault_ch1 = faultCh1;
@@ -262,7 +258,6 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           message->SetFrame(msg);
 
           bool steeringSystemFault = message->GetSignal("DBW_SteeringFault")->GetResult() ? true : false;
-          //uint8_t watchdog_status = message->GetSignal("DBW_SteeringWatchdogStatus")->GetResult();
           bool dbwSystemFault = steeringSystemFault;
 
           faultSteering(steeringSystemFault);
@@ -280,8 +275,6 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           steeringReport.driver_override = message->GetSignal("DBW_SteeringDriverActivity")->GetResult() ? true : false;
 
           steeringReport.fault_dbw_system = dbwSystemFault;
-
-          //steeringReport.watchdog_status.source = watchdog_status;
 
           steeringReport.rolling_counter =  message->GetSignal("DBW_SteeringRollingCntr")->GetResult();
 
@@ -680,8 +673,6 @@ void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalC
       message->GetSignal("AKit_AccelReqType")->SetResult(0);
       message->GetSignal("AKit_AccelPdlReq")->SetResult(0);
     }
-
-    //message->GetSignal("AKit_AccelPdlCmd")->SetResult(msg->pedal_cmd);
 
     message->GetSignal("AKit_AccelPdlEnblReq")->SetResult(1);
   }
