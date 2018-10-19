@@ -653,32 +653,47 @@ void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalC
 {
   NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_AccelPdlCommand");
 
-  message->GetSignal("AKit_AccelPdlEnblCmd")->SetResult(0);
-  message->GetSignal("AKit_AccelPdlCmd")->SetResult(0);
-
-  message->GetSignal("AKit_AccelPdlWatchdogCntr")->SetResult(0);
-  message->GetSignal("AKit_AccelPdlCtrlMode")->SetResult(0);
-  message->GetSignal("AKit_AccelPdlClearDriverOvrd")->SetResult(0);
+  message->GetSignal("AKit_AccelPdlReq")->SetResult(0);
+  message->GetSignal("AKit_AccelPdlEnblReq")->SetResult(0);
   message->GetSignal("Akit_AccelPdlIgnoreDriverOvrd")->SetResult(0);
+  message->GetSignal("AKit_AccelPdlRollingCntr")->SetResult(0);
+  message->GetSignal("AKit_AccelReqType")->SetResult(0);
+  message->GetSignal("AKit_AccelPcntTorqueReq")->SetResult(0);
+  message->GetSignal("AKit_SpeedReq")->SetResult(0);
+  message->GetSignal("AKit_SpeedModeRoadSlope")->SetResult(0);
 
   if (enabled()) {
-    message->GetSignal("AKit_AccelPdlCmd")->SetResult(msg->pedal_cmd);
 
-    message->GetSignal("AKit_AccelPdlEnblCmd")->SetResult(1);
+    if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::open_loop) {
+      message->GetSignal("AKit_AccelReqType")->SetResult(1);
+      message->GetSignal("AKit_AccelPcntTorqueReq")->SetResult(0);
+    } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_actuator) {
+      message->GetSignal("AKit_AccelReqType")->SetResult(2);
+    } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle) {
+      message->GetSignal("AKit_AccelReqType")->SetResult(3);
+      message->GetSignal("AKit_SpeedReq")->SetResult(0);
+    } else {
+      message->GetSignal("AKit_AccelReqType")->SetResult(0);
+      message->GetSignal("AKit_AccelPdlReq")->SetResult(0);
+    }
+
+    //message->GetSignal("AKit_AccelPdlCmd")->SetResult(msg->pedal_cmd);
+
+    message->GetSignal("AKit_AccelPdlEnblReq")->SetResult(1);
   }
 
-  NewEagle::DbcSignal* cnt = message->GetSignal("AKit_AccelPdlWatchdogCntr");
+  NewEagle::DbcSignal* cnt = message->GetSignal("AKit_AccelPdlRollingCntr");
   cnt->SetResult(msg->accelerator_pedal_cmd_rolling_counter);
 
-  if (msg->control_mode.value == 1)
-  message->GetSignal("AKit_AccelPdlWatchdogCntr")->SetResult(1);
-  {
-  }
+  // if (msg->control_mode.value == 1)  
+  // {
+  //   message->GetSignal("AKit_AccelPdlRollingCntr")->SetResult(1);
+  // }
 
-  if (msg->control_mode.value == 1)
-  {
-    message->GetSignal("AKit_AccelPdlCtrlMode")->SetResult(1);
-  }
+  // if (msg->control_mode.value == 1)
+  // {
+  //   message->GetSignal("AKit_AccelPdlCtrlMode")->SetResult(1);
+  // }
 
   if (clear() || msg->clear) {
     message->GetSignal("AKit_AccelPdlClearDriverOvrd")->SetResult(1);

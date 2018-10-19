@@ -56,6 +56,7 @@
 #include <dbw_pacifica_msgs/SurroundReport.h>
 #include <dbw_pacifica_msgs/DriverInputReport.h>
 #include <dbw_pacifica_msgs/LowVoltageSystemReport.h>
+#include <dbw_pacifica_msgs/ActuatorControlMode.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/JointState.h>
 #include <geometry_msgs/TwistStamped.h>
@@ -201,3 +202,4 @@ private:
 } // dbw_pacifica_can
 
 #endif // _DBW_NODE_H_
+

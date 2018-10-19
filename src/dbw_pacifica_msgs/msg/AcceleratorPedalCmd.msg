@@ -13,5 +13,7 @@ bool ignore
 # Watchdog counter (optional)
 uint8 accelerator_pedal_cmd_rolling_counter
 
-# control mode - autonomous or joystick
-ControlMode control_mode
+## control mode - autonomous or joystick
+#ControlMode control_mode
+
+ActuatorControlMode control_type
