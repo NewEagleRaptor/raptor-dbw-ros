@@ -45,6 +45,11 @@ typedef enum {
   VIN_MUX_VIN2  = 0x02,
 } VinMux;
 
+typedef enum {
+  WHEEL_SPEED_MUX0  = 0x00,
+  WHEEL_SPEED_MUX1  = 0x01,
+} WheelSpeedMux;
+
 #undef BUILD_ASSERT
 
 enum {
