@@ -527,12 +527,6 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           out.adaptive_cruise_increase_distance_button = message->GetSignal("DBW_DrvInptAccIncDistBtn")->GetResult() ? true : false;
           out.adaptive_cruise_decrease_distance_button = message->GetSignal("DBW_DrvInptAccDecDistBtn")->GetResult() ? true : false;
 
-          out.driver_door_ajar = message->GetSignal("DBW_OccupDrvDoorAjar")->GetResult() ? true : false;
-          out.passenger_door_ajar = message->GetSignal("DBW_OccupPsgDoorAjar")->GetResult() ? true : false;
-          out.rear_left_door_ajar = message->GetSignal("DBW_OccupRlDoorAjar")->GetResult() ? true : false;
-          out.rear_right_door_ajar = message->GetSignal("DBW_OccupRrDoorAjar")->GetResult() ? true : false;
-          out.liftgate_ajar = message->GetSignal("DBW_OccupLiftgateAjar")->GetResult() ? true : false;
-
           out.door_or_hood_ajar = message->GetSignal("DBW_OccupAnyDoorOrHoodAjar")->GetResult() ? true : false;
 
           out.airbag_deployed = message->GetSignal("DBW_OccupAnyAirbagDeployed")->GetResult() ? true : false;
