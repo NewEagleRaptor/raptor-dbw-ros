@@ -162,35 +162,40 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
           bool faultCh1 = message->GetSignal("DBW_BrakeFault_Ch1")->GetResult() ? true : false;
           bool faultCh2 = message->GetSignal("DBW_BrakeFault_Ch2")->GetResult() ? true : false;
-          bool dbwSystemFault = message->GetSignal("DBW_MiscFault_BrkRpt")->GetResult() ? true : false;
-          uint8_t watchdog_status = message->GetSignal("DBW_BrakeWatchdogStatus")->GetResult();
+          //bool dbwSystemFault = message->GetSignal("DBW_MiscFault_BrkRpt")->GetResult() ? true : false;
+          //uint8_t watchdog_status = message->GetSignal("DBW_BrakeWatchdogStatus")->GetResult();
           bool brakeSystemFault = message->GetSignal("DBW_BrakeFault")->GetResult() ? true : false;
+          bool dbwSystemFault = brakeSystemFault;
 
           faultBrakes(faultCh1 && faultCh2);
-          faultWatchdog(dbwSystemFault, watchdog_status, brakeSystemFault);
+          //faultWatchdog(dbwSystemFault, watchdog_status, brakeSystemFault);
+          faultWatchdog(dbwSystemFault, brakeSystemFault);
+
           overrideBrake(message->GetSignal("DBW_BrakeDriverActivity")->GetResult());
-          dbw_pacifica_msgs::BrakeReport out;
-          out.header.stamp = msg->header.stamp;
-          out.pedal_position  = message->GetSignal("DBW_BrakePedalDriverInput")->GetResult();
-          out.pedal_output = message->GetSignal("DBW_BrakePedalOutput")->GetResult();
+          dbw_pacifica_msgs::BrakeReport brakeReport;
+          brakeReport.header.stamp = msg->header.stamp;
+          brakeReport.pedal_position  = message->GetSignal("DBW_BrakePedalDriverInput")->GetResult();
+          brakeReport.pedal_output = message->GetSignal("DBW_BrakePedalPosnFdbck")->GetResult();
 
-          out.enabled = message->GetSignal("DBW_BrakeEnabled")->GetResult() ? true : false;
-          out.driver = message->GetSignal("DBW_BrakeDriverActivity")->GetResult() ? true : false;
-          out.watchdog_status.source = watchdog_status;
-          out.fault_brake_system = brakeSystemFault;
-          out.fault_dbw_system =  dbwSystemFault;
-          out.fault_ch2 = faultCh2;
+          brakeReport.enabled = message->GetSignal("DBW_BrakeEnabled")->GetResult() ? true : false;
+          brakeReport.driver = message->GetSignal("DBW_BrakeDriverActivity")->GetResult() ? true : false;
+          brakeReport.watchdog_status.source = watchdog_status;
+          brakeReport.fault_brake_system = brakeSystemFault;
+          brakeReport.fault_dbw_system =  dbwSystemFault;
+          brakeReport.fault_ch2 = faultCh2;
 
-          out.brake_report_rolling_counter =  message->GetSignal("DBW_BrakeWatchdogCntr")->GetResult();
+          brakeReport.rolling_counter =  message->GetSignal("DBW_BrakeRollingCntr")->GetResult();
 
-          out.brake_torque_actual = message->GetSignal("DBW_BrakeTrqActual")->GetResult();
-          out.abs_active = message->GetSignal("DBW_BrakeAntiLockBrkActv")->GetResult() ? true : false;
-          out.abs_enabled = message->GetSignal("DBW_BrakeAntiLockBrkEnbld")->GetResult() ? true : false;
-          out.trac_active = message->GetSignal("DBW_BrakeTracCtrlActv")->GetResult() ? true : false;
-          out.trac_enabled = message->GetSignal("DBW_BrakeTracCtrlEnbld")->GetResult() ? true : false;
-          out.parking_brake.status = message->GetSignal("DBW_BrakeParkingBrkStatus")->GetResult();
+          brakeReport.brake_torque_actual = message->GetSignal("DBW_BrakePcntTorqueActual")->GetResult();
 
-          pub_brake_.publish(out);
+          brakeReport.intervention_active = message->GetSignal("DBW_BrakeInterventionActv")->GetResult() ? true : false;
+          brakeReport.intervention_ready = message->GetSignal("DBW_BrakeInterventionReady")->GetResult() ? true : false;
+
+          brakeReport.parking_brake.status = message->GetSignal("DBW_BrakeParkingBrkStatus")->GetResult();
+
+          brakeReport.control_type.value = message->GetSignal("DBW_BrakeCtrlType")->GetResult();
+
+          pub_brake_.publish(brakeReport);
           if (faultCh1 || faultCh2) {
             ROS_WARN_THROTTLE(5.0, "Brake fault.    FLT1: %s FLT2: %s",
                 faultCh1 ? "true, " : "false,",
@@ -210,11 +215,9 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           bool faultCh1 = message->GetSignal("DBW_AccelPdlFault_Ch1")->GetResult() ? true : false;
           bool faultCh2 = message->GetSignal("DBW_AccelPdlFault_Ch2")->GetResult() ? true : false;
           bool accelPdlSystemFault = message->GetSignal("DBW_AccelPdlFault")->GetResult() ? true : false;
-          //uint8_t watchdog_status = message->GetSignal("DBW_AccelPdlWatchdogStatus")->GetResult();
-          //bool dbwSystemFault = message->GetSignal("DBW_MiscFault_AccelRpt")->GetResult() ? true : false;
+          bool dbwSystemFault = accelPdlSystemFault;
 
           uint16_t positionFeedback = message->GetSignal("DBW_AccelPdlPosnFdbck")->GetResult(); 
-
 
           faultAcceleratorPedal(faultCh1 && faultCh2);
           faultWatchdog(dbwSystemFault, accelPdlSystemFault);
@@ -228,9 +231,9 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           accelPedalReprt.enabled = message->GetSignal("DBW_AccelPdlEnabled")->GetResult() ? true : false;
           accelPedalReprt.ignore_driver = message->GetSignal("DBW_AccelPdlIgnoreDriver")->GetResult() ? true : false;
           accelPedalReprt.driver = message->GetSignal("DBW_AccelPdlDriverActivity")->GetResult() ? true : false;
-          accelPedalReprt.torque_actual = message->GetSignal("DBW_AccelTorqueActual")->GetResult();
+          accelPedalReprt.torque_actual = message->GetSignal("DBW_AccelPcntTorqueActual")->GetResult();
 
-          accelPedalReprt.control_type.value = message->GetSignal("DBW_AccelTorqueActual")->GetResult();
+          accelPedalReprt.control_type.value = message->GetSignal("DBW_AccelCtrlType")->GetResult();
 
           accelPedalReprt.rolling_counter =  message->GetSignal("DBW_AccelPdlRollingCntr")->GetResult();
 
@@ -309,12 +312,13 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           dbw_pacifica_msgs::GearReport out;
           out.header.stamp = msg->header.stamp;
 
+          out.enabled = message->GetSignal("DBW_PrndCtrlEnabled")->GetResult() ? true : false;
           out.state.gear = message->GetSignal("DBW_PrndStateActual")->GetResult();
           out.driver_override = driverActivity;
           out.gear_select_system_fault = message->GetSignal("DBW_PrndFault")->GetResult() ? true : false;
 
           if (msg->dlc >= message->GetDlc()) {
-            out.reject.value = message->GetSignal("DBW_PrndStateReject")->GetResult();
+            out.reject = message->GetSignal("DBW_PrndStateReject")->GetResult() ? true : false;
             if (out.reject.value == dbw_pacifica_msgs::GearReject::NONE) {
               gear_warned_ = false;
             } else if (!gear_warned_) {

@@ -22,6 +22,6 @@ bool fault_ch2
 
 uint8 rolling_counter
 
-float32 torque_actual #Nm
+float32 torque_actual # 0 to 100%
 
 ActuatorControlMode control_type
