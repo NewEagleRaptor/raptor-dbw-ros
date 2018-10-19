@@ -635,11 +635,6 @@ void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
   NewEagle::DbcSignal* cnt = message->GetSignal("AKit_BrakeWatchdogCntr");
   cnt->SetResult(msg->count);
 
-  // if (msg->control_mode.value == 1)
-  // {
-  //   message->GetSignal("AKit_BrakePedalCtrlMode")->SetResult(1);
-  // }
-
   if (clear() || msg->clear) {
     message->GetSignal("AKit_BrakePedalClearDriverOvrd")->SetResult(1);
   }
@@ -684,16 +679,6 @@ void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalC
 
   NewEagle::DbcSignal* cnt = message->GetSignal("AKit_AccelPdlRollingCntr");
   cnt->SetResult(msg->accelerator_pedal_cmd_rolling_counter);
-
-  // if (msg->control_mode.value == 1)  
-  // {
-  //   message->GetSignal("AKit_AccelPdlRollingCntr")->SetResult(1);
-  // }
-
-  // if (msg->control_mode.value == 1)
-  // {
-  //   message->GetSignal("AKit_AccelPdlCtrlMode")->SetResult(1);
-  // }
 
   if (clear() || msg->clear) {
     message->GetSignal("AKit_AccelPdlClearDriverOvrd")->SetResult(1);
@@ -754,11 +739,6 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
   if (msg->quiet) {
     message->GetSignal("AKit_SteeringWhlQuiet")->SetResult(1);
   }
-
-  // if (msg->control_mode.value == 1)
-  // {
-  //   message->GetSignal("AKit_SteeringWhlCtrlMode")->SetResult(1);
-  // }
 
   message->GetSignal("AKit_SteerCmdWatchdogCntr")->SetResult(msg->count);
 
