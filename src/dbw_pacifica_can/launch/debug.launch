@@ -5,6 +5,7 @@
       type="dbw_node"
       name="dbw"
       respawn="true"
+      launch-prefix="xterm -e gdb --args"
       >
       <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)New_Eagle_DBW.dbc" />
       <remap from="/can_rx" to="/can0/can_rx" />

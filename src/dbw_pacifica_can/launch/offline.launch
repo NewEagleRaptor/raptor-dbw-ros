@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<launch>
-  <arg name="use_sim_time" default="true"/>
-  <param name="use_sim_time" value="true" if="$(arg use_sim_time)"/>
-  <include file="$(find dbw_pacifica_can)/launch/dbw.launch" >
-    <arg name="live" value="false" />
-    <arg name="twist_controller" value="false" />
-  </include>
-</launch>

@@ -641,7 +641,7 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
 void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
 {
-  NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_BrakeCommand");
+  NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_BrakeRequest");
   
   message->GetSignal("AKit_BrakePedalReq")->SetResult(0);
   message->GetSignal("AKit_BrakeCtrlEnblReq")->SetResult(0);
@@ -681,7 +681,7 @@ void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
 
 void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalCmd::ConstPtr& msg)
 {
-  NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_AccelPdlCommand");
+  NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_AccelPdlRequest");
 
   message->GetSignal("AKit_AccelPdlReq")->SetResult(0);
   message->GetSignal("AKit_AccelPdlEnblReq")->SetResult(0);
@@ -728,7 +728,7 @@ void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalC
 
 void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& msg)
 {
-  NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_SteeringCommand");
+  NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_SteeringRequest");
 
   message->GetSignal("AKit_SteeringWhlAngleReq")->SetResult(0);
   message->GetSignal("AKit_SteeringWhlAngleVelocityLim")->SetResult(0);
@@ -767,7 +767,7 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
     message->GetSignal("AKit_SteeringWhlIgnoreDriverOvrd")->SetResult(1);
   }
 
-  message->GetSignal("AKit_SteerCmdRollingCntr")->SetResult(msg->rolling_counter);
+  message->GetSignal("AKit_SteerRollingCntr")->SetResult(msg->rolling_counter);
 
   can_msgs::Frame frame = message->GetFrame();
 
@@ -776,20 +776,20 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
 
 void DbwNode::recvGearCmd(const dbw_pacifica_msgs::GearCmd::ConstPtr& msg)
 {
-  NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_GearCommand");
+  NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_PrndRequest");
 
-  message->GetSignal("AKit_PrndEnblReq")->SetResult(0);
+  message->GetSignal("AKit_PrndCtrlEnblReq")->SetResult(0);
   message->GetSignal("AKit_PrndStateReq")->SetResult(0);
 
   if (enabled()) {
     if(msg->enable)
     {
-      message->GetSignal("AKit_PrndEnblReq")->SetResult(1);
+      message->GetSignal("AKit_PrndCtrlEnblReq")->SetResult(1);
     }    
     message->GetSignal("AKit_PrndStateReq")->SetResult(msg->cmd.gear);
   }  
 
-  message->GetSignal("AKit_PrndCmdRollingCntr")->SetResult(msg->rolling_counter);
+  message->GetSignal("AKit_PrndRollingCntr")->SetResult(msg->rolling_counter);
 
   can_msgs::Frame frame = message->GetFrame();
 
