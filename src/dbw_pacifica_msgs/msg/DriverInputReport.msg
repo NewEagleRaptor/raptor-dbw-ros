@@ -7,7 +7,7 @@ TurnSignal turn_signal
 HighBeam high_beam_headlights
 
 # Front Windshield Wipers enumeration
-Wiper wiper
+WiperFront wiper
 
 # Buttons
 bool cruise_resume_button

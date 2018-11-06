@@ -57,6 +57,9 @@
 #include <dbw_pacifica_msgs/DriverInputReport.h>
 #include <dbw_pacifica_msgs/LowVoltageSystemReport.h>
 #include <dbw_pacifica_msgs/ActuatorControlMode.h>
+#include <dbw_pacifica_msgs/Brake2Report.h>
+#include <dbw_pacifica_msgs/Steering2Report.h>
+
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/JointState.h>
 #include <geometry_msgs/TwistStamped.h>
@@ -190,6 +193,10 @@ private:
   ros::Publisher pub_vin_;
   ros::Publisher pub_sys_enable_;
   ros::Publisher pub_driver_input_;
+  ros::Publisher pub_low_voltage_system_;
+
+  ros::Publisher pub_brake_2_report_;
+  ros::Publisher pub_steering_2_report_;
 
   NewEagle::Dbc dbwDbc_;
   std::string dbcFile_;

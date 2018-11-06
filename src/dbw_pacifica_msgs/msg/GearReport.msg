@@ -7,7 +7,7 @@ Gear state
 bool reject
 
 # Status
-bool driver_override
+bool driver_activity
 bool enabled
 
 # Faults
