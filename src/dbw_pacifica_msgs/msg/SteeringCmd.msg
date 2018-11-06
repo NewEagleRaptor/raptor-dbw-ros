@@ -11,8 +11,6 @@ bool ignore
 # Watchdog counter (optional)
 uint8 rolling_counter
 
-SteeringCommandType command_type
-
 float32 torque_cmd # %-torque
 
 float32 vehicle_curvature_cmd # 1/m

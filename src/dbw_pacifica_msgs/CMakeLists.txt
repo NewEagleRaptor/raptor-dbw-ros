@@ -28,7 +28,6 @@ add_message_files(DIRECTORY msg FILES
   SonarArcNum.msg  
   Steering2Report.msg
   SteeringCmd.msg
-  SteeringCommandType.msg
   SteeringReport.msg
   SurroundReport.msg  
   TirePressureReport.msg

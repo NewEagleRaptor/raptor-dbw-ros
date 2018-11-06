@@ -7,7 +7,7 @@ float32 steering_wheel_torque     # 0 to 100%
 
 # Status
 bool enabled  
-bool driver_override
+bool driver_activity
 
 bool fault_steering_system
 
