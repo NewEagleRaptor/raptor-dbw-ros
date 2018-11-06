@@ -1,8 +1,7 @@
 # Gear command enumeration
 Gear cmd
 
-# Clear driver overrides
-bool clear
+bool enable
 
-# Watchdog counter (optional)
-uint8 gear_cmd_rolling_counter
+# Watchdog counter
+uint8 rolling_counter
