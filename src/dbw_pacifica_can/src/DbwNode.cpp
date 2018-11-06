@@ -644,7 +644,6 @@ void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
   NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_BrakeCommand");
   
   message->GetSignal("AKit_BrakePedalReq")->SetResult(0);
-  message->GetSignal("AKit_BrakePedalCtrlMode")->SetResult(0);
   message->GetSignal("AKit_BrakeCtrlEnblReq")->SetResult(0);
   message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(0);
   message->GetSignal("AKit_BrakePcntTorqueReq")->SetResult(0);
@@ -653,18 +652,23 @@ void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
 
   if (enabled()) {
     if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::open_loop) {
-      message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(1);
-      message->GetSignal("AKit_BrakePcntTorqueReq")->SetResult(0);      
+      message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(0);
+      message->GetSignal("AKit_BrakePedalReq")->SetResult(0);      
     } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_actuator) {
+      message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(1); 
+      message->GetSignal("AKit_BrakePcntTorqueReq")->SetResult(0);           
+    } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle) {
       message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(2);      
       message->GetSignal("AKit_SpeedModeAccelLim")->SetResult(0);
-      message->GetSignal("AKit_SpeedModeDecelLim")->SetResult(0);
-    } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle) {
-      message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(3);      
+      message->GetSignal("AKit_SpeedModeDecelLim")->SetResult(0);      
     } else {
       message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(0);
-      message->GetSignal("AKit_BrakePedalReq")->SetResult(0);
     }    
+
+    if(msg->enable) {
+      message->GetSignal("AKit_BrakeCtrlEnblReq")->SetResult(1);
+    }
+    
   }
 
   NewEagle::DbcSignal* cnt = message->GetSignal("AKit_BrakeRollingCntr");
@@ -691,19 +695,23 @@ void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalC
   if (enabled()) {
 
     if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::open_loop) {
-      message->GetSignal("AKit_AccelReqType")->SetResult(1);
-      message->GetSignal("AKit_AccelPcntTorqueReq")->SetResult(0);
+      message->GetSignal("AKit_AccelReqType")->SetResult(0);
+      message->GetSignal("AKit_AccelPdlReq")->SetResult(msg->pedal_cmd);
     } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_actuator) {
-      message->GetSignal("AKit_AccelReqType")->SetResult(2);
-      message->GetSignal("AKit_SpeedReq")->SetResult(0);
+      message->GetSignal("AKit_AccelReqType")->SetResult(1);
+      message->GetSignal("AKit_AccelPcntTorqueReq")->SetResult(msg->torque_cmd);
     } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle) {
-      message->GetSignal("AKit_AccelReqType")->SetResult(3);      
+      message->GetSignal("AKit_AccelReqType")->SetResult(2);      
+
+      message->GetSignal("AKit_SpeedReq")->SetResult(msg->speed_cmd);
+      message->GetSignal("Akit_SpeedModeRoadSlope")->SetResult(msg->road_slope);
     } else {
       message->GetSignal("AKit_AccelReqType")->SetResult(0);
-      message->GetSignal("AKit_AccelPdlReq")->SetResult(0);
     }
 
-    message->GetSignal("AKit_AccelPdlEnblReq")->SetResult(1);
+    if(msg->enable) {
+      message->GetSignal("AKit_AccelPdlEnblReq")->SetResult(1);
+    }
   }
 
   NewEagle::DbcSignal* cnt = message->GetSignal("AKit_AccelPdlRollingCntr");
@@ -711,7 +719,7 @@ void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalC
 
   if (msg->ignore) {
     message->GetSignal("Akit_AccelPdlIgnoreDriverOvrd")->SetResult(1);
-  }
+  }    
 
   can_msgs::Frame frame = message->GetFrame();
 
@@ -725,37 +733,23 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
   message->GetSignal("AKit_SteeringWhlAngleReq")->SetResult(0);
   message->GetSignal("AKit_SteeringWhlAngleVelocityLim")->SetResult(0);
   message->GetSignal("AKit_SteerCtrlEnblReq")->SetResult(0);  
-
   message->GetSignal("AKit_SteeringWhlIgnoreDriverOvrd")->SetResult(0);  
   message->GetSignal("AKit_SteeringWhlPcntTrqReq")->SetResult(0);  
   message->GetSignal("AKit_SteeringReqType")->SetResult(0);
   message->GetSignal("AKit_SteeringVehCurvatureReq")->SetResult(0);
 
   if (enabled()) {
-    message->GetSignal("AKit_SteeringWhlCmdType")->SetResult(msg->command_type.value);
-
-    // if (0 == msg->command_type.value)
-    // {
-    //   double scmd = std::max((float)-5000, std::min((float)5000, (float)(msg->steering_wheel_angle_cmd * (180 / M_PI * 10))));
-
-    //   scmd /= 10;
-    //   message->GetSignal("AKit_SteeringWhlAngleCmd")->SetResult(scmd);
-    // }
-    // else // torque mode
-    // {
-    //   message->GetSignal("AKit_SteeringWhlTrqCmd")->SetResult(msg->steering_wheel_torque_cmd);
-    // }
     if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::open_loop) {
-      message->GetSignal("AKit_SteeringReqType")->SetResult(1);
-      message->GetSignal("AKit_SteeringWhlAngleReq")->SetResult(0);      
+      message->GetSignal("AKit_SteeringReqType")->SetResult(0);
+      message->GetSignal("AKit_SteeringWhlPcntTrqReq")->SetResult(msg->torque_cmd);      
     } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_actuator) {
-      message->GetSignal("AKit_SteeringReqType")->SetResult(2);      
-      message->GetSignal("AKit_SteeringVehCurvatureReq")->SetResult(0);
+      message->GetSignal("AKit_SteeringReqType")->SetResult(1);      
+      message->GetSignal("AKit_SteeringWhlAngleReq")->SetResult(msg->angle_cmd);
     } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle) {
-      message->GetSignal("AKit_SteeringReqType")->SetResult(3);      
+      message->GetSignal("AKit_SteeringReqType")->SetResult(2);      
+      message->GetSignal("AKit_SteeringVehCurvatureReq")->SetResult(msg->vehicle_curvature_cmd);
     } else {
       message->GetSignal("AKit_SteeringReqType")->SetResult(0);
-      message->GetSignal("AKit_SteeringWhlPcntTrqReq")->SetResult(0);
     }    
 
     if (fabsf(msg->angle_velocity) > 0)
@@ -764,8 +758,9 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
 
       message->GetSignal("AKit_SteeringWhlAngleVelocityLim")->SetResult(vcmd);
     }
-
-    message->GetSignal("AKit_SteerCtrlEnblReq")->SetResult(1);
+    if(msg->enable) {
+      message->GetSignal("AKit_SteerCtrlEnblReq")->SetResult(1);
+    }
   }
 
   if (msg->ignore) {
@@ -787,6 +782,10 @@ void DbwNode::recvGearCmd(const dbw_pacifica_msgs::GearCmd::ConstPtr& msg)
   message->GetSignal("AKit_PrndStateReq")->SetResult(0);
 
   if (enabled()) {
+    if(msg->enable)
+    {
+      message->GetSignal("AKit_PrndEnblReq")->SetResult(1);
+    }    
     message->GetSignal("AKit_PrndStateReq")->SetResult(msg->cmd.gear);
   }  
 
@@ -817,8 +816,33 @@ void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
   message->GetSignal("AKit_BlockTurnSigStalkInpts")->SetResult(0);
 
   if (enabled()) {
-    message->GetSignal("AKit_GlobalByWireEnblReq")->SetResult(1);
+    if(msg->global_enable) {
+      message->GetSignal("AKit_GlobalByWireEnblReq")->SetResult(1);
+    }
+
+    if(msg->enable_joystick_limits) {
+      message->GetSignal("AKit_EnblJoystickLimits")->SetResult(1);
+    }
+
     message->GetSignal("AKit_TurnSignalReq")->SetResult(msg->cmd.value);
+
+    message->GetSignal("AKit_RightRearDoorReq")->SetResult(msg->door_request_right_rear.value);
+    message->GetSignal("AKit_HighBeamReq")->SetResult(msg->high_beam_cmd.status);
+
+    message->GetSignal("AKit_FrontWiperReq")->SetResult(msg->front_wiper_cmd.status);
+    message->GetSignal("AKit_RearWiperReq")->SetResult(msg->rear_wiper_cmd.status);
+
+    message->GetSignal("AKit_IgnitionReq")->SetResult(msg->ignition_cmd.status);
+
+    message->GetSignal("AKit_LeftRearDoorReq")->SetResult(msg->door_request_left_rear.value);
+    message->GetSignal("AKit_LiftgateDoorReq")->SetResult(msg->door_request_lift_gate.value);
+
+    message->GetSignal("AKit_SoftwareBuildNumber")->SetResult(msg->ecu_build_number);
+
+    message->GetSignal("AKit_BlockBasicCruiseCtrlBtns")->SetResult(msg->block_standard_cruise_buttons);
+    message->GetSignal("AKit_BlockAdapCruiseCtrlBtns")->SetResult(msg->block_adaptive_cruise_buttons);
+    message->GetSignal("AKit_BlockTurnSigStalkInpts")->SetResult(msg->block_turn_signal_stalk);
+
   }
 
   message->GetSignal("AKit_MiscCmdRollingCntr")->SetResult(msg->rolling_counter);
