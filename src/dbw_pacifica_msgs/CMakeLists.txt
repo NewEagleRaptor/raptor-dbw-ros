@@ -11,6 +11,7 @@ add_message_files(DIRECTORY msg FILES
   AcceleratorPedalCmd.msg
   AcceleratorPedalReport.msg
   ActuatorControlMode.msg
+  Brake2Report.msg
   BrakeCmd.msg
   BrakeReport.msg
   DoorRequest.msg
@@ -19,11 +20,13 @@ add_message_files(DIRECTORY msg FILES
   GearCmd.msg  
   GearReport.msg
   HighBeam.msg
+  Ignition.msg
   LowVoltageSystemReport.msg
   MiscCmd.msg
   MiscReport.msg  
   ParkingBrake.msg
   SonarArcNum.msg  
+  Steering2Report.msg
   SteeringCmd.msg
   SteeringCommandType.msg
   SteeringReport.msg
@@ -34,8 +37,9 @@ add_message_files(DIRECTORY msg FILES
   WatchdogStatus.msg
   WheelPositionReport.msg
   WheelSpeedReport.msg
-  Wiper.msg  
-  
+  WheelSpeedType.msg
+  WiperFront.msg  
+  WiperRear.msg
 )
 
 generate_messages(DEPENDENCIES
