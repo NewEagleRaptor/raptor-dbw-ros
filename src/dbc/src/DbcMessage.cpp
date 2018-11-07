@@ -98,6 +98,8 @@ namespace NewEagle
 
     for(std::map<std::string, NewEagle::DbcSignal>::iterator it = _signals.begin(); it != _signals.end(); it++)
     {
+      // If there is a multiplexor here, need to select the signals that are associated with that MUX switch 
+      //  before packing
       Pack(ptr, it->second);
     }
 
@@ -110,6 +112,8 @@ namespace NewEagle
 
     for(std::map<std::string, NewEagle::DbcSignal>::iterator it = _signals.begin(); it != _signals.end(); it++)
     {
+      // If there is a multiplexor here, need to select the signals that are associated with that MUX switch 
+      //  before packing      
       double res = Unpack(ptr, it->second);
       it->second.SetResult(res);
     }

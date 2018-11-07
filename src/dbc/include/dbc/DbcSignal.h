@@ -67,6 +67,13 @@ namespace NewEagle
     DOUBLE = 2
   };
 
+  enum MultiplexerMode
+  {
+    NONE = 0,
+    MUX_SWITCH = 1,
+    MUX_SIGNAL = 2
+  };
+
   class DbcSignal {
     public:
       DbcSignal(
@@ -77,7 +84,20 @@ namespace NewEagle
         ByteOrder endianness,
         uint8_t length,
         SignType sign,
-        std::string name);
+        std::string name, 
+        MultiplexerMode multiplexerMode);
+
+      DbcSignal(
+        uint8_t dlc,
+        double gain,
+        double offset,
+        uint8_t startBit,
+        ByteOrder endianness,
+        uint8_t length,
+        SignType sign,
+        std::string name, 
+        MultiplexerMode multiplexerMode,
+        int32_t multiplexerSwitch);
 
       ~DbcSignal();
 
@@ -96,6 +116,8 @@ namespace NewEagle
       double GetInitialValue();
       DataType GetDataType();
       void SetDataType(DataType type);
+      MultiplexerMode GetMultiplexerMode() const;
+      int32_t GetMultiplexerSwitch() const;      
 
     private:
       uint8_t _dlc;
@@ -110,6 +132,8 @@ namespace NewEagle
       NewEagle::DbcSignalComment _comment;
       double _initialValue;
       DataType _type;
+      MultiplexerMode _multiplexerMode;
+      int32_t _multiplexerSwitch;
   };
 }
 
