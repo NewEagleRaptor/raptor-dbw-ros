@@ -18,6 +18,7 @@
   <exec_depend>dbw_pacifica_can</exec_depend>
   <exec_depend>dbw_pacifica_description</exec_depend>
   <exec_depend>dbw_pacifica_joystick_demo</exec_depend>
+    <exec_depend>dbw_pacifica_joystick_speed_demo</exec_depend>
   <exec_depend>dbw_pacifica_msgs</exec_depend>
   <exec_depend>pdu</exec_depend>
   <exec_depend>pdu_msgs</exec_depend>

@@ -704,7 +704,7 @@ void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalC
       message->GetSignal("AKit_AccelReqType")->SetResult(2);      
 
       message->GetSignal("AKit_SpeedReq")->SetResult(msg->speed_cmd);
-      message->GetSignal("Akit_SpeedModeRoadSlope")->SetResult(msg->road_slope);
+      message->GetSignal("AKit_SpeedModeRoadSlope")->SetResult(msg->road_slope);
     } else {
       message->GetSignal("AKit_AccelReqType")->SetResult(0);
     }

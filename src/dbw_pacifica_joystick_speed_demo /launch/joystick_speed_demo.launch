@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- DBW system -->
+  <node ns="vehicle" pkg="dbw_pacifica_can" type="dbw_node" name="dbw" output="screen" launch-prefix="xterm -e gdb --args">
+    <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)/New_Eagle_DBW.dbc" />
+    <remap from="can_rx" to="/can0/can_rx" />
+    <remap from="can_tx" to="/can0/can_tx" />
+  </node>
+
+  <node ns="can0" pkg="socketcan_bridge" type="socketcan_to_topic_node" name="socketcan_to_topic" output="screen">
+    <param name="can_device" value="can0" />
+  </node>
+
+  <node ns="can0" pkg="socketcan_bridge" type="topic_to_socketcan_node" name="topic_to_socketcan" output="screen">
+    <param name="can_device" value="can0" />
+  </node>
+
+  <!-- Joystick demo -->
+<arg name="ignore" default="false" />
+<arg name="enable" default="true" />
+<arg name="count" default="true" />
+<arg name="svel" default="0.0" />
+<node ns="vehicle" pkg="dbw_joystick_speed_demo" type="joystick_speed_demo" name="joystick_demo" output="screen">
+<param name="ignore" value="$(arg ignore)" />
+  <!-- Ignore driver overrides -->
+  <param name="enable" value="$(arg enable)" />
+  <!-- Enable buttons -->
+  <param name="count" value="$(arg count)" />
+  <!-- Watchdog counter -->
+  <param name="svel" value="$(arg svel)" />
+  <!-- Steering velocity limit -->
+</node>
+
+<!-- Joystick driver -->
+<arg name="dev" default="/dev/input/js0" />
+<node pkg="joy" type="joy_node" name="joy_node" output="screen">
+<param name="dev" value="$(arg dev)" />
+<param name="deadzone" value="0.01" />
+<param name="autorepeat_rate" value="50.0" />
+</node>
+
+</launch>
