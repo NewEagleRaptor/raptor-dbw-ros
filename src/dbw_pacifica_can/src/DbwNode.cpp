@@ -786,6 +786,7 @@ void DbwNode::recvGearCmd(const dbw_pacifica_msgs::GearCmd::ConstPtr& msg)
     {
       message->GetSignal("AKit_PrndCtrlEnblReq")->SetResult(1);
     }    
+
     message->GetSignal("AKit_PrndStateReq")->SetResult(msg->cmd.gear);
   }  
 

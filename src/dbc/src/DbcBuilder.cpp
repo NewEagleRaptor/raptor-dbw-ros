@@ -64,7 +64,7 @@ namespace NewEagle
     NewEagle::DbcMessage currentMessage;
 
     int32_t cnt = 0;
-    int32_t yyy = 0;
+
     while (std::getline(f, line, '\n'))
     {
       lineNumber++;
@@ -86,7 +86,6 @@ namespace NewEagle
       {
         try
         {
-          yyy++;
           currentMessage =  ReadMessage(parser);
           currentMessage.SetRawText(line);
           dbc.AddMessage(currentMessage.GetName(), currentMessage);

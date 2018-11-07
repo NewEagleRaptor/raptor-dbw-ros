@@ -100,6 +100,7 @@ void JoystickDemo::cmdCallback(const ros::TimerEvent& event)
   accelerator_pedal_msg.ignore = ignore_;
   accelerator_pedal_msg.rolling_counter = counter_;
   accelerator_pedal_msg.pedal_cmd = data_.accelerator_pedal_joy * 100;
+  accelerator_pedal_msg.control_type.value = dbw_pacifica_msgs::ActuatorControlMode::open_loop;
   pub_accelerator_pedal_.publish(accelerator_pedal_msg);
 
   // Brake
@@ -107,6 +108,7 @@ void JoystickDemo::cmdCallback(const ros::TimerEvent& event)
   brake_msg.enable = true;
   brake_msg.rolling_counter = counter_;
   brake_msg.pedal_cmd = data_.brake_joy * 100;
+  brake_msg.control_type.value = dbw_pacifica_msgs::ActuatorControlMode::open_loop;
   pub_brake_.publish(brake_msg);
 
   // Steering
@@ -116,6 +118,7 @@ void JoystickDemo::cmdCallback(const ros::TimerEvent& event)
   steering_msg.rolling_counter = counter_;
   steering_msg.angle_cmd = data_.steering_joy;
   steering_msg.angle_velocity = svel_;
+  steering_msg.control_type.value = dbw_pacifica_msgs::ActuatorControlMode::closed_loop_actuator;
   if (!data_.steering_mult) {
     steering_msg.angle_cmd *= 0.5;
   }
@@ -124,6 +127,7 @@ void JoystickDemo::cmdCallback(const ros::TimerEvent& event)
   // Gear
   dbw_pacifica_msgs::GearCmd gear_msg;
   gear_msg.cmd.gear = data_.gear_cmd;
+  gear_msg.enable = true;
   gear_msg.rolling_counter = counter_;
   pub_gear_.publish(gear_msg);
 
