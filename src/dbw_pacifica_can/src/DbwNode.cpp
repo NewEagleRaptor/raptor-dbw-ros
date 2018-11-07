@@ -653,14 +653,14 @@ void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
   if (enabled()) {
     if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::open_loop) {
       message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(0);
-      message->GetSignal("AKit_BrakePedalReq")->SetResult(0);      
+      message->GetSignal("AKit_BrakePedalReq")->SetResult(msg->pedal_cmd);      
     } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_actuator) {
       message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(1); 
-      message->GetSignal("AKit_BrakePcntTorqueReq")->SetResult(0);           
+      message->GetSignal("AKit_BrakePcntTorqueReq")->SetResult(msg->torque_cmd);           
     } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle) {
       message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(2);      
-      message->GetSignal("AKit_SpeedModeAccelLim")->SetResult(0);
-      message->GetSignal("AKit_SpeedModeDecelLim")->SetResult(0);      
+      message->GetSignal("AKit_SpeedModeAccelLim")->SetResult(msg->accel_limit);
+      message->GetSignal("AKit_SpeedModeDecelLim")->SetResult(msg->decel_limit);      
     } else {
       message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(0);
     }    
@@ -744,7 +744,8 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
       message->GetSignal("AKit_SteeringWhlPcntTrqReq")->SetResult(msg->torque_cmd);      
     } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_actuator) {
       message->GetSignal("AKit_SteeringReqType")->SetResult(1);      
-      message->GetSignal("AKit_SteeringWhlAngleReq")->SetResult(msg->angle_cmd);
+      double scmd = std::max((float)-470.0, std::min((float)470.0, (float)(msg->angle_cmd * (180 / M_PI * 1.0))));
+      message->GetSignal("AKit_SteeringWhlAngleReq")->SetResult(scmd);
     } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle) {
       message->GetSignal("AKit_SteeringReqType")->SetResult(2);      
       message->GetSignal("AKit_SteeringVehCurvatureReq")->SetResult(msg->vehicle_curvature_cmd);

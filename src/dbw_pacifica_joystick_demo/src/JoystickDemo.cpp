@@ -134,6 +134,8 @@ void JoystickDemo::cmdCallback(const ros::TimerEvent& event)
   // Turn signal
   dbw_pacifica_msgs::MiscCmd misc_msg;
   misc_msg.cmd.value = data_.turn_signal_cmd;
+  misc_msg.global_enable = true;
+  misc_msg.enable_joystick_limits = true;
   misc_msg.rolling_counter = counter_;
   pub_misc_.publish(misc_msg);
 }
