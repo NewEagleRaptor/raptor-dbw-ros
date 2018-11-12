@@ -92,6 +92,7 @@ namespace NewEagle
      uint32_t GetRawId();
      void SetComment(NewEagle::DbcMessageComment comment);
      std::map<std::string, NewEagle::DbcSignal>* GetSignals();
+     bool AnyMultiplexedSignals();
 
    private:
      std::map<std::string, NewEagle::DbcSignal> _signals;

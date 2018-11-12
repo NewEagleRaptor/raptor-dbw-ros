@@ -4,13 +4,11 @@ float32 pedal_cmd
 # Enable
 bool enable
 
-# Clear driver overrides
-bool clear
-
 # Watchdog counter (optional)
-uint8 count
+uint8 rolling_counter
 
-float32 TORQUE_BOO=520  # Nm, brake lights threshold
-float32 TORQUE_MAX=3412 # Nm, maximum torque
+float32 torque_cmd # %-torque 
+float32 accel_limit # m/s^2
+float32 decel_limit # m/s^2
 
 ActuatorControlMode control_type

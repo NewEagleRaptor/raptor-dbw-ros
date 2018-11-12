@@ -98,39 +98,45 @@ void JoystickDemo::cmdCallback(const ros::TimerEvent& event)
   dbw_pacifica_msgs::AcceleratorPedalCmd accelerator_pedal_msg;
   accelerator_pedal_msg.enable = true;
   accelerator_pedal_msg.ignore = ignore_;
-  accelerator_pedal_msg.accelerator_pedal_cmd_rolling_counter = counter_;
+  accelerator_pedal_msg.rolling_counter = counter_;
   accelerator_pedal_msg.pedal_cmd = data_.accelerator_pedal_joy * 100;
+  accelerator_pedal_msg.control_type.value = dbw_pacifica_msgs::ActuatorControlMode::open_loop;
   pub_accelerator_pedal_.publish(accelerator_pedal_msg);
 
   // Brake
   dbw_pacifica_msgs::BrakeCmd brake_msg;
   brake_msg.enable = true;
-  brake_msg.count = counter_;
+  brake_msg.rolling_counter = counter_;
   brake_msg.pedal_cmd = data_.brake_joy * 100;
+  brake_msg.control_type.value = dbw_pacifica_msgs::ActuatorControlMode::open_loop;
   pub_brake_.publish(brake_msg);
 
   // Steering
   dbw_pacifica_msgs::SteeringCmd steering_msg;
   steering_msg.enable = true;
   steering_msg.ignore = ignore_;
-  steering_msg.count = counter_;
-  steering_msg.steering_wheel_angle_cmd = data_.steering_joy;
-  steering_msg.steering_wheel_angle_velocity = svel_;
+  steering_msg.rolling_counter = counter_;
+  steering_msg.angle_cmd = data_.steering_joy;
+  steering_msg.angle_velocity = svel_;
+  steering_msg.control_type.value = dbw_pacifica_msgs::ActuatorControlMode::closed_loop_actuator;
   if (!data_.steering_mult) {
-    steering_msg.steering_wheel_angle_cmd *= 0.5;
+    steering_msg.angle_cmd *= 0.5;
   }
   pub_steering_.publish(steering_msg);
 
   // Gear
   dbw_pacifica_msgs::GearCmd gear_msg;
   gear_msg.cmd.gear = data_.gear_cmd;
-  gear_msg.gear_cmd_rolling_counter = counter_;
+  gear_msg.enable = true;
+  gear_msg.rolling_counter = counter_;
   pub_gear_.publish(gear_msg);
 
   // Turn signal
   dbw_pacifica_msgs::MiscCmd misc_msg;
   misc_msg.cmd.value = data_.turn_signal_cmd;
-  misc_msg.misc_cmd_rolling_counter = counter_;
+  misc_msg.global_enable = true;
+  misc_msg.enable_joystick_limits = true;
+  misc_msg.rolling_counter = counter_;
   pub_misc_.publish(misc_msg);
 }
 

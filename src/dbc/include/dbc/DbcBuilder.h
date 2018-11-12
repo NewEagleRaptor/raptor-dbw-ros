@@ -157,19 +157,19 @@ namespace NewEagle
       {
         std::string name = parser.ReadCIdentifier();
         char mux = parser.ReadNextChar("mux");
-        int32_t multiplexMode = -1;
+        NewEagle::MultiplexerMode multiplexMode = NewEagle::NONE;
         int32_t muxSwitch = 0;
 
         switch (mux) {
           case ':':
-            multiplexMode = 0;
+            multiplexMode = NewEagle::NONE;
             break;
           case 'M':
-            multiplexMode = 1;
+            multiplexMode = NewEagle::MUX_SWITCH;
             parser.SeekSeparator(':');
             break;
           case 'm':
-            multiplexMode = 2;
+            multiplexMode = NewEagle::MUX_SIGNAL;
             muxSwitch = parser.ReadInt();
             parser.SeekSeparator(':');
             break;
@@ -232,9 +232,19 @@ namespace NewEagle
 
         // Need to include Min, Max, DataType, MuxSwitch, Unit, Receiver
         // Find a way to include the DLC...
-        NewEagle::DbcSignal signal(8, gain, offset, startBit, endianness, length, sign, name);
-        signal.SetDataType(type);
-        return signal;
+        NewEagle::DbcSignal* signal;
+
+        if (NewEagle::MUX_SIGNAL == multiplexMode) {
+          //NewEagle::DbcSignal signal(8, gain, offset, startBit, endianness, length, sign, name, multiplexMode, muxSwitch);
+          signal = new NewEagle::DbcSignal(8, gain, offset, startBit, endianness, length, sign, name, multiplexMode, muxSwitch);
+        }
+        else {
+          //NewEagle::DbcSignal signal(8, gain, offset, startBit, endianness, length, sign, name, multiplexMode);
+          signal = new NewEagle::DbcSignal(8, gain, offset, startBit, endianness, length, sign, name, multiplexMode);
+        }
+
+        signal->SetDataType(type);
+        return NewEagle::DbcSignal(*signal);
       }
 }
 

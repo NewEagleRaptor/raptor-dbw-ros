@@ -96,9 +96,36 @@ namespace NewEagle
     uint8_t *ptr = (uint8_t*)frame.data.elems;
     memset(ptr, 0x00, 8);
 
-    for(std::map<std::string, NewEagle::DbcSignal>::iterator it = _signals.begin(); it != _signals.end(); it++)
-    {
-      Pack(ptr, it->second);
+    if(!AnyMultiplexedSignals()) {
+      for(std::map<std::string, NewEagle::DbcSignal>::iterator it = _signals.begin(); it != _signals.end(); it++) {
+        Pack(ptr, it->second);
+      }    
+    }
+    else{
+      // Start by looping through an only setting signals that are not multiplexed
+      // While we're at it, we can pick out the mutliplexer switch.  
+      // Perform a second loop to find the mulitplexed signal based on the multiplexer switch.
+            
+      NewEagle::DbcSignal* muxSwitch; // only one multiplexer switch per message is allowed
+
+      for(std::map<std::string, NewEagle::DbcSignal>::iterator it = _signals.begin(); it != _signals.end(); it++) {
+        if (NewEagle::NONE == it->second.GetMultiplexerMode()) {
+          Pack(ptr, it->second);
+        }                
+        if (NewEagle::MUX_SWITCH == it->second.GetMultiplexerMode()) {
+          muxSwitch = &it->second;
+          Pack(ptr, it->second);
+        }
+      }  
+
+      for(std::map<std::string, NewEagle::DbcSignal>::iterator it = _signals.begin(); it != _signals.end(); it++) {
+        if (NewEagle::MUX_SIGNAL == it->second.GetMultiplexerMode()) {
+          if (muxSwitch->GetResult() == it->second.GetMultiplexerSwitch()) {
+            Pack(ptr, it->second);
+          }
+
+        }                  
+      }
     }
 
     return frame;
@@ -108,11 +135,41 @@ namespace NewEagle
   {
     uint8_t *ptr = (uint8_t*)msg->data.elems;
 
-    for(std::map<std::string, NewEagle::DbcSignal>::iterator it = _signals.begin(); it != _signals.end(); it++)
-    {
-      double res = Unpack(ptr, it->second);
-      it->second.SetResult(res);
+    if(!AnyMultiplexedSignals()) {
+      for(std::map<std::string, NewEagle::DbcSignal>::iterator it = _signals.begin(); it != _signals.end(); it++) {
+        double res = Unpack(ptr, it->second);
+        it->second.SetResult(res);
+      }
     }
+    else{
+      // Start by looping through an only setting signals that are not multiplexed
+      // While we're at it, we can pick out the mutliplexer switch.  
+      // Perform a second loop to find the mulitplexed signal based on the multiplexer switch.
+            
+      NewEagle::DbcSignal* muxSwitch; // only one multiplexer switch per message is allowed
+
+      for(std::map<std::string, NewEagle::DbcSignal>::iterator it = _signals.begin(); it != _signals.end(); it++) {
+        if (NewEagle::NONE == it->second.GetMultiplexerMode()) {
+          double res = Unpack(ptr, it->second);
+          it->second.SetResult(res);
+        }                
+        if (NewEagle::MUX_SWITCH == it->second.GetMultiplexerMode()) {
+          muxSwitch = &it->second;
+          double res = Unpack(ptr, it->second);
+          it->second.SetResult(res);
+        }
+      }  
+
+      for(std::map<std::string, NewEagle::DbcSignal>::iterator it = _signals.begin(); it != _signals.end(); it++) {
+        if (NewEagle::MUX_SIGNAL == it->second.GetMultiplexerMode()) {
+          if (muxSwitch->GetResult() == it->second.GetMultiplexerSwitch()) {
+            double res = Unpack(ptr, it->second);
+            it->second.SetResult(res);
+          }
+
+        }                  
+      }
+    }    
 
   }
 
@@ -135,10 +192,6 @@ namespace NewEagle
     NewEagle::DbcSignal* signal = &it->second;
 
     return signal;
-
-    // borchert-ne - keep around for now, Useful when debugging pack/unpack code.
-    //NewEagle::DbcSignal WhlAngleVelocity(8, 1.0, 0.0, 16, NewEagle::LITTLE_END, 16, NewEagle::SIGNED);
-    //return WhlAngleVelocity;
   }
 
   void DbcMessage::SetRawText(std::string rawText)
@@ -159,5 +212,18 @@ namespace NewEagle
   std::map<std::string, NewEagle::DbcSignal>* DbcMessage::GetSignals()
   {
     return &_signals;
+  }
+
+  bool DbcMessage::AnyMultiplexedSignals()
+  {
+    for(std::map<std::string, NewEagle::DbcSignal>::iterator it = _signals.begin(); it != _signals.end(); it++)
+    {
+      if (NewEagle::MUX_SWITCH == it->second.GetMultiplexerMode())
+      {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

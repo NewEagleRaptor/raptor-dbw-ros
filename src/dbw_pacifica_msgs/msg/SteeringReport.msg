@@ -6,17 +6,12 @@ float32 steering_wheel_angle_cmd  # degrees
 float32 steering_wheel_torque     # 0 to 100%
 
 # Status
-bool enabled  # Enabled
-bool driver_override
+bool enabled  
+bool driver_activity
 
 bool fault_steering_system
-bool fault_dbw_system
 
-# Faults
-bool fault_bus1
-bool fault_bus2
-bool fault_calibration
-bool fault_power
+bool overheat_prevention_mode
 
 uint8 rolling_counter
 

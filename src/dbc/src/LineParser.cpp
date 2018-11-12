@@ -111,7 +111,7 @@ namespace NewEagle
 
     if (AtEOL())
     {
-      throw LineParserAtEOLException(); //std::runtime_error("ReadNextChar: AtEOL");
+      throw LineParserAtEOLException(); 
     }
 
     int32_t idx = _position;
@@ -141,7 +141,7 @@ namespace NewEagle
 
     if (AtEOL())
     {
-      throw LineParserAtEOLException(); //throw std::runtime_error("PeekUInt: AtEOL");
+      throw LineParserAtEOLException(); 
     }
 
     int32_t position = _position;
@@ -165,7 +165,7 @@ namespace NewEagle
 
     if (0 == len)
     {
-      throw LineParserLenZeroException(); //std::runtime_error("PeekUInt: Len is 0");
+      throw LineParserLenZeroException(); 
     }
 
     std::istringstream reader(_line.substr(startIdx, len));
@@ -181,7 +181,7 @@ namespace NewEagle
 
     if (AtEOL())
     {
-      throw LineParserAtEOLException(); //throw std::runtime_error("ReadUInt: AtEOL");
+      throw LineParserAtEOLException(); 
     }
 
     int32_t startIdx = _position;
@@ -203,7 +203,7 @@ namespace NewEagle
 
     if (0 == len)
     {
-      throw LineParserLenZeroException(); //throw std::runtime_error("ReadUInt: Len is 0");
+      throw LineParserLenZeroException(); 
     }
 
     std::istringstream reader(_line.substr(startIdx, len));
@@ -232,12 +232,12 @@ namespace NewEagle
 
     if (AtEOL())
     {
-      throw LineParserAtEOLException(); //throw std::runtime_error("ReadInt: AtEOL");
+      throw LineParserAtEOLException(); 
     }
 
     if (!isdigit(_line[_position]) && _line[_position] != '-' && _line[_position] != '+')
     {
-      throw LineParserInvalidCharException(); //throw std::runtime_error("ReadInt: Incorrect formatting");
+      throw LineParserInvalidCharException(); 
     }
 
     int32_t startIdx = _position;
@@ -259,7 +259,7 @@ namespace NewEagle
 
     if (0 == len)
     {
-      throw LineParserLenZeroException(); //throw std::runtime_error("ReadInt: Len is 0");
+      throw LineParserLenZeroException(); 
     }
 
     std::istringstream reader(_line.substr(startIdx, len));
@@ -276,12 +276,12 @@ namespace NewEagle
 
     if (AtEOL())
     {
-      throw LineParserAtEOLException(); //throw std::runtime_error("ReadDouble: AtEOL");
+      throw LineParserAtEOLException(); 
     }
 
     if (!isdigit(_line[_position]) && _line[_position] != '-' && _line[_position] != '+')
     {
-      throw LineParserInvalidCharException(); //throw std::runtime_error("ReadDouble: Incorrect formatting");
+      throw LineParserInvalidCharException(); 
     }
 
     int32_t startIdx = _position;
@@ -331,7 +331,7 @@ namespace NewEagle
         case NewEagle::READ_SIGN:
           if (!isdigit(c))
           {
-            throw LineParserInvalidCharException(); //throw std::runtime_error("ReadDouble: Not correct symbol");
+            throw LineParserInvalidCharException();
           }
           else
           {
@@ -357,7 +357,7 @@ DoneReading:
 
     if (0 == len)
     {
-      throw LineParserLenZeroException(); //throw std::runtime_error("ReadDouble: Len is 0");
+      throw LineParserLenZeroException(); 
     }
 
     std::istringstream reader(_line.substr(startIdx, len));
@@ -397,7 +397,7 @@ DoneReading:
 
     if (AtEOL())
     {
-      throw LineParserAtEOLException(); //throw std::runtime_error("ReadQuotedString: AtEOL");
+      throw LineParserAtEOLException(); 
     }
 
     if (_line[_position] != '"')
@@ -420,12 +420,12 @@ DoneReading:
 
     if (-1 == len)
     {
-      throw LineParserLenZeroException(); //throw std::runtime_error("ReadQuotedString: Len < 0");
+      throw LineParserLenZeroException();
     }
 
     if (0 == len)
     {
-      throw LineParserLenZeroException(); //throw std::runtime_error("ReadQuotedString: Len is 0");
+      throw LineParserLenZeroException(); 
     }
 
     return _line.substr(startIdx, len);

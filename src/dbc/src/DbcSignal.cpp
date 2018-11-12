@@ -44,7 +44,8 @@ namespace NewEagle
     ByteOrder endianness,
     uint8_t length,
     SignType sign,
-    std::string name)
+    std::string name,
+    MultiplexerMode multiplexerMode)
   {
     _dlc = dlc;
     _gain  = gain;
@@ -54,6 +55,31 @@ namespace NewEagle
     _length = length;
     _sign = sign;
     _name = name;
+    _multiplexerMode = multiplexerMode;
+  }
+
+  DbcSignal::DbcSignal(
+    uint8_t dlc,
+    double gain,
+    double offset,
+    uint8_t startBit,
+    ByteOrder endianness,
+    uint8_t length,
+    SignType sign,
+    std::string name,
+    MultiplexerMode multiplexerMode,
+    int32_t multiplexerSwitch)
+  {
+    _dlc = dlc;
+    _gain  = gain;
+    _offset = offset;
+    _startBit = startBit;
+    _endianness = endianness;
+    _length = length;
+    _sign = sign;
+    _name = name;
+    _multiplexerMode = multiplexerMode;
+    _multiplexerSwitch = multiplexerSwitch;
   }
 
   DbcSignal::~DbcSignal()
@@ -132,5 +158,15 @@ namespace NewEagle
   NewEagle::DataType DbcSignal::GetDataType()
   {
     return _type;
+  }
+
+  NewEagle::MultiplexerMode DbcSignal::GetMultiplexerMode() const
+  {
+    return _multiplexerMode;
+  }
+
+  int32_t DbcSignal::GetMultiplexerSwitch() const
+  {
+    return _multiplexerSwitch;
   }
 }

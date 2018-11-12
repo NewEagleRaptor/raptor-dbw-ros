@@ -1,24 +1,18 @@
 # Steering Wheel
-float32 steering_wheel_angle_cmd        # degrees, range -500 to 500
-float32 steering_wheel_angle_velocity   # degrees/s, range 0 to 498, 0 = maximum
+float32 angle_cmd        # degrees, range -500 to 500
+float32 angle_velocity   # degrees/s, range 0 to 498, 0 = maximum
 
 # Enable
 bool enable
 
-# Clear driver overrides
-bool clear
-
 # Ignore driver overrides
 bool ignore
 
-# Disable the driver override audible warning
-bool quiet
-
 # Watchdog counter (optional)
-uint8 count
+uint8 rolling_counter
 
-SteeringCommandType command_type
+float32 torque_cmd # %-torque
 
-float32 steering_wheel_torque_cmd
+float32 vehicle_curvature_cmd # 1/m
 
 ActuatorControlMode control_type

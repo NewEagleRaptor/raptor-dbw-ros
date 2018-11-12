@@ -1,11 +1,12 @@
 Header header
 
-float32 vehicle_battery_volts
-float32 vehicle_battery_current
-float32 vehicle_alternator_current
+float32 dbw_battery_volts # Volts
+float32 vehicle_battery_volts # Volts 
+float32 vehicle_battery_current # Amps
+float32 vehicle_alternator_current #Amps
 
-float32 aux_battery_volts
-float32 aux_dcdc_current
+float32 dcdc_current # Amps
+float32 alternator_current # Amps
 
-bool aux_battery_contactor
-bool aux_inverter_contactor
+bool aux_battery_contactor # On/Off
+bool aux_inverter_contactor # On/Off

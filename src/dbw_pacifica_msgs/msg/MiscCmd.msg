@@ -1,5 +1,26 @@
 # Turn signal command enumeration
 TurnSignal cmd
 
-DoorRequest door_request
-uint8 misc_cmd_rolling_counter
+DoorRequest door_request_right_rear
+
+uint8 rolling_counter
+
+bool global_enable
+
+bool enable_joystick_limits
+
+HighBeam high_beam_cmd
+
+WiperFront front_wiper_cmd
+
+WiperRear rear_wiper_cmd
+
+Ignition ignition_cmd
+DoorRequest door_request_left_rear
+DoorRequest door_request_lift_gate
+
+uint16 ecu_build_number
+
+bool block_standard_cruise_buttons
+bool block_adaptive_cruise_buttons
+bool block_turn_signal_stalk

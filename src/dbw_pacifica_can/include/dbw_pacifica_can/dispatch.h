@@ -48,6 +48,7 @@ typedef enum {
 typedef enum {
   WHEEL_SPEED_MUX0  = 0x00,
   WHEEL_SPEED_MUX1  = 0x01,
+  WHEEL_SPEED_MUX2  = 0x02,
 } WheelSpeedMux;
 
 #undef BUILD_ASSERT
@@ -70,7 +71,8 @@ enum {
   ID_REPORT_WHEEL_POSITION      = 0x1F06,
   ID_MISC_REPORT                = 0x1F01,
   ID_LOW_VOLTAGE_SYSTEM_REPORT  = 0x1F11,
-
+  ID_BRAKE_2_REPORT             = 0x1F12,
+  ID_STEERING_2_REPORT          = 0x1F13,
 };
 
 } //dbw_pacifica_can

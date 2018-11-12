@@ -8,11 +8,9 @@ float32 pedal_output
 # Status
 bool enabled
 bool ignore_driver
-bool override # Driver override
-bool driver   # Driver activity
+bool driver_activity   # Driver activity
 
 bool fault_accel_pedal_system
-bool fault_dbw_system
 
 # Faults
 bool fault_ch1

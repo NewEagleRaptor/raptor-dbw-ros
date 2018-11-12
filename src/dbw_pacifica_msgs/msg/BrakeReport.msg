@@ -6,10 +6,9 @@ float32 pedal_output
 
 # Status
 bool enabled  # Enabled
-bool driver   # Driver activity
+bool driver_activity   # Driver activity
 
 bool fault_brake_system
-bool fault_dbw_system
 
 # Faults
 bool fault_ch1
