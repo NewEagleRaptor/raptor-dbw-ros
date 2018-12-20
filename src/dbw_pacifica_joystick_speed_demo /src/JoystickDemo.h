@@ -44,6 +44,7 @@
 #include <dbw_pacifica_msgs/SteeringCmd.h>
 #include <dbw_pacifica_msgs/GearCmd.h>
 #include <dbw_pacifica_msgs/MiscCmd.h>
+#include <dbw_pacifica_msgs/GlobalEnableCmd.h>
 
 namespace joystick_demo
 {
@@ -77,7 +78,7 @@ private:
   ros::Publisher pub_misc_;
   ros::Publisher pub_enable_;
   ros::Publisher pub_disable_;
-
+  ros::Publisher pub_global_enable_;
   // Parameters
   bool ignore_; // Ignore driver overrides
   bool enable_; // Use enable and disable buttons

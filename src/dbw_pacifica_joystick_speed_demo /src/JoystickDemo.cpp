@@ -68,6 +68,7 @@ JoystickDemo::JoystickDemo(ros::NodeHandle &node, ros::NodeHandle &priv_nh) : co
   pub_brake_ = node.advertise<dbw_pacifica_msgs::BrakeCmd>("brake_cmd", 1);
   pub_misc_ = node.advertise<dbw_pacifica_msgs::MiscCmd>("misc_cmd", 1);
   pub_steering_ = node.advertise<dbw_pacifica_msgs::SteeringCmd>("steering_cmd", 1);
+  pub_global_enable_ = node.advertise<dbw_pacifica_msgs::GlobalEnableCmd>("global_enable_cmd", 1);
   pub_gear_ = node.advertise<dbw_pacifica_msgs::GearCmd>("gear_cmd", 1);
   if (enable_) {
     pub_enable_ = node.advertise<std_msgs::Empty>("enable", 1);
@@ -139,10 +140,14 @@ void JoystickDemo::cmdCallback(const ros::TimerEvent& event)
   // Turn signal
   dbw_pacifica_msgs::MiscCmd misc_msg;
   misc_msg.cmd.value = data_.turn_signal_cmd;
-  misc_msg.global_enable = true;
-  misc_msg.enable_joystick_limits = true;
   misc_msg.rolling_counter = counter_;
   pub_misc_.publish(misc_msg);
+
+  dbw_pacifica_msgs::GlobalEnableCmd globalEnable_msg;
+  globalEnable_msg.global_enable = true;
+  globalEnable_msg.enable_joystick_limits = true;
+  globalEnable_msg.rolling_counter = counter_;
+  pub_global_enable_.publish(globalEnable_msg);
 }
 
 void JoystickDemo::recvJoy(const sensor_msgs::Joy::ConstPtr& msg)

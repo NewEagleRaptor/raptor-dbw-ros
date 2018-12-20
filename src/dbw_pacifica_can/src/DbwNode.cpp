@@ -128,6 +128,7 @@ DbwNode::DbwNode(ros::NodeHandle &node, ros::NodeHandle &priv_nh)
   sub_steering_ = node.subscribe("steering_cmd", 1, &DbwNode::recvSteeringCmd, this, ros::TransportHints().tcpNoDelay(true));
   sub_gear_ = node.subscribe("gear_cmd", 1, &DbwNode::recvGearCmd, this, ros::TransportHints().tcpNoDelay(true));
   sub_misc_ = node.subscribe("misc_cmd", 1, &DbwNode::recvMiscCmd, this, ros::TransportHints().tcpNoDelay(true));
+  sub_global_enable_ = node.subscribe("global_enable_cmd", 1, &DbwNode::recvGlobalEnableCmd, this, ros::TransportHints().tcpNoDelay(true));
 
 
   pdu1_relay_pub_ = node.advertise<pdu_msgs::RelayCommand>("/pduB/relay_cmd", 1000);
@@ -798,24 +799,17 @@ void DbwNode::recvGearCmd(const dbw_pacifica_msgs::GearCmd::ConstPtr& msg)
   pub_can_.publish(frame);
 }
 
-void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
+void DbwNode::recvGlobalEnableCmd(const dbw_pacifica_msgs::GlobalEnableCmd::ConstPtr& msg)
 {
-  NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_Misc");
+  NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_GlobalEnbl");
 
   message->GetSignal("AKit_TurnSignalReq")->SetResult(0);
-  message->GetSignal("AKit_RightRearDoorReq")->SetResult(0);
+
+  message->GetSignal("AKit_GlobalEnblRollingCntr")->SetResult(0);
   message->GetSignal("AKit_GlobalByWireEnblReq")->SetResult(0);
   message->GetSignal("AKit_EnblJoystickLimits")->SetResult(0);
-  message->GetSignal("AKit_HighBeamReq")->SetResult(0);
-  message->GetSignal("AKit_FrontWiperReq")->SetResult(0);
-  message->GetSignal("AKit_RearWiperReq")->SetResult(0);
-  message->GetSignal("AKit_IgnitionReq")->SetResult(0);
-  message->GetSignal("AKit_LeftRearDoorReq")->SetResult(0);
-  message->GetSignal("AKit_LiftgateDoorReq")->SetResult(0);
   message->GetSignal("AKit_SoftwareBuildNumber")->SetResult(0);
-  message->GetSignal("AKit_BlockBasicCruiseCtrlBtns")->SetResult(0);
-  message->GetSignal("AKit_BlockAdapCruiseCtrlBtns")->SetResult(0);
-  message->GetSignal("AKit_BlockTurnSigStalkInpts")->SetResult(0);
+  message->GetSignal("Akit_GlobalEnblChecksum")->SetResult(0);
 
   if (enabled()) {
     if(msg->global_enable) {
@@ -825,6 +819,46 @@ void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
     if(msg->enable_joystick_limits) {
       message->GetSignal("AKit_EnblJoystickLimits")->SetResult(1);
     }
+
+    message->GetSignal("AKit_SoftwareBuildNumber")->SetResult(msg->ecu_build_number);
+  }  
+   
+  message->GetSignal("AKit_GlobalEnblRollingCntr")->SetResult(msg->rolling_counter);
+   
+  can_msgs::Frame frame = message->GetFrame();
+
+  pub_can_.publish(frame);      
+}
+
+void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
+{
+  NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_OtherActuators");
+
+  message->GetSignal("AKit_TurnSignalReq")->SetResult(0);
+  message->GetSignal("AKit_RightRearDoorReq")->SetResult(0);
+//  message->GetSignal("AKit_GlobalByWireEnblReq")->SetResult(0);
+//  message->GetSignal("AKit_EnblJoystickLimits")->SetResult(0);
+  message->GetSignal("AKit_HighBeamReq")->SetResult(0);
+  message->GetSignal("AKit_FrontWiperReq")->SetResult(0);
+  message->GetSignal("AKit_RearWiperReq")->SetResult(0);
+  message->GetSignal("AKit_IgnitionReq")->SetResult(0);
+  message->GetSignal("AKit_LeftRearDoorReq")->SetResult(0);
+  message->GetSignal("AKit_LiftgateDoorReq")->SetResult(0);
+//  message->GetSignal("AKit_SoftwareBuildNumber")->SetResult(0);
+  message->GetSignal("AKit_BlockBasicCruiseCtrlBtns")->SetResult(0);
+  message->GetSignal("AKit_BlockAdapCruiseCtrlBtns")->SetResult(0);
+  message->GetSignal("AKit_BlockTurnSigStalkInpts")->SetResult(0);
+  message->GetSignal("AKit_OtherChecksum")->SetResult(0);
+
+  if (enabled()) {
+//   
+// if(msg->global_enable) {
+//      message->GetSignal("AKit_GlobalByWireEnblReq")->SetResult(1);
+//    }
+
+//    if(msg->enable_joystick_limits) {
+//      message->GetSignal("AKit_EnblJoystickLimits")->SetResult(1);
+//    }
 
     message->GetSignal("AKit_TurnSignalReq")->SetResult(msg->cmd.value);
 
@@ -839,7 +873,7 @@ void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
     message->GetSignal("AKit_LeftRearDoorReq")->SetResult(msg->door_request_left_rear.value);
     message->GetSignal("AKit_LiftgateDoorReq")->SetResult(msg->door_request_lift_gate.value);
 
-    message->GetSignal("AKit_SoftwareBuildNumber")->SetResult(msg->ecu_build_number);
+//    message->GetSignal("AKit_SoftwareBuildNumber")->SetResult(msg->ecu_build_number);
 
     message->GetSignal("AKit_BlockBasicCruiseCtrlBtns")->SetResult(msg->block_standard_cruise_buttons);
     message->GetSignal("AKit_BlockAdapCruiseCtrlBtns")->SetResult(msg->block_adaptive_cruise_buttons);
@@ -847,7 +881,7 @@ void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
 
   }
 
-  message->GetSignal("AKit_MiscCmdRollingCntr")->SetResult(msg->rolling_counter);
+  message->GetSignal("AKit_OtherRollingCntr")->SetResult(msg->rolling_counter);
 
   can_msgs::Frame frame = message->GetFrame();
 

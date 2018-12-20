@@ -39,6 +39,7 @@ add_message_files(DIRECTORY msg FILES
   WheelSpeedType.msg
   WiperFront.msg  
   WiperRear.msg
+  GlobalEnableCmd.msg
 )
 
 generate_messages(DEPENDENCIES

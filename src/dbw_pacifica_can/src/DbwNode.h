@@ -59,6 +59,8 @@
 #include <dbw_pacifica_msgs/ActuatorControlMode.h>
 #include <dbw_pacifica_msgs/Brake2Report.h>
 #include <dbw_pacifica_msgs/Steering2Report.h>
+#include <dbw_pacifica_msgs/GlobalEnableCmd.h>
+
 
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/JointState.h>
@@ -97,6 +99,7 @@ private:
   void recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& msg);
   void recvGearCmd(const dbw_pacifica_msgs::GearCmd::ConstPtr& msg);
   void recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg);
+  void recvGlobalEnableCmd(const dbw_pacifica_msgs::GlobalEnableCmd::ConstPtr& msg);
 
   ros::Timer timer_;
   bool prev_enable_;
@@ -175,6 +178,7 @@ private:
   ros::Subscriber sub_steering_;
   ros::Subscriber sub_gear_;
   ros::Subscriber sub_misc_;
+  ros::Subscriber sub_global_enable_;
 
   // Published topics
   ros::Publisher pub_can_;
