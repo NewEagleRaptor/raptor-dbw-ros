@@ -12,22 +12,14 @@
       <remap from="/can_tx" to="/can0/can_tx" />
   </node>
 
-  <node
-    pkg="socketcan_bridge"
-    type="socketcan_to_topic_node"
-    name="socketcan_to_topic"
-    respawn="true"
-    ns="can0">
-    <param name="can_device" value="can0" />
-  </node>
+  <arg name="can_hardware_id" default="18291" />
+  <arg name="can_circuit_id" default="0" />
+  <arg name="can_bit_rate" default="250000" />
 
-  <node
-    pkg="socketcan_bridge"
-    type="topic_to_socketcan_node"
-    name="topic_to_socketcan"
-    respawn="true"
-    ns="can0">
-    <param name="can_device" value="can0" />
+  <node ns="can0" pkg="kvaser_interface" type="kvaser_can_bridge" name="kvaser_can_bridge">
+    <param name="can_hardware_id" value="$(arg can_hardware_id)" />
+    <param name="can_circuit_id" value="$(arg can_circuit_id)" />
+    <param name="can_bit_rate" value="$(arg can_bit_rate)" />
   </node>
 
 </launch>
