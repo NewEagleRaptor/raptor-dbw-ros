@@ -2,18 +2,27 @@
 <launch>
 
   <!-- DBW system -->
+<<<<<<< HEAD
   <node ns="vehicle" pkg="dbw_pacifica_can" type="dbw_node" name="dbw" output="screen">
     <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)/New_Eagle_DBW_3.1.292.dbc" />
     <remap from="can_rx" to="/can0/can_rx" />
     <remap from="can_tx" to="/can0/can_tx" />
+=======
+  <node ns="vehicle" pkg="dbw_pacifica_can" type="dbw_node" name="dbw" output="screen" > 
+    <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)/New_Eagle_DBW.dbc" />
+    <remap from="can_rx" to="/can0/can_tx" />
+    <remap from="can_tx" to="/can0/can_rx" />
+>>>>>>> 30fed110e232e90efa470823d23d9db0b6710313
   </node>
 
-  <node ns="can0" pkg="socketcan_bridge" type="socketcan_to_topic_node" name="socketcan_to_topic" output="screen">
-    <param name="can_device" value="can0" />
-  </node>
+  <arg name="can_hardware_id" default="18291" />
+  <arg name="can_circuit_id" default="0" />
+  <arg name="can_bit_rate" default="500000" />
 
-  <node ns="can0" pkg="socketcan_bridge" type="topic_to_socketcan_node" name="topic_to_socketcan" output="screen">
-    <param name="can_device" value="can0" />
+  <node ns="can0" pkg="kvaser_interface" type="kvaser_can_bridge" name="kvaser_can_bridge">
+    <param name="can_hardware_id" value="$(arg can_hardware_id)" />
+    <param name="can_circuit_id" value="$(arg can_circuit_id)" />
+    <param name="can_bit_rate" value="$(arg can_bit_rate)" />
   </node>
 
   <!-- Joystick demo -->
