@@ -905,15 +905,9 @@ void DbwNode::timerCallback(const ros::TimerEvent& event)
     if (override_brake_) {
       // Might have an issue with WatchdogCntr when these are set.
       NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_BrakeRequest");
-<<<<<<< HEAD
-      message->GetSignal("AKit_BrakePedalCmd")->SetResult(0);
-      message->GetSignal("AKit_BrakeCtrlEnblCmd")->SetResult(0);
-      message->GetSignal("AKit_BrakePedalCtrlMode")->SetResult(0);
-=======
       message->GetSignal("AKit_BrakePedalReq")->SetResult(0);
       message->GetSignal("AKit_BrakeCtrlEnblReq")->SetResult(0);
       //message->GetSignal("AKit_BrakePedalCtrlMode")->SetResult(0);
->>>>>>> 30fed110e232e90efa470823d23d9db0b6710313
       pub_can_.publish(message->GetFrame());
     }
 
@@ -921,40 +915,22 @@ void DbwNode::timerCallback(const ros::TimerEvent& event)
     {
       // Might have an issue with WatchdogCntr when these are set.
       NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_AccelPdlRequest");
-<<<<<<< HEAD
-      message->GetSignal("AKit_AccelPdlCmd")->SetResult(0);
-      message->GetSignal("AKit_AccelPdlEnblCmd")->SetResult(0);
-      message->GetSignal("Akit_AccelPdlIgnoreDriverOvrd")->SetResult(0);
-      message->GetSignal("AKit_AccelPdlCtrlMode")->SetResult(0);
-      message->GetSignal("AKit_AccelPdlChecksum")->SetResult(0);
-=======
       message->GetSignal("AKit_AccelPdlReq")->SetResult(0);
       message->GetSignal("AKit_AccelPdlEnblReq")->SetResult(0);
       message->GetSignal("Akit_AccelPdlIgnoreDriverOvrd")->SetResult(0);
       //message->GetSignal("AKit_AccelPdlCtrlMode")->SetResult(0);
->>>>>>> 30fed110e232e90efa470823d23d9db0b6710313
       pub_can_.publish(message->GetFrame());
     }
 
     if (override_steering_) {
       // Might have an issue with WatchdogCntr when these are set.
       NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_SteeringRequest");
-<<<<<<< HEAD
-      message->GetSignal("AKit_SteeringWhlAngleCmd")->SetResult(0);
-      message->GetSignal("AKit_SteeringWhlAngleVelocity")->SetResult(0);
-      message->GetSignal("AKit_SteeringWhlIgnoreDriverOvrd")->SetResult(0);
-      message->GetSignal("AKit_SteeringWhlTrqCmd")->SetResult(0);
-      message->GetSignal("AKit_SteeringWhlCtrlMode")->SetResult(0);
-      message->GetSignal("AKit_SteeringWhlCmdType")->SetResult(0);
-      message->GetSignal("AKit_SteeringChecksum")->SetResult(0);
-=======
       message->GetSignal("AKit_SteeringWhlAngleReq")->SetResult(0);
       message->GetSignal("AKit_SteeringWhlAngleVelocityLim")->SetResult(0);
       message->GetSignal("AKit_SteeringWhlIgnoreDriverOvrd")->SetResult(0);
       message->GetSignal("AKit_SteeringWhlPcntTrqReq")->SetResult(0);
       //message->GetSignal("AKit_SteeringWhlCtrlMode")->SetResult(0);
       //message->GetSignal("AKit_SteeringWhlCmdType")->SetResult(0);
->>>>>>> 30fed110e232e90efa470823d23d9db0b6710313
 
       pub_can_.publish(message->GetFrame());
     }

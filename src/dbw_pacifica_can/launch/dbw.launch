@@ -1,15 +1,9 @@
 <!-- -*- mode: XML -*- -->
 <launch>
   <node ns="vehicle" pkg="dbw_pacifica_can" type="dbw_node" name="dbw" output="screen">
-<<<<<<< HEAD
     <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)/New_Eagle_DBW_3.1.292.dbc" />
     <remap from="can_rx" to="/can0/can_rx" />
     <remap from="can_tx" to="/can0/can_tx" />
-=======
-    <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)/New_Eagle_DBW.dbc" />
-    <remap from="can_rx" to="/can0/can_tx" />
-    <remap from="can_tx" to="/can0/can_rx" />
->>>>>>> 30fed110e232e90efa470823d23d9db0b6710313
   </node>
 
   <arg name="can_hardware_id" default="18291" />
