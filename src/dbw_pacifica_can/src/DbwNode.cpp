@@ -176,8 +176,8 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           overrideBrake(message->GetSignal("DBW_BrakeDriverActivity")->GetResult());
           dbw_pacifica_msgs::BrakeReport brakeReport;
           brakeReport.header.stamp = msg->header.stamp;
-          brakeReport.pedal_position  = message->GetSignal("DBW_BrakePedalDriverInput")->GetResult();
-          brakeReport.pedal_output = message->GetSignal("DBW_BrakePedalPosnFdbck")->GetResult();
+          brakeReport.pedal_position  = message->GetSignal("DBW_BrakePdlDriverInput")->GetResult();
+          brakeReport.pedal_output = message->GetSignal("DBW_BrakePdlPosnFdbck")->GetResult();
 
           brakeReport.enabled = message->GetSignal("DBW_BrakeEnabled")->GetResult() ? true : false;
           brakeReport.driver_activity = message->GetSignal("DBW_BrakeDriverActivity")->GetResult() ? true : false;
@@ -274,7 +274,7 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           steeringReport.header.stamp = msg->header.stamp;
           steeringReport.steering_wheel_angle = message->GetSignal("DBW_SteeringWhlAngleAct")->GetResult() * (0.1 * M_PI / 180);
           steeringReport.steering_wheel_angle_cmd = message->GetSignal("DBW_SteeringWhlAngleDes")->GetResult() * (0.1 * M_PI / 180);
-          steeringReport.steering_wheel_torque = message->GetSignal("DBW_SteeringWhlTorqueCmd")->GetResult() * 0.0625;
+          steeringReport.steering_wheel_torque = message->GetSignal("DBW_SteeringWhlPcntTrqCmd")->GetResult() * 0.0625;
 
           steeringReport.enabled = message->GetSignal("DBW_SteeringEnabled")->GetResult() ? true : false;
           steeringReport.driver_activity = message->GetSignal("DBW_SteeringDriverActivity")->GetResult() ? true : false;
@@ -479,7 +479,7 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           out.header.stamp = msg->header.stamp;
           out.header.frame_id = frame_id_;
 
-          out.angular_velocity.z = (double)message->GetSignal("DBW_ImuYawRate_Raw")->GetResult();
+          out.angular_velocity.z = (double)message->GetSignal("DBW_ImuYawRate")->GetResult();
 
           out.linear_acceleration.x = (double)message->GetSignal("DBW_ImuAccelX")->GetResult();
           out.linear_acceleration.y = (double)message->GetSignal("DBW_ImuAccelY")->GetResult();
@@ -537,7 +537,7 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
           out.fuel_level = (double)message->GetSignal("DBW_MiscFuelLvl")->GetResult();
 
-          out.drive_by_wire_enabled = (double)message->GetSignal("DBW_MiscByWireEnbled")->GetResult();
+          out.drive_by_wire_enabled = (bool)message->GetSignal("DBW_MiscByWireEnabled")->GetResult();
           out.vehicle_speed = (double)message->GetSignal("DBW_MiscVehicleSpeed")->GetResult();
 
           out.software_build_number = message->GetSignal("DBW_SoftwareBuildNumber")->GetResult();
@@ -876,33 +876,33 @@ void DbwNode::timerCallback(const ros::TimerEvent& event)
 
     if (override_brake_) {
       // Might have an issue with WatchdogCntr when these are set.
-      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_BrakeCommand");
-      message->GetSignal("AKit_BrakePedalCmd")->SetResult(0);
-      message->GetSignal("AKit_BrakeCtrlEnblCmd")->SetResult(0);
-      message->GetSignal("AKit_BrakePedalCtrlMode")->SetResult(0);
+      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_BrakeRequest");
+      message->GetSignal("AKit_BrakePedalReq")->SetResult(0);
+      message->GetSignal("AKit_BrakeCtrlEnblReq")->SetResult(0);
+      //message->GetSignal("AKit_BrakePedalCtrlMode")->SetResult(0);
       pub_can_.publish(message->GetFrame());
     }
 
     if (override_accelerator_pedal_)
     {
       // Might have an issue with WatchdogCntr when these are set.
-      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_AccelPdlCommand");
-      message->GetSignal("AKit_AccelPdlCmd")->SetResult(0);
-      message->GetSignal("AKit_AccelPdlEnblCmd")->SetResult(0);
+      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_AccelPdlRequest");
+      message->GetSignal("AKit_AccelPdlReq")->SetResult(0);
+      message->GetSignal("AKit_AccelPdlEnblReq")->SetResult(0);
       message->GetSignal("Akit_AccelPdlIgnoreDriverOvrd")->SetResult(0);
-      message->GetSignal("AKit_AccelPdlCtrlMode")->SetResult(0);
+      //message->GetSignal("AKit_AccelPdlCtrlMode")->SetResult(0);
       pub_can_.publish(message->GetFrame());
     }
 
     if (override_steering_) {
       // Might have an issue with WatchdogCntr when these are set.
-      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_SteeringCommand");
-      message->GetSignal("AKit_SteeringWhlAngleCmd")->SetResult(0);
-      message->GetSignal("AKit_SteeringWhlAngleVelocity")->SetResult(0);
+      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_SteeringRequest");
+      message->GetSignal("AKit_SteeringWhlAngleReq")->SetResult(0);
+      message->GetSignal("AKit_SteeringWhlAngleVelocityLim")->SetResult(0);
       message->GetSignal("AKit_SteeringWhlIgnoreDriverOvrd")->SetResult(0);
-      message->GetSignal("AKit_SteeringWhlTrqCmd")->SetResult(0);
-      message->GetSignal("AKit_SteeringWhlCtrlMode")->SetResult(0);
-      message->GetSignal("AKit_SteeringWhlCmdType")->SetResult(0);
+      message->GetSignal("AKit_SteeringWhlPcntTrqReq")->SetResult(0);
+      //message->GetSignal("AKit_SteeringWhlCtrlMode")->SetResult(0);
+      //message->GetSignal("AKit_SteeringWhlCmdType")->SetResult(0);
 
       pub_can_.publish(message->GetFrame());
     }
