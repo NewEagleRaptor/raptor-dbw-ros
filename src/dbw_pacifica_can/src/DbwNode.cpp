@@ -547,6 +547,8 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           out.general_driver_activity = message->GetSignal("DBW_MiscDriverActivity")->GetResult() ? true : false;
           out.comms_fault = message->GetSignal("DBW_MiscAKitCommFault")->GetResult() ? true : false;        
 
+          out.ambient_temp = (double)message->GetSignal("DBW_AmbientTemp")->GetResult();
+
           pub_misc_.publish(out);
         }
       }
@@ -690,6 +692,7 @@ void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalC
   message->GetSignal("AKit_AccelPdlRollingCntr")->SetResult(0);
   message->GetSignal("AKit_AccelReqType")->SetResult(0);
   message->GetSignal("AKit_AccelPcntTorqueReq")->SetResult(0);
+  message->GetSignal("AKit_AccelPdlChecksum")->SetResult(0);
   message->GetSignal("AKit_SpeedReq")->SetResult(0);
   message->GetSignal("AKit_SpeedModeRoadSlope")->SetResult(0);
 
@@ -738,6 +741,7 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
   message->GetSignal("AKit_SteeringWhlPcntTrqReq")->SetResult(0);  
   message->GetSignal("AKit_SteeringReqType")->SetResult(0);
   message->GetSignal("AKit_SteeringVehCurvatureReq")->SetResult(0);
+  message->GetSignal("AKit_SteeringChecksum")->SetResult(0);
 
   if (enabled()) {
     if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::open_loop) {
@@ -782,6 +786,7 @@ void DbwNode::recvGearCmd(const dbw_pacifica_msgs::GearCmd::ConstPtr& msg)
 
   message->GetSignal("AKit_PrndCtrlEnblReq")->SetResult(0);
   message->GetSignal("AKit_PrndStateReq")->SetResult(0);
+  message->GetSignal("AKit_PrndChecksum")->SetResult(0);
 
   if (enabled()) {
     if(msg->enable)
@@ -836,29 +841,18 @@ void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
 
   message->GetSignal("AKit_TurnSignalReq")->SetResult(0);
   message->GetSignal("AKit_RightRearDoorReq")->SetResult(0);
-//  message->GetSignal("AKit_GlobalByWireEnblReq")->SetResult(0);
-//  message->GetSignal("AKit_EnblJoystickLimits")->SetResult(0);
   message->GetSignal("AKit_HighBeamReq")->SetResult(0);
   message->GetSignal("AKit_FrontWiperReq")->SetResult(0);
   message->GetSignal("AKit_RearWiperReq")->SetResult(0);
   message->GetSignal("AKit_IgnitionReq")->SetResult(0);
   message->GetSignal("AKit_LeftRearDoorReq")->SetResult(0);
   message->GetSignal("AKit_LiftgateDoorReq")->SetResult(0);
-//  message->GetSignal("AKit_SoftwareBuildNumber")->SetResult(0);
   message->GetSignal("AKit_BlockBasicCruiseCtrlBtns")->SetResult(0);
   message->GetSignal("AKit_BlockAdapCruiseCtrlBtns")->SetResult(0);
   message->GetSignal("AKit_BlockTurnSigStalkInpts")->SetResult(0);
   message->GetSignal("AKit_OtherChecksum")->SetResult(0);
 
   if (enabled()) {
-//   
-// if(msg->global_enable) {
-//      message->GetSignal("AKit_GlobalByWireEnblReq")->SetResult(1);
-//    }
-
-//    if(msg->enable_joystick_limits) {
-//      message->GetSignal("AKit_EnblJoystickLimits")->SetResult(1);
-//    }
 
     message->GetSignal("AKit_TurnSignalReq")->SetResult(msg->cmd.value);
 
@@ -910,7 +904,7 @@ void DbwNode::timerCallback(const ros::TimerEvent& event)
 
     if (override_brake_) {
       // Might have an issue with WatchdogCntr when these are set.
-      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_BrakeCommand");
+      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_BrakeRequest");
       message->GetSignal("AKit_BrakePedalCmd")->SetResult(0);
       message->GetSignal("AKit_BrakeCtrlEnblCmd")->SetResult(0);
       message->GetSignal("AKit_BrakePedalCtrlMode")->SetResult(0);
@@ -920,30 +914,33 @@ void DbwNode::timerCallback(const ros::TimerEvent& event)
     if (override_accelerator_pedal_)
     {
       // Might have an issue with WatchdogCntr when these are set.
-      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_AccelPdlCommand");
+      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_AccelPdlRequest");
       message->GetSignal("AKit_AccelPdlCmd")->SetResult(0);
       message->GetSignal("AKit_AccelPdlEnblCmd")->SetResult(0);
       message->GetSignal("Akit_AccelPdlIgnoreDriverOvrd")->SetResult(0);
       message->GetSignal("AKit_AccelPdlCtrlMode")->SetResult(0);
+      message->GetSignal("AKit_AccelPdlChecksum")->SetResult(0);
       pub_can_.publish(message->GetFrame());
     }
 
     if (override_steering_) {
       // Might have an issue with WatchdogCntr when these are set.
-      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_SteeringCommand");
+      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_SteeringRequest");
       message->GetSignal("AKit_SteeringWhlAngleCmd")->SetResult(0);
       message->GetSignal("AKit_SteeringWhlAngleVelocity")->SetResult(0);
       message->GetSignal("AKit_SteeringWhlIgnoreDriverOvrd")->SetResult(0);
       message->GetSignal("AKit_SteeringWhlTrqCmd")->SetResult(0);
       message->GetSignal("AKit_SteeringWhlCtrlMode")->SetResult(0);
       message->GetSignal("AKit_SteeringWhlCmdType")->SetResult(0);
+      message->GetSignal("AKit_SteeringChecksum")->SetResult(0);
 
       pub_can_.publish(message->GetFrame());
     }
 
     if (override_gear_) {
-      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_GearCommand");
+      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_GearRequest");
       message->GetSignal("AKit_PrndStateCmd")->SetResult(0);
+      message->GetSignal("AKit_PrndChecksum")->SetResult(0);
       pub_can_.publish(message->GetFrame());
     }
   }
