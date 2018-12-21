@@ -334,10 +334,6 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           dbw_pacifica_msgs::WheelSpeedReport out;
           out.header.stamp = msg->header.stamp;          
 
-          if (message->GetSignal("DBW_WhlSpdType")->GetResult() == WHEEL_SPEED_MUX0) {
-
-            out.wheel_speed_type.value = 0;
-
             out.front_left  = message->GetSignal("DBW_WhlRpm_FL")->GetResult();
             out.front_right = message->GetSignal("DBW_WhlRpm_FR")->GetResult();
             out.rear_left   = message->GetSignal("DBW_WhlRpm_RL")->GetResult();
@@ -345,21 +341,7 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
             pub_wheel_speeds_.publish(out);
             publishJointStates(msg->header.stamp, &out, NULL);
-
-          } else if (message->GetSignal("DBW_WhlSpdType")->GetResult() == WHEEL_SPEED_MUX1) {
-            out.wheel_speed_type.value = 1;
-
-            out.front_left  = message->GetSignal("DBW_WhlSpd_FL")->GetResult();
-            out.front_right = message->GetSignal("DBW_WhlSpd_FR")->GetResult();
-
-          } else if (message->GetSignal("DBW_WhlSpdType")->GetResult() == WHEEL_SPEED_MUX2) {
-            out.rear_left   = message->GetSignal("DBW_WhlSpd_RL")->GetResult();
-            out.rear_right  = message->GetSignal("DBW_WhlSpd_RR")->GetResult();            
-
-            pub_wheel_speeds_.publish(out);
-            publishJointStates(msg->header.stamp, &out, NULL);
           }
-        }
       }
       break;
 
@@ -807,8 +789,6 @@ void DbwNode::recvGearCmd(const dbw_pacifica_msgs::GearCmd::ConstPtr& msg)
 void DbwNode::recvGlobalEnableCmd(const dbw_pacifica_msgs::GlobalEnableCmd::ConstPtr& msg)
 {
   NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_GlobalEnbl");
-
-  message->GetSignal("AKit_TurnSignalReq")->SetResult(0);
 
   message->GetSignal("AKit_GlobalEnblRollingCntr")->SetResult(0);
   message->GetSignal("AKit_GlobalByWireEnblReq")->SetResult(0);
