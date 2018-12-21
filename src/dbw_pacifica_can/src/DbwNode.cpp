@@ -128,6 +128,7 @@ DbwNode::DbwNode(ros::NodeHandle &node, ros::NodeHandle &priv_nh)
   sub_steering_ = node.subscribe("steering_cmd", 1, &DbwNode::recvSteeringCmd, this, ros::TransportHints().tcpNoDelay(true));
   sub_gear_ = node.subscribe("gear_cmd", 1, &DbwNode::recvGearCmd, this, ros::TransportHints().tcpNoDelay(true));
   sub_misc_ = node.subscribe("misc_cmd", 1, &DbwNode::recvMiscCmd, this, ros::TransportHints().tcpNoDelay(true));
+  sub_global_enable_ = node.subscribe("global_enable_cmd", 1, &DbwNode::recvGlobalEnableCmd, this, ros::TransportHints().tcpNoDelay(true));
 
 
   pdu1_relay_pub_ = node.advertise<pdu_msgs::RelayCommand>("/pduB/relay_cmd", 1000);
@@ -333,10 +334,6 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           dbw_pacifica_msgs::WheelSpeedReport out;
           out.header.stamp = msg->header.stamp;          
 
-          if (message->GetSignal("DBW_WhlSpdType")->GetResult() == WHEEL_SPEED_MUX0) {
-
-            out.wheel_speed_type.value = 0;
-
             out.front_left  = message->GetSignal("DBW_WhlRpm_FL")->GetResult();
             out.front_right = message->GetSignal("DBW_WhlRpm_FR")->GetResult();
             out.rear_left   = message->GetSignal("DBW_WhlRpm_RL")->GetResult();
@@ -344,21 +341,7 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
             pub_wheel_speeds_.publish(out);
             publishJointStates(msg->header.stamp, &out, NULL);
-
-          } else if (message->GetSignal("DBW_WhlSpdType")->GetResult() == WHEEL_SPEED_MUX1) {
-            out.wheel_speed_type.value = 1;
-
-            out.front_left  = message->GetSignal("DBW_WhlSpd_FL")->GetResult();
-            out.front_right = message->GetSignal("DBW_WhlSpd_FR")->GetResult();
-
-          } else if (message->GetSignal("DBW_WhlSpdType")->GetResult() == WHEEL_SPEED_MUX2) {
-            out.rear_left   = message->GetSignal("DBW_WhlSpd_RL")->GetResult();
-            out.rear_right  = message->GetSignal("DBW_WhlSpd_RR")->GetResult();            
-
-            pub_wheel_speeds_.publish(out);
-            publishJointStates(msg->header.stamp, &out, NULL);
           }
-        }
       }
       break;
 
@@ -546,6 +529,8 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           out.general_driver_activity = message->GetSignal("DBW_MiscDriverActivity")->GetResult() ? true : false;
           out.comms_fault = message->GetSignal("DBW_MiscAKitCommFault")->GetResult() ? true : false;        
 
+          out.ambient_temp = (double)message->GetSignal("DBW_AmbientTemp")->GetResult();
+
           pub_misc_.publish(out);
         }
       }
@@ -689,6 +674,7 @@ void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalC
   message->GetSignal("AKit_AccelPdlRollingCntr")->SetResult(0);
   message->GetSignal("AKit_AccelReqType")->SetResult(0);
   message->GetSignal("AKit_AccelPcntTorqueReq")->SetResult(0);
+  message->GetSignal("AKit_AccelPdlChecksum")->SetResult(0);
   message->GetSignal("AKit_SpeedReq")->SetResult(0);
   message->GetSignal("AKit_SpeedModeRoadSlope")->SetResult(0);
 
@@ -737,6 +723,7 @@ void DbwNode::recvSteeringCmd(const dbw_pacifica_msgs::SteeringCmd::ConstPtr& ms
   message->GetSignal("AKit_SteeringWhlPcntTrqReq")->SetResult(0);  
   message->GetSignal("AKit_SteeringReqType")->SetResult(0);
   message->GetSignal("AKit_SteeringVehCurvatureReq")->SetResult(0);
+  message->GetSignal("AKit_SteeringChecksum")->SetResult(0);
 
   if (enabled()) {
     if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::open_loop) {
@@ -781,6 +768,7 @@ void DbwNode::recvGearCmd(const dbw_pacifica_msgs::GearCmd::ConstPtr& msg)
 
   message->GetSignal("AKit_PrndCtrlEnblReq")->SetResult(0);
   message->GetSignal("AKit_PrndStateReq")->SetResult(0);
+  message->GetSignal("AKit_PrndChecksum")->SetResult(0);
 
   if (enabled()) {
     if(msg->enable)
@@ -798,24 +786,15 @@ void DbwNode::recvGearCmd(const dbw_pacifica_msgs::GearCmd::ConstPtr& msg)
   pub_can_.publish(frame);
 }
 
-void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
+void DbwNode::recvGlobalEnableCmd(const dbw_pacifica_msgs::GlobalEnableCmd::ConstPtr& msg)
 {
-  NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_Misc");
+  NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_GlobalEnbl");
 
-  message->GetSignal("AKit_TurnSignalReq")->SetResult(0);
-  message->GetSignal("AKit_RightRearDoorReq")->SetResult(0);
+  message->GetSignal("AKit_GlobalEnblRollingCntr")->SetResult(0);
   message->GetSignal("AKit_GlobalByWireEnblReq")->SetResult(0);
   message->GetSignal("AKit_EnblJoystickLimits")->SetResult(0);
-  message->GetSignal("AKit_HighBeamReq")->SetResult(0);
-  message->GetSignal("AKit_FrontWiperReq")->SetResult(0);
-  message->GetSignal("AKit_RearWiperReq")->SetResult(0);
-  message->GetSignal("AKit_IgnitionReq")->SetResult(0);
-  message->GetSignal("AKit_LeftRearDoorReq")->SetResult(0);
-  message->GetSignal("AKit_LiftgateDoorReq")->SetResult(0);
   message->GetSignal("AKit_SoftwareBuildNumber")->SetResult(0);
-  message->GetSignal("AKit_BlockBasicCruiseCtrlBtns")->SetResult(0);
-  message->GetSignal("AKit_BlockAdapCruiseCtrlBtns")->SetResult(0);
-  message->GetSignal("AKit_BlockTurnSigStalkInpts")->SetResult(0);
+  message->GetSignal("Akit_GlobalEnblChecksum")->SetResult(0);
 
   if (enabled()) {
     if(msg->global_enable) {
@@ -825,6 +804,35 @@ void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
     if(msg->enable_joystick_limits) {
       message->GetSignal("AKit_EnblJoystickLimits")->SetResult(1);
     }
+
+    message->GetSignal("AKit_SoftwareBuildNumber")->SetResult(msg->ecu_build_number);
+  }  
+   
+  message->GetSignal("AKit_GlobalEnblRollingCntr")->SetResult(msg->rolling_counter);
+   
+  can_msgs::Frame frame = message->GetFrame();
+
+  pub_can_.publish(frame);      
+}
+
+void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
+{
+  NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_OtherActuators");
+
+  message->GetSignal("AKit_TurnSignalReq")->SetResult(0);
+  message->GetSignal("AKit_RightRearDoorReq")->SetResult(0);
+  message->GetSignal("AKit_HighBeamReq")->SetResult(0);
+  message->GetSignal("AKit_FrontWiperReq")->SetResult(0);
+  message->GetSignal("AKit_RearWiperReq")->SetResult(0);
+  message->GetSignal("AKit_IgnitionReq")->SetResult(0);
+  message->GetSignal("AKit_LeftRearDoorReq")->SetResult(0);
+  message->GetSignal("AKit_LiftgateDoorReq")->SetResult(0);
+  message->GetSignal("AKit_BlockBasicCruiseCtrlBtns")->SetResult(0);
+  message->GetSignal("AKit_BlockAdapCruiseCtrlBtns")->SetResult(0);
+  message->GetSignal("AKit_BlockTurnSigStalkInpts")->SetResult(0);
+  message->GetSignal("AKit_OtherChecksum")->SetResult(0);
+
+  if (enabled()) {
 
     message->GetSignal("AKit_TurnSignalReq")->SetResult(msg->cmd.value);
 
@@ -839,7 +847,7 @@ void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
     message->GetSignal("AKit_LeftRearDoorReq")->SetResult(msg->door_request_left_rear.value);
     message->GetSignal("AKit_LiftgateDoorReq")->SetResult(msg->door_request_lift_gate.value);
 
-    message->GetSignal("AKit_SoftwareBuildNumber")->SetResult(msg->ecu_build_number);
+//    message->GetSignal("AKit_SoftwareBuildNumber")->SetResult(msg->ecu_build_number);
 
     message->GetSignal("AKit_BlockBasicCruiseCtrlBtns")->SetResult(msg->block_standard_cruise_buttons);
     message->GetSignal("AKit_BlockAdapCruiseCtrlBtns")->SetResult(msg->block_adaptive_cruise_buttons);
@@ -847,7 +855,7 @@ void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
 
   }
 
-  message->GetSignal("AKit_MiscCmdRollingCntr")->SetResult(msg->rolling_counter);
+  message->GetSignal("AKit_OtherRollingCntr")->SetResult(msg->rolling_counter);
 
   can_msgs::Frame frame = message->GetFrame();
 
@@ -908,8 +916,9 @@ void DbwNode::timerCallback(const ros::TimerEvent& event)
     }
 
     if (override_gear_) {
-      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_GearCommand");
+      NewEagle::DbcMessage* message = dbwDbc_.GetMessage("AKit_GearRequest");
       message->GetSignal("AKit_PrndStateCmd")->SetResult(0);
+      message->GetSignal("AKit_PrndChecksum")->SetResult(0);
       pub_can_.publish(message->GetFrame());
     }
   }
