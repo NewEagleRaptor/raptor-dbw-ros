@@ -23,7 +23,7 @@
 <arg name="enable" default="true" />
 <arg name="count" default="true" />
 <arg name="svel" default="0.0" />
-<node ns="vehicle" pkg="dbw_joystick_demo" type="joystick_demo" name="joystick_demo" output="screen">
+<node ns="vehicle" pkg="dbw_pacifica_joystick_demo" type="joystick_demo" name="joystick_demo" output="screen">
 <param name="ignore" value="$(arg ignore)" />
   <!-- Ignore driver overrides -->
   <param name="enable" value="$(arg enable)" />
