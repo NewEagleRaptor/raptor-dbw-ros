@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(dbw_joystick_speed_demo)
+project(dbw_pacifica_joystick_speed_demo)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -14,19 +14,22 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(${PROJECT_NAME}_joystick_speed_demo src/joystick_demo.cpp src/JoystickDemo.cpp)
-add_dependencies(${PROJECT_NAME}_joystick_speed_demo dbw_pacifica_msgs_gencpp)
+add_executable(${PROJECT_NAME}_joystick_speed_demo
+  src/joystick_demo.cpp
+  src/JoystickDemo.cpp
+)
+
 target_link_libraries(${PROJECT_NAME}_joystick_speed_demo
   ${catkin_LIBRARIES}
 )
 set_target_properties(${PROJECT_NAME}_joystick_speed_demo PROPERTIES OUTPUT_NAME joystick_speed_demo PREFIX "")
 
 install(TARGETS ${PROJECT_NAME}_joystick_speed_demo
-        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(DIRECTORY launch
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
 if (CATKIN_ENABLE_TESTING)

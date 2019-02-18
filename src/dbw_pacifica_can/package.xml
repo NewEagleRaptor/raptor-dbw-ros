@@ -13,7 +13,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <depend>rospy</depend>
   <depend>roscpp</depend>
   <depend>nodelet</depend>
   <depend>std_msgs</depend>
@@ -22,6 +21,7 @@
   <depend>can_msgs</depend>
   <depend>dbw_pacifica_msgs</depend>
   <depend>dbc</depend>
+  <depend>pdu_msgs</depend>
 
   <exec_depend>roslaunch</exec_depend>
   <exec_depend>dbw_pacifica_description</exec_depend>
