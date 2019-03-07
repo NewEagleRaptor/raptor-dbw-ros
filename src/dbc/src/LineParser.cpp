@@ -373,6 +373,7 @@ DoneReading:
     try
     {
       double val = ReadDouble();
+     return val;
     }
     catch(LineParserExceptionBase& exlp)
     {
