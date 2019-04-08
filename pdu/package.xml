@@ -16,9 +16,7 @@
   <maintainer email="rborchert@neweagle.net">Ryan Borchert</maintainer>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>roscpp</build_depend>
-  <build_export_depend>roscpp</build_export_depend>
-  <exec_depend>roscpp</exec_depend>
+  <depend>roscpp</depend>
   <depend>std_msgs</depend>
   <depend>can_msgs</depend>
   <depend>pdu_msgs</depend>

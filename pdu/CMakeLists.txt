@@ -21,18 +21,22 @@ add_executable(${PROJECT_NAME}_pdu_node
   src/pdu.cpp
 )
 
-add_dependencies(${PROJECT_NAME}_pdu_node pdu_msgs_gencpp)
+add_dependencies(${PROJECT_NAME}_pdu_node
+  ${catkin_EXPORTED_TARGETS}
+)
+
 target_link_libraries(${PROJECT_NAME}_pdu_node
   ${catkin_LIBRARIES}
 )
+
 set_target_properties(${PROJECT_NAME}_pdu_node PROPERTIES OUTPUT_NAME pdu_node PREFIX "")
 
 install(TARGETS ${PROJECT_NAME}_pdu_node
-        RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 install(DIRECTORY launch
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
 if (CATKIN_ENABLE_TESTING)
