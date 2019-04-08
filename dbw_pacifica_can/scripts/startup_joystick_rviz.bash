@@ -11,4 +11,4 @@ else
 fi
 
 # Launch
-roslaunch dbw_joystick_demo joystick_demo.launch sys:=true rviz:=true
+roslaunch dbw_pacifica_joystick_demo joystick_demo.launch sys:=true rviz:=true

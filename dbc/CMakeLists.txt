@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.8.3)
 project(dbc)
 
 find_package(catkin REQUIRED COMPONENTS
-  rospy
   roscpp
 )
 
@@ -11,8 +10,6 @@ catkin_package(
     include
   LIBRARIES
     ${PROJECT_NAME}
-    LIBRARIES
-    dbc
 )
 
 include_directories(
@@ -27,6 +24,7 @@ add_library(dbc
   src/LineParser.cpp
   src/DbcBuilder.cpp
 )
+
 target_link_libraries(dbc
   ${catkin_LIBRARIES}
 )
@@ -35,7 +33,11 @@ add_dependencies(dbc
   ${catkin_EXPORTED_TARGETS}
 )
 
-install(DIRECTORY include/${PROJECT_NAME}/
+install(TARGETS ${PROJECT_NAME}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+install(DIRECTORY include/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
   FILES_MATCHING PATTERN "*.h"
 )

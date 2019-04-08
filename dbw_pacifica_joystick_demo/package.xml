@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>dbw_joystick_demo</name>
+  <name>dbw_pacifica_joystick_demo</name>
   <version>1.0.12</version>
   <description>
     Demonstration of drive-by-wire with joystick
@@ -22,5 +22,4 @@
   <exec_depend>dbw_pacifica_can</exec_depend>
 
   <test_depend>roslaunch</test_depend>
-
 </package>
