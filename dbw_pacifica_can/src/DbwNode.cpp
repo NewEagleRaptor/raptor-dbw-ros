@@ -273,8 +273,8 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
           dbw_pacifica_msgs::SteeringReport steeringReport;
           steeringReport.header.stamp = msg->header.stamp;
-          steeringReport.steering_wheel_angle = message->GetSignal("DBW_SteeringWhlAngleAct")->GetResult() * (0.1 * M_PI / 180);
-          steeringReport.steering_wheel_angle_cmd = message->GetSignal("DBW_SteeringWhlAngleDes")->GetResult() * (0.1 * M_PI / 180);
+          steeringReport.steering_wheel_angle = message->GetSignal("DBW_SteeringWhlAngleAct")->GetResult() * (M_PI / 180);
+          steeringReport.steering_wheel_angle_cmd = message->GetSignal("DBW_SteeringWhlAngleDes")->GetResult() * (M_PI / 180);
           steeringReport.steering_wheel_torque = message->GetSignal("DBW_SteeringWhlPcntTrqCmd")->GetResult() * 0.0625;
 
           steeringReport.enabled = message->GetSignal("DBW_SteeringEnabled")->GetResult() ? true : false;
@@ -462,7 +462,7 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           out.header.stamp = msg->header.stamp;
           out.header.frame_id = frame_id_;
 
-          out.angular_velocity.z = (double)message->GetSignal("DBW_ImuYawRate")->GetResult();
+          out.angular_velocity.z = (double)message->GetSignal("DBW_ImuYawRate")->GetResult() * (M_PI / 180.0);
 
           out.linear_acceleration.x = (double)message->GetSignal("DBW_ImuAccelX")->GetResult();
           out.linear_acceleration.y = (double)message->GetSignal("DBW_ImuAccelY")->GetResult();
