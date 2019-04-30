@@ -33,6 +33,8 @@
  *********************************************************************/
  
 #include <dbc/LineParser.h>
+#include <stdexcept>
+#include <sstream>
 
 namespace NewEagle
 {
