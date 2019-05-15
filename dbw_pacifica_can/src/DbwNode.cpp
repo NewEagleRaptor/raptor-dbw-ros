@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2018, New Eagle
+ *  Copyright (c) 2018-2019 New Eagle 
  *  Copyright (c) 2015-2018, Dataspeed Inc.
  *  All rights reserved.
  *
