@@ -73,6 +73,9 @@ enum {
   ID_LOW_VOLTAGE_SYSTEM_REPORT  = 0x1F11,
   ID_BRAKE_2_REPORT             = 0x1F12,
   ID_STEERING_2_REPORT          = 0x1F13,
+  ID_OTHER_ACTUATORS_REPORT     = 0x1F14,
+  ID_FAULT_ACTION_REPORT        = 0x1F15,
+  ID_HMI_GLOBAL_ENABLE_REPORT   = 0x3f01,
 };
 
 } //dbw_pacifica_can

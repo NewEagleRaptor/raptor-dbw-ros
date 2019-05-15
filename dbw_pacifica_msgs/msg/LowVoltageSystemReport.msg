@@ -8,5 +8,4 @@ float32 vehicle_alternator_current #Amps
 float32 dcdc_current # Amps
 float32 alternator_current # Amps
 
-bool aux_battery_contactor # On/Off
 bool aux_inverter_contactor # On/Off

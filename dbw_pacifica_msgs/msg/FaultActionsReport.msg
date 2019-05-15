@@ -1,0 +1,8 @@
+Header header
+
+bool autonomous_disabled_no_brakes 
+bool autonomous_disabled_apply_brakes 
+bool can_gateway_disabled 
+bool inverter_contactor_disabled 
+bool prevent_enter_autonomous_mode 
+bool warn_driver_only 

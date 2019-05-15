@@ -16,3 +16,5 @@ bool overheat_prevention_mode
 uint8 rolling_counter
 
 ActuatorControlMode control_type
+
+bool steering_overheat_warning

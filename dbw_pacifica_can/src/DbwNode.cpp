@@ -109,6 +109,8 @@ DbwNode::DbwNode(ros::NodeHandle &node, ros::NodeHandle &priv_nh)
 
   pub_brake_2_report_ = node.advertise<dbw_pacifica_msgs::Brake2Report>("brake_2_report", 2);
   pub_steering_2_report_ = node.advertise<dbw_pacifica_msgs::Steering2Report>("steering_2_report", 2);
+  pub_fault_actions_report_ = node.advertise<dbw_pacifica_msgs::FaultActionsReport>("fault_actions_report", 2);
+  pub_hmi_global_enable_report_ = node.advertise<dbw_pacifica_msgs::HmiGlobalEnableReport>("hmi_global_enable_report", 2);
 
   pub_imu_ = node.advertise<sensor_msgs::Imu>("imu/data_raw", 10);
   pub_joint_states_ = node.advertise<sensor_msgs::JointState>("joint_states", 10);
@@ -129,7 +131,6 @@ DbwNode::DbwNode(ros::NodeHandle &node, ros::NodeHandle &priv_nh)
   sub_gear_ = node.subscribe("gear_cmd", 1, &DbwNode::recvGearCmd, this, ros::TransportHints().tcpNoDelay(true));
   sub_misc_ = node.subscribe("misc_cmd", 1, &DbwNode::recvMiscCmd, this, ros::TransportHints().tcpNoDelay(true));
   sub_global_enable_ = node.subscribe("global_enable_cmd", 1, &DbwNode::recvGlobalEnableCmd, this, ros::TransportHints().tcpNoDelay(true));
-
 
   pdu1_relay_pub_ = node.advertise<pdu_msgs::RelayCommand>("/pduB/relay_cmd", 1000);
   count_ = 0;
@@ -285,6 +286,10 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           steeringReport.control_type.value =  message->GetSignal("DBW_SteeringCtrlType")->GetResult();
 
           steeringReport.overheat_prevention_mode = message->GetSignal("DBW_OverheatPreventMode")->GetResult() ? true : false;
+
+          steeringReport.steering_overheat_warning = message->GetSignal("DBW_SteeringOverheatWarning")->GetResult() ? true : false;
+
+          steeringReport.fault_steering_system = steeringSystemFault;
 
           pub_steering_.publish(steeringReport);
 
@@ -554,7 +559,6 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           lvSystemReport.dbw_battery_volts = (double)message->GetSignal("DBW_LvDbwBattVlt")->GetResult();
           lvSystemReport.dcdc_current = (double)message->GetSignal("DBW_LvDcdcCurr")->GetResult();
 
-          lvSystemReport.aux_battery_contactor = message->GetSignal("DBW_LvBattContactorCmd")->GetResult() ? true : false;
           lvSystemReport.aux_inverter_contactor = message->GetSignal("DBW_LvInvtrContactorCmd")->GetResult() ? true : false;
 
           pub_low_voltage_system_.publish(lvSystemReport);
@@ -576,6 +580,8 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
 
           brake2Report.estimated_road_slope = message->GetSignal("DBW_RoadSlopeEstimate")->GetResult();
 
+          brake2Report.speed_set_point = message->GetSignal("DBW_SpeedSetpt")->GetResult();
+
           pub_brake_2_report_.publish(brake2Report);
         }
       }
@@ -592,8 +598,57 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           steering2Report.header.stamp = msg->header.stamp;
 
           steering2Report.vehicle_curvature_actual = message->GetSignal("DBW_SteeringVehCurvatureAct")->GetResult();
-          
+
+          steering2Report.max_torque_driver = message->GetSignal("DBW_SteerTrq_Driver")->GetResult();
+
+          steering2Report.max_torque_motor = message->GetSignal("DBW_SteerTrq_Motor")->GetResult();
+
           pub_steering_2_report_.publish(steering2Report);
+        }      
+      }
+      break;
+
+      case ID_FAULT_ACTION_REPORT:
+      {
+        NewEagle::DbcMessage* message = dbwDbc_.GetMessageById(ID_FAULT_ACTION_REPORT);
+
+        if (msg->dlc >= message->GetDlc()) {
+          message->SetFrame(msg);
+
+          dbw_pacifica_msgs::FaultActionsReport faultActionsReport;
+          faultActionsReport.header.stamp = msg->header.stamp;
+
+          faultActionsReport.autonomous_disabled_no_brakes = message->GetSignal("DBW_FltAct_AutonDsblNoBrakes")->GetResult();
+
+          faultActionsReport.autonomous_disabled_apply_brakes = message->GetSignal("DBW_FltAct_AutonDsblApplyBrakes")->GetResult();
+          faultActionsReport.can_gateway_disabled = message->GetSignal("DBW_FltAct_CANGatewayDsbl")->GetResult();
+          faultActionsReport.inverter_contactor_disabled = message->GetSignal("DBW_FltAct_InvtrCntctrDsbl")->GetResult();
+          faultActionsReport.prevent_enter_autonomous_mode = message->GetSignal("DBW_FltAct_PreventEnterAutonMode")->GetResult();
+          faultActionsReport.warn_driver_only = message->GetSignal("DBW_FltAct_WarnDriverOnly")->GetResult();
+
+          pub_fault_actions_report_.publish(faultActionsReport);
+        }      
+      }
+      break;
+
+      case ID_HMI_GLOBAL_ENABLE_REPORT:
+      {
+        NewEagle::DbcMessage* message = dbwDbc_.GetMessageById(ID_HMI_GLOBAL_ENABLE_REPORT);
+
+        if (msg->dlc >= message->GetDlc()) {
+          message->SetFrame(msg);
+
+          dbw_pacifica_msgs::HmiGlobalEnableReport hmiGlobalEnableReport;
+          hmiGlobalEnableReport.header.stamp = msg->header.stamp;
+
+          hmiGlobalEnableReport.enable_request = message->GetSignal("HMI_GlobalByWireEnblReq")->GetResult();
+
+          hmiGlobalEnableReport.disable_request = message->GetSignal("HMI_GlobalByWireDisblReq")->GetResult();
+          hmiGlobalEnableReport.checksum = message->GetSignal("HMI_GlobalEnblChecksum")->GetResult();
+          hmiGlobalEnableReport.ecu_build_number = message->GetSignal("HMI_SoftwareBuildNumber")->GetResult();
+          hmiGlobalEnableReport.rolling_counter = message->GetSignal("HMI_GlobalEnblRollingCntr")->GetResult();
+
+          pub_hmi_global_enable_report_.publish(hmiGlobalEnableReport);
         }      
       }
       break;
@@ -632,8 +687,8 @@ void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
   message->GetSignal("AKit_BrakeCtrlEnblReq")->SetResult(0);
   message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(0);
   message->GetSignal("AKit_BrakePcntTorqueReq")->SetResult(0);
-  message->GetSignal("AKit_SpeedModeAccelLim")->SetResult(0);
   message->GetSignal("AKit_SpeedModeDecelLim")->SetResult(0);
+  message->GetSignal("AKit_SpeedModeNegJerkLim")->SetResult(0);
 
   if (enabled()) {
     if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::open_loop) {
@@ -644,8 +699,8 @@ void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
       message->GetSignal("AKit_BrakePcntTorqueReq")->SetResult(msg->torque_cmd);           
     } else if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle) {
       message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(2);      
-      message->GetSignal("AKit_SpeedModeAccelLim")->SetResult(msg->accel_limit);
       message->GetSignal("AKit_SpeedModeDecelLim")->SetResult(msg->decel_limit);      
+      message->GetSignal("AKit_SpeedModeNegJerkLim")->SetResult(msg->decel_negative_jerk_limit);
     } else {
       message->GetSignal("AKit_BrakeCtrlReqType")->SetResult(0);
     }    
@@ -677,6 +732,8 @@ void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalC
   message->GetSignal("AKit_AccelPdlChecksum")->SetResult(0);
   message->GetSignal("AKit_SpeedReq")->SetResult(0);
   message->GetSignal("AKit_SpeedModeRoadSlope")->SetResult(0);
+  message->GetSignal("AKit_SpeedModeAccelLim")->SetResult(0);
+  message->GetSignal("AKit_SpeedModePosJerkLim")->SetResult(0);
 
   if (enabled()) {
 
@@ -691,6 +748,8 @@ void DbwNode::recvAcceleratorPedalCmd(const dbw_pacifica_msgs::AcceleratorPedalC
 
       message->GetSignal("AKit_SpeedReq")->SetResult(msg->speed_cmd);
       message->GetSignal("AKit_SpeedModeRoadSlope")->SetResult(msg->road_slope);
+      message->GetSignal("AKit_SpeedModeAccelLim")->SetResult(msg->accel_limit);
+      message->GetSignal("AKit_SpeedModePosJerkLim")->SetResult(msg->accel_positive_jerk_limit);
     } else {
       message->GetSignal("AKit_AccelReqType")->SetResult(0);
     }
@@ -831,6 +890,8 @@ void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
   message->GetSignal("AKit_BlockAdapCruiseCtrlBtns")->SetResult(0);
   message->GetSignal("AKit_BlockTurnSigStalkInpts")->SetResult(0);
   message->GetSignal("AKit_OtherChecksum")->SetResult(0);
+  message->GetSignal("AKit_HornReq")->SetResult(0);
+  message->GetSignal("AKit_LowBeamReq")->SetResult(0);
 
   if (enabled()) {
 
@@ -847,12 +908,12 @@ void DbwNode::recvMiscCmd(const dbw_pacifica_msgs::MiscCmd::ConstPtr& msg)
     message->GetSignal("AKit_LeftRearDoorReq")->SetResult(msg->door_request_left_rear.value);
     message->GetSignal("AKit_LiftgateDoorReq")->SetResult(msg->door_request_lift_gate.value);
 
-//    message->GetSignal("AKit_SoftwareBuildNumber")->SetResult(msg->ecu_build_number);
-
     message->GetSignal("AKit_BlockBasicCruiseCtrlBtns")->SetResult(msg->block_standard_cruise_buttons);
     message->GetSignal("AKit_BlockAdapCruiseCtrlBtns")->SetResult(msg->block_adaptive_cruise_buttons);
     message->GetSignal("AKit_BlockTurnSigStalkInpts")->SetResult(msg->block_turn_signal_stalk);
 
+    message->GetSignal("AKit_HornReq")->SetResult(msg->horn_cmd);
+    message->GetSignal("AKit_LowBeamReq")->SetResult(msg->low_beam_cmd.status);
   }
 
   message->GetSignal("AKit_OtherRollingCntr")->SetResult(msg->rolling_counter);

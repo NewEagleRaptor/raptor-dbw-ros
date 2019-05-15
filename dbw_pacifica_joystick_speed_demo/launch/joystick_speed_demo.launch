@@ -3,14 +3,14 @@
 
   <!-- DBW system -->
   <node ns="vehicle" pkg="dbw_pacifica_can" type="dbw_node" name="dbw" output="screen">
-    <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)/New_Eagle_DBW_3.1.292.dbc" />
+    <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)/New_Eagle_DBW.dbc" />
     <remap from="can_tx" to="/can0/can_rx" />
     <remap from="can_rx" to="/can0/can_tx" />
   </node>
 
   <arg name="can_hardware_id" default="18291" />
   <arg name="can_circuit_id" default="0" />
-  <arg name="can_bit_rate" default="500000" />
+  <arg name="can_bit_rate" default="250000" />
 
   <node ns="can0" pkg="kvaser_interface" type="kvaser_can_bridge" name="kvaser_can_bridge">
     <param name="can_hardware_id" value="$(arg can_hardware_id)" />

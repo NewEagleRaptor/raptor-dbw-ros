@@ -40,6 +40,13 @@ add_message_files(DIRECTORY msg FILES
   WiperFront.msg  
   WiperRear.msg
   GlobalEnableCmd.msg
+  HmiGlobalEnableReport.msg
+  OtherActuatorsReport.msg
+  LowBeam.msg
+  FaultActionsReport.msg
+  DoorState.msg
+  HighBeamState.msg
+  HornState.msg
 )
 
 generate_messages(DEPENDENCIES
