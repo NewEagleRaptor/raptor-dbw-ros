@@ -2,8 +2,8 @@
 <launch>
 
   <!-- DBW system -->
-  <node ns="vehicle" pkg="dbw_pacifica_can" type="dbw_node" name="dbw" output="screen" launch-prefix="xterm -e gdb --args">
-    <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)/New_Eagle_DBW.dbc" />
+  <node ns="vehicle" pkg="dbw_pacifica_can" type="dbw_node" name="dbw" output="screen">
+    <param name="dbw_dbc_file" textfile="$(find dbw_pacifica_can)/New_Eagle_DBW_build385.dbc" />
     <remap from="can_tx" to="/can0/can_rx" />
     <remap from="can_rx" to="/can0/can_tx" />
   </node>
