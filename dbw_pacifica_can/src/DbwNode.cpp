@@ -339,10 +339,10 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           dbw_pacifica_msgs::WheelSpeedReport out;
           out.header.stamp = msg->header.stamp;          
 
-            out.front_left  = message->GetSignal("DBW_WhlRpm_FL")->GetResult();
-            out.front_right = message->GetSignal("DBW_WhlRpm_FR")->GetResult();
-            out.rear_left   = message->GetSignal("DBW_WhlRpm_RL")->GetResult();
-            out.rear_right  = message->GetSignal("DBW_WhlRpm_RR")->GetResult();
+            out.front_left  = message->GetSignal("DBW_WhlSpd_FL")->GetResult();
+            out.front_right = message->GetSignal("DBW_WhlSpd_FR")->GetResult();
+            out.rear_left   = message->GetSignal("DBW_WhlSpd_RL")->GetResult();
+            out.rear_right  = message->GetSignal("DBW_WhlSpd_RR")->GetResult();
 
             pub_wheel_speeds_.publish(out);
             publishJointStates(msg->header.stamp, &out, NULL);
