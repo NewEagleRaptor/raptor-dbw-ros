@@ -38,6 +38,7 @@
 #include <string>
 #include <exception>
 #include <ctype.h>
+#include <ros/ros.h>
 
 namespace NewEagle
 {

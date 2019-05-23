@@ -37,6 +37,8 @@
 
 #include <string>
 
+#include <ros/ros.h>
+
 namespace NewEagle
 {
   struct DbcSignalComment
