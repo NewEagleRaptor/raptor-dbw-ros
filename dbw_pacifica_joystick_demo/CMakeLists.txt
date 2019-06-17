@@ -19,10 +19,6 @@ add_executable(${PROJECT_NAME}_joystick_demo
   src/JoystickDemo.cpp
 )
 
-add_dependencies(${PROJECT_NAME}_joystick_demo 
-  dbw_pacifica_msgs_gencpp
-)
-
 target_link_libraries(${PROJECT_NAME}_joystick_demo
   ${catkin_LIBRARIES}
 )

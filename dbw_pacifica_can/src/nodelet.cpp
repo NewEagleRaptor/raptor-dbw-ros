@@ -36,7 +36,7 @@
 #include <pluginlib/class_list_macros.h>
 #include <nodelet/nodelet.h>
 
-#include "DbwNode.h"
+#include <dbw_pacifica_can/DbwNode.h>
 
 namespace dbw_pacifica_can
 {

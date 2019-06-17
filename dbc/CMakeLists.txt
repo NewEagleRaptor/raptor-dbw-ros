@@ -3,7 +3,7 @@ project(dbc)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-)
+  can_msgs)
 
 catkin_package(
   INCLUDE_DIRS
@@ -37,7 +37,6 @@ install(TARGETS ${PROJECT_NAME}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
 
-install(DIRECTORY include/
+install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.h"
 )

@@ -35,8 +35,6 @@
 #ifndef _NEW_EAGLE_DBCBUILDER_H
 #define _NEW_EAGLE_DBCBUILDER_H
 
-#include <ros/ros.h>
-
 #include <string>
 
 #include <dbc/Dbc.h>

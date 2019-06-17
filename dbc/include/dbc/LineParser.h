@@ -35,11 +35,10 @@
 #ifndef _NEW_EAGLE_LINEPARSER_H
 #define _NEW_EAGLE_LINEPARSER_H
 
-#include <ros/ros.h>
-
 #include <string>
 #include <exception>
 #include <ctype.h>
+#include <ros/ros.h>
 
 namespace NewEagle
 {
