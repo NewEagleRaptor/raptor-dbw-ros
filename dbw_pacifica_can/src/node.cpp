@@ -34,7 +34,7 @@
  *********************************************************************/
 
 #include <ros/ros.h>
-#include <dbw_pacifica_can/DbwNode.h>
+#include "DbwNode.h"
 
 int main(int argc, char **argv)
 {

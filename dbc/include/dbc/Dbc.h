@@ -35,6 +35,8 @@
 #ifndef _NEW_EAGLE_DBC_H
 #define _NEW_EAGLE_DBC_H
 
+#include <ros/ros.h>
+
 #include <string>
 #include <ctype.h>
 

@@ -35,9 +35,9 @@
 #ifndef _NEW_EAGLE_DBC_SIGNAL_H
 #define _NEW_EAGLE_DBC_SIGNAL_H
 
-#include <string>
-
 #include <ros/ros.h>
+
+#include <string>
 
 namespace NewEagle
 {
