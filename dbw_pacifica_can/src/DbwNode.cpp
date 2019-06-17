@@ -33,7 +33,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include <dbw_pacifica_can/DbwNode.h>
+#include "DbwNode.h"
 #include <dbw_pacifica_can/dispatch.h>
 
 namespace dbw_pacifica_can

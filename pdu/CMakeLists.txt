@@ -10,9 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 
-catkin_package(
-  CATKIN_DEPENDS dbc
-)
+catkin_package()
 
 include_directories(
   ${catkin_INCLUDE_DIRS}

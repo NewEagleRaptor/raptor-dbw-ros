@@ -35,8 +35,6 @@
 #ifndef _NEW_EAGLE_DBC_MESSAGE_H
 #define _NEW_EAGLE_DBC_MESSAGE_H
 
-#include <ros/ros.h>
-
 #include <string>
 #include <can_msgs/Frame.h>
 

@@ -35,6 +35,7 @@
 #ifndef _NEW_EAGLE_DBC_UTILITIES_H
 #define _NEW_EAGLE_DBC_UTILITIES_H
 
+#include <ros/ros.h>
 #include <map>
 #include <sstream>      // std::istringstream
 #include <string>
