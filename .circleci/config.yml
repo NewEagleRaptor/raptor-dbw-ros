@@ -2,7 +2,7 @@ version: 2
 jobs:
   kinetic:
     docker:
-      - image: neweagleraptor/docker-ros:kinetic
+      - image: autonomoustuff/docker-builds:kinetic-ros-base
     steps:
       - checkout
       - run:
@@ -30,7 +30,7 @@ jobs:
 
   melodic:
     docker:
-      - image: neweagleraptor/docker-ros:melodic
+      - image: autonomoustuff/docker-builds:melodic-ros-base
     steps:
       - checkout
       - run:
