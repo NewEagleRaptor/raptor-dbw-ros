@@ -60,5 +60,4 @@ workflows:
   version: 2
   ros_build:
     jobs:
-      - kinetic
       - melodic
