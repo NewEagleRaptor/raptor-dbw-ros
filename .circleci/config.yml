@@ -10,6 +10,7 @@ jobs:
           command: |
             apt-get update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
+            rosdep update
             rosdep install --from-paths . --ignore-src -y
             cd ..
             catkin init
@@ -38,6 +39,7 @@ jobs:
           command: |
             apt-get update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
+            rosdep update
             rosdep install --from-paths . --ignore-src -y
             cd ..
             catkin init
