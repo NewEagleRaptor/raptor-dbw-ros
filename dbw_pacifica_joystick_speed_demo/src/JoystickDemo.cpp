@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2018 New Eagle 
+ *  Copyright (c) 2018-2019 New Eagle 
  *  Copyright (c) 2015-2018, Dataspeed Inc.
  *  All rights reserved.
  *
@@ -104,6 +104,7 @@ void JoystickDemo::cmdCallback(const ros::TimerEvent& event)
   //accelerator_pedal_msg.pedal_cmd = data_.accelerator_pedal_joy * 100;
   accelerator_pedal_msg.speed_cmd = data_.accelerator_pedal_joy; // * 10 * 0.44704;
   accelerator_pedal_msg.road_slope = 0;
+  accelerator_pedal_msg.accel_limit = data_.accel_decel_limits;
   accelerator_pedal_msg.control_type.value = dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle;
   pub_accelerator_pedal_.publish(accelerator_pedal_msg);
 
@@ -113,7 +114,6 @@ void JoystickDemo::cmdCallback(const ros::TimerEvent& event)
   brake_msg.rolling_counter = counter_;
   brake_msg.pedal_cmd = data_.brake_joy * 100;
   brake_msg.control_type.value = dbw_pacifica_msgs::ActuatorControlMode::closed_loop_vehicle;
-  brake_msg.accel_limit = data_.accel_decel_limits;
   brake_msg.decel_limit = data_.accel_decel_limits;
   pub_brake_.publish(brake_msg);
 

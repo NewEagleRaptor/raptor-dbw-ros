@@ -18,3 +18,7 @@ DoorRequest door_request_lift_gate
 bool block_standard_cruise_buttons
 bool block_adaptive_cruise_buttons
 bool block_turn_signal_stalk
+
+bool horn_cmd
+
+LowBeam low_beam_cmd

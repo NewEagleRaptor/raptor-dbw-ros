@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2018 New Eagle
+ *  Copyright (c) 2018-2019 New Eagle 
  *  Copyright (c) 2015-2018, Dataspeed Inc.
  *  All rights reserved.
  *
@@ -60,7 +60,8 @@
 #include <dbw_pacifica_msgs/Brake2Report.h>
 #include <dbw_pacifica_msgs/Steering2Report.h>
 #include <dbw_pacifica_msgs/GlobalEnableCmd.h>
-
+#include <dbw_pacifica_msgs/FaultActionsReport.h>
+#include <dbw_pacifica_msgs/HmiGlobalEnableReport.h>
 
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/JointState.h>
@@ -201,6 +202,8 @@ private:
 
   ros::Publisher pub_brake_2_report_;
   ros::Publisher pub_steering_2_report_;
+  ros::Publisher pub_fault_actions_report_;
+  ros::Publisher pub_hmi_global_enable_report_;
 
   NewEagle::Dbc dbwDbc_;
   std::string dbcFile_;

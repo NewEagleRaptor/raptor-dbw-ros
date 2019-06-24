@@ -123,6 +123,11 @@ namespace NewEagle
       {
         b++;
       }
+      
+      w -= ( 8 - maskShift);
+      rightShift += maskShift;
+      maskShift = 0;
+
     }
 
     double result = 0;

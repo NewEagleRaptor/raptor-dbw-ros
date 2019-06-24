@@ -8,7 +8,8 @@ bool enable
 uint8 rolling_counter
 
 float32 torque_cmd # %-torque 
-float32 accel_limit # m/s^2
 float32 decel_limit # m/s^2
 
 ActuatorControlMode control_type
+
+float32 decel_negative_jerk_limit # m/s^3
