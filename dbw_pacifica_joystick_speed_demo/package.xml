@@ -22,4 +22,5 @@
   <exec_depend>dbw_pacifica_can</exec_depend>
 
   <test_depend>roslaunch</test_depend>
+  <test_depend>kvaser_interface</test_depend>
 </package>
