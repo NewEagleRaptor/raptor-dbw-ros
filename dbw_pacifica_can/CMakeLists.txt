@@ -65,6 +65,8 @@ install(DIRECTORY launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
-if (CATKIN_ENABLE_TESTING)
-  add_subdirectory(tests)
+if(CATKIN_ENABLE_TESTING)
+  find_package(rostest REQUIRED)
+  add_rostest_gtest(utest_node test/sample_test_launch.test src/test/sampleTest.cpp)
+  target_link_libraries(utest_node ${catkin_LIBRARIES})
 endif()
