@@ -56,6 +56,8 @@ JoystickDemo::JoystickDemo(ros::NodeHandle &node, ros::NodeHandle &priv_nh) : co
 
   data_.brake_joy = 0.0;
   data_.gear_cmd = dbw_pacifica_msgs::Gear::NONE;
+  data_.ParkingBrkReq = dbw_pacifica_msgs::ParkingBrake::PRK_BRK_NO_REQUEST;
+  data_.IgnitionReq = dbw_pacifica_msgs::Ignition::NO_REQUEST;
   data_.steering_joy = 0.0;
   data_.steering_mult = false;
   data_.accelerator_pedal_joy = 0.0;
@@ -110,6 +112,7 @@ void JoystickDemo::cmdCallback(const ros::TimerEvent& event)
   brake_msg.rolling_counter = counter_;
   brake_msg.pedal_cmd = data_.brake_joy * 100;
   brake_msg.control_type.value = dbw_pacifica_msgs::ActuatorControlMode::open_loop;
+  brake_msg.ParkingBrkReq =  data_.ParkingBrkReq;
   pub_brake_.publish(brake_msg);
 
   // Steering
@@ -135,6 +138,7 @@ void JoystickDemo::cmdCallback(const ros::TimerEvent& event)
   // Turn signal
   dbw_pacifica_msgs::MiscCmd misc_msg;
   misc_msg.cmd.value = data_.turn_signal_cmd;
+  misc_msg.ignition_cmd.value = data_.IgnitionReq;
   misc_msg.rolling_counter = counter_;
   pub_misc_.publish(misc_msg);
 
@@ -219,10 +223,59 @@ void JoystickDemo::recvJoy(const sensor_msgs::Joy::ConstPtr& msg)
 
   // Button Modifier for extra features
   if (msg->axes[AXIS_DPAD_UD] == 1) { //if UP is pressed... i think its UP?!?
-    if (msg->buttons[BTN_PARK]) {
-      data_.ParkingBrkCmd = need to toggle parking brake here based on state feedback;
+
+    //Parking Brake Control
+    if (msg->buttons[BTN_PARK]) { //y button
+      switch (brakeReport.parking_brake.status) //switch based on the feedback from the DBW
+      {
+      case dbw_pacifica_msgs::ParkingBrake::PRK_BRK_OFF:
+          data_.ParkingBrkReq = dbw_pacifica_msgs::ParkingBrake::PRK_BRK_ON;
+        break;
+      
+      case dbw_pacifica_msgs::ParkingBrake::PRK_BRK_ON:
+          data_.ParkingBrkReq = dbw_pacifica_msgs::ParkingBrake::PRK_BRK_OFF;
+        break;
+
+      default: //default is the faulted or undefined state
+          data_.ParkingBrkReq = dbw_pacifica_msgs::ParkingBrake::PRK_BRK_NO_REQUEST;
+        break;
+      }
+    }else{ //else park brake button not pressed
+      data_.ParkingBrkReq = dbw_pacifica_msgs::ParkingBrake::PRK_BRK_NO_REQUEST;
     }
-  }else{ //If button modifier is not pressed
+
+    //Ignition control
+    if(msg-> buttons[BTN_REVERSE]){  //B button
+      switch (OtherActuatorsReport.ignition_state)
+      {
+      case = dbw_pacifica_msgs::Ignition::FORCE_OFF:
+        data_.IgnitionReq = dbw_pacifica_msgs::Ignition::ACCESSORY;
+        break;
+      
+      case = dbw_pacifica_msgs::Ignition::ACCESSORY:
+        data_.IgnitionReq = dbw_pacifica_msgs::Ignition::RUN;
+        break;
+
+      case = dbw_pacifica_msgs::Ignition::RUN:
+        if (MiscReport.VehReadyToDrive){  //if engine is already started
+          data_.IgnitionReq = dbw_pacifica_msgs::Ignition::FORCE_OFF;
+        }else{ //else engine is off, crank it up
+          data_.IgnitionReq = dbw_pacifica_msgs::Ignition::CRANK;
+        }
+        break;
+
+      default:
+        data_.IgnitionReq = dbw_pacifica_msgs::Ignition::NO_REQUEST;
+        break;
+      }
+    else
+    {
+      data_.IgnitionReq = dbw_pacifica_msgs::Ignition::NO_REQUEST;
+    }
+    
+    }
+    
+  }else{ //else button modifier is not pressed
       // Gear
     if (msg->buttons[BTN_PARK]) {
         data_.gear_cmd = dbw_pacifica_msgs::Gear::PARK;

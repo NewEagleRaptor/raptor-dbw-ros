@@ -535,6 +535,7 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
           out.comms_fault = message->GetSignal("DBW_MiscAKitCommFault")->GetResult() ? true : false;        
 
           out.ambient_temp = (double)message->GetSignal("DBW_AmbientTemp")->GetResult();
+          out.VehReadyToDrive = message->GetSignal("DBW_VehReadyToDrive")->GetResult() ? true : false; 
 
           pub_misc_.publish(out);
         }
@@ -694,7 +695,7 @@ void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
   message->GetSignal("AKit_BrakePcntTorqueReq")->SetResult(0);
   message->GetSignal("AKit_SpeedModeDecelLim")->SetResult(0);
   message->GetSignal("AKit_SpeedModeNegJerkLim")->SetResult(0);
-  message->GetSignal("AKit_ParkingBrkCmd")->SetResult(0);
+  message->GetSignal("AKit_ParkingBrkReq")->SetResult(0);
 
   if (enabled()) {
     if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::open_loop) {
@@ -715,10 +716,7 @@ void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
       message->GetSignal("AKit_BrakeCtrlEnblReq")->SetResult(1);
     }
 
-    message->GetSignal("AKit_ParkingBrkCmd")->SetResult(0); 
-    //need to tie this to a real signal later
-
-    
+    message->GetSignal("AKit_ParkingBrkReq")->SetResult(msg->ParkingBrkReq);    
   }
 
   NewEagle::DbcSignal* cnt = message->GetSignal("AKit_BrakeRollingCntr");
