@@ -653,6 +653,11 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
       }
       break;
 
+case ID_PTS:
+{
+  
+}
+break;
       case ID_BRAKE_CMD:
         //ROS_WARN("DBW system: Another node on the CAN bus is commanding the vehicle!!! Subsystem: Brake. Id: 0x%03X", ID_BRAKE_CMD);
         break;
@@ -689,6 +694,7 @@ void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
   message->GetSignal("AKit_BrakePcntTorqueReq")->SetResult(0);
   message->GetSignal("AKit_SpeedModeDecelLim")->SetResult(0);
   message->GetSignal("AKit_SpeedModeNegJerkLim")->SetResult(0);
+  message->GetSignal("AKit_ParkingBrkCmd")->SetResult(0);
 
   if (enabled()) {
     if (msg->control_type.value == dbw_pacifica_msgs::ActuatorControlMode::open_loop) {
@@ -708,6 +714,10 @@ void DbwNode::recvBrakeCmd(const dbw_pacifica_msgs::BrakeCmd::ConstPtr& msg)
     if(msg->enable) {
       message->GetSignal("AKit_BrakeCtrlEnblReq")->SetResult(1);
     }
+
+    message->GetSignal("AKit_ParkingBrkCmd")->SetResult(0); 
+    //need to tie this to a real signal later
+
     
   }
 

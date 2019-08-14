@@ -175,19 +175,6 @@ void JoystickDemo::recvJoy(const sensor_msgs::Joy::ConstPtr& msg)
     data_.brake_joy = 0.5 - 0.5 * msg->axes[AXIS_BRAKE];
   }
 
-  // Gear
-  if (msg->buttons[BTN_PARK]) {
-    data_.gear_cmd = dbw_pacifica_msgs::Gear::PARK;
-  } else if (msg->buttons[BTN_REVERSE]) {
-    data_.gear_cmd = dbw_pacifica_msgs::Gear::REVERSE;
-  } else if (msg->buttons[BTN_DRIVE]) {
-    data_.gear_cmd = dbw_pacifica_msgs::Gear::DRIVE;
-  } else if (msg->buttons[BTN_NEUTRAL]) {
-    data_.gear_cmd = dbw_pacifica_msgs::Gear::NEUTRAL;
-  } else {
-    data_.gear_cmd = dbw_pacifica_msgs::Gear::NONE;
-  }
-
   // Steering
   data_.steering_joy = 470.0 * M_PI / 180.0 * ((fabs(msg->axes[AXIS_STEER_1]) > fabs(msg->axes[AXIS_STEER_2])) ? msg->axes[AXIS_STEER_1] : msg->axes[AXIS_STEER_2]);
   data_.steering_mult = msg->buttons[BTN_STEER_MULT_1] || msg->buttons[BTN_STEER_MULT_2];
@@ -228,6 +215,26 @@ void JoystickDemo::recvJoy(const sensor_msgs::Joy::ConstPtr& msg)
     if (msg->buttons[BTN_DISABLE]) {
       pub_disable_.publish(empty);
     }
+  }
+
+  // Button Modifier for extra features
+  if (msg->axes[AXIS_DPAD_UD] == 1) { //if UP is pressed... i think its UP?!?
+    if (msg->buttons[BTN_PARK]) {
+      data_.ParkingBrkCmd = need to toggle parking brake here based on state feedback;
+    }
+  }else{ //If button modifier is not pressed
+      // Gear
+    if (msg->buttons[BTN_PARK]) {
+        data_.gear_cmd = dbw_pacifica_msgs::Gear::PARK;
+      } else if (msg->buttons[BTN_REVERSE]) {
+        data_.gear_cmd = dbw_pacifica_msgs::Gear::REVERSE;
+      } else if (msg->buttons[BTN_DRIVE]) {
+        data_.gear_cmd = dbw_pacifica_msgs::Gear::DRIVE;
+      } else if (msg->buttons[BTN_NEUTRAL]) {
+        data_.gear_cmd = dbw_pacifica_msgs::Gear::NEUTRAL;
+      } else {
+        data_.gear_cmd = dbw_pacifica_msgs::Gear::NONE;
+      }
   }
 
   data_.stamp = ros::Time::now();

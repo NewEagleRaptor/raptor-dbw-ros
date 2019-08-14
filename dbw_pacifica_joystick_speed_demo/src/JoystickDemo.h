@@ -93,21 +93,28 @@ private:
   uint8_t counter_;
 
   enum {
-    BTN_PARK = 3,
-    BTN_REVERSE = 1,
-    BTN_NEUTRAL = 2,
-    BTN_DRIVE = 0,
-    BTN_ENABLE = 5,
-    BTN_DISABLE = 4,
-    BTN_STEER_MULT_1 = 6,
-    BTN_STEER_MULT_2 = 7,
-    BTN_COUNT = 11,
-    AXIS_ACCELERATOR_PEDAL = 5,
+    BTN_DRIVE = 0, // A
+    BTN_REVERSE = 1, // B
+    BTN_NEUTRAL = 2, // X 
+    BTN_PARK = 3,// Y
+    BTN_DISABLE = 4, // Left Bump (LB)
+    BTN_ENABLE = 5, // Right Bump (RB)
+    BTN_STEER_MULT_1 = 6, //Back
+    BTN_STEER_MULT_2 = 7, // Start
+    BTN_POWER = 8, //Power Button
+    BTN_LEFT_STICK = 9,
+    BTN_RIGHT_STICK = 10,
+    BTN_COUNT = 11, //i dont know what button 11 is. its not defined in ROS docs
+
+    AXIS_STEER_1 = 0, // LR Axis, Left stick
+    AXIS_LEFTSTICK_UD = 1; //Left Stick, up-down axis
     AXIS_BRAKE = 2,
-    AXIS_STEER_1 = 0,
     AXIS_STEER_2 = 3,
-    AXIS_TURN_SIG = 6,
-    AXIS_COUNT = 8,
+    AXIS_RIGHTSTICK_UD = 4,
+    AXIS_ACCELERATOR_PEDAL = 5,
+    AXIS_TURN_SIG = 6, // D-pad, left-right axis
+    AXIS_DPAD_UD = 7, //D-pad, up-down axis
+    AXIS_COUNT = 8, //i dont know what axis 8 is. its not defined in ROS docs
   };
 };
 

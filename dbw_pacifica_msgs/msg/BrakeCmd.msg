@@ -13,3 +13,6 @@ float32 decel_limit # m/s^2
 ActuatorControlMode control_type
 
 float32 decel_negative_jerk_limit # m/s^3
+
+#Parking Brake
+uint8 AKit_ParkingBrkCmd
