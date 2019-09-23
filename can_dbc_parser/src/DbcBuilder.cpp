@@ -32,9 +32,9 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include <dbc/DbcBuilder.h>
-#include <dbc/DbcMessage.h>
-#include <dbc/DbcSignal.h>
+#include <can_dbc_parser/DbcBuilder.h>
+#include <can_dbc_parser/DbcMessage.h>
+#include <can_dbc_parser/DbcSignal.h>
 
 namespace NewEagle
 {

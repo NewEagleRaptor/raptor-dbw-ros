@@ -31,78 +31,65 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
- 
-#ifndef _NEW_EAGLE_DBC_MESSAGE_H
-#define _NEW_EAGLE_DBC_MESSAGE_H
 
-#include <string>
-#include <can_msgs/Frame.h>
-
-#include <dbc/DbcSignal.h>
+#include <can_dbc_parser/Dbc.h>
 
 namespace NewEagle
 {
-  struct DbcMessageComment
+  ////
+  Dbc::Dbc()
   {
-    uint32_t Id;
-    std::string Comment;
-  };
+  }
 
-  enum IdType
+  Dbc::~Dbc()
   {
-    STD = 0,
-    EXT = 1
-  };
+  }
 
-  typedef struct {
-    uint8_t :8;
-    uint8_t :8;
-    uint8_t :8;
-    uint8_t :8;
-    uint8_t :8;
-    uint8_t :8;
-    uint8_t :8;
-    uint8_t :8;
-  } EmptyData;
-
-  class DbcMessage
+  std::map<std::string, NewEagle::DbcMessage>* Dbc::GetMessages()
   {
-    public:
-      DbcMessage();
-      DbcMessage(
-        uint8_t dlc,
-        uint32_t id,
-        IdType idType,
-        std::string name,
-        uint32_t rawId
-     );
+    return &_messages;
 
-     ~DbcMessage();
+  }
 
-     uint8_t GetDlc();
-     uint32_t GetId();
-     IdType GetIdType();
-     std::string GetName();
-     can_msgs::Frame GetFrame();
-     uint32_t GetSignalCount();
-     void SetFrame(const can_msgs::Frame::ConstPtr& msg);
-     void AddSignal(std::string signalName, NewEagle::DbcSignal signal);
-     NewEagle::DbcSignal* GetSignal(std::string signalName);
-     void SetRawText(std::string rawText);
-     uint32_t GetRawId();
-     void SetComment(NewEagle::DbcMessageComment comment);
-     std::map<std::string, NewEagle::DbcSignal>* GetSignals();
-     bool AnyMultiplexedSignals();
+  void Dbc::AddMessage(std::string messageName, NewEagle::DbcMessage message)
+  {
+    _messages.insert(std::pair<std::string, NewEagle::DbcMessage>(message.GetName(), message));
+  }
 
-   private:
-     std::map<std::string, NewEagle::DbcSignal> _signals;
-     uint8_t _data[8];
-     uint8_t _dlc;
-     uint32_t _id;
-     IdType _idType;
-     std::string _name;
-     uint32_t _rawId;
-     NewEagle::DbcMessageComment _comment;
-  };
+  NewEagle::DbcMessage* Dbc::GetMessage(std::string messageName)
+  {
+    std::map<std::string, NewEagle::DbcMessage>::iterator it;
+
+    it = _messages.find(messageName);
+
+    if (_messages.end() == it)
+    {
+      return NULL;
+    }
+
+    NewEagle::DbcMessage* message = &it->second;
+
+    return message;
+  }
+
+  NewEagle::DbcMessage* Dbc::GetMessageById(uint32_t id)
+  {
+    for(std::map<std::string, NewEagle::DbcMessage>::iterator it = _messages.begin(); it != _messages.end(); it++)
+    {
+      if (it->second.GetId() == id)
+      {
+        NewEagle::DbcMessage* message = &it->second;
+
+        return message;
+      }
+
+    }
+
+    return NULL;
+  }
+
+  uint16_t Dbc::GetMessageCount()
+  {
+    return _messages.size();
+  }
 }
-#endif // _NEW_EAGLE_DBC_UTILITIES_H

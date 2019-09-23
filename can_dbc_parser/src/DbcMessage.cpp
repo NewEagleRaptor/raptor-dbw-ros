@@ -32,7 +32,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
  
-#include <dbc/DbcMessage.h>
+#include <can_dbc_parser/DbcMessage.h>
 
 #include "DbcUtilities.h"
 

@@ -40,8 +40,8 @@
 #include <sstream>      // std::istringstream
 #include <string>
 
-#include <dbc/DbcSignal.h>
-#include <dbc/DbcMessage.h>
+#include <can_dbc_parser/DbcSignal.h>
+#include <can_dbc_parser/DbcMessage.h>
 
 namespace NewEagle
 {

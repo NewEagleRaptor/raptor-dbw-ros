@@ -32,64 +32,34 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include <dbc/Dbc.h>
+#ifndef _NEW_EAGLE_DBC_H
+#define _NEW_EAGLE_DBC_H
+
+#include <ros/ros.h>
+
+#include <string>
+#include <ctype.h>
+
+#include <can_dbc_parser/DbcMessage.h>
 
 namespace NewEagle
 {
-  ////
-  Dbc::Dbc()
+  class Dbc
   {
-  }
+    public:
+      Dbc();
+      ~Dbc();
 
-  Dbc::~Dbc()
-  {
-  }
+      void AddMessage(std::string messageName, NewEagle::DbcMessage message);
+      NewEagle::DbcMessage* GetMessage(std::string messageName);
+      NewEagle::DbcMessage* GetMessageById(uint32_t id);
+      uint16_t GetMessageCount();
+      std::map<std::string, NewEagle::DbcMessage>* GetMessages();
 
-  std::map<std::string, NewEagle::DbcMessage>* Dbc::GetMessages()
-  {
-    return &_messages;
+    private:
+      std::map<std::string, NewEagle::DbcMessage> _messages;
 
-  }
-
-  void Dbc::AddMessage(std::string messageName, NewEagle::DbcMessage message)
-  {
-    _messages.insert(std::pair<std::string, NewEagle::DbcMessage>(message.GetName(), message));
-  }
-
-  NewEagle::DbcMessage* Dbc::GetMessage(std::string messageName)
-  {
-    std::map<std::string, NewEagle::DbcMessage>::iterator it;
-
-    it = _messages.find(messageName);
-
-    if (_messages.end() == it)
-    {
-      return NULL;
-    }
-
-    NewEagle::DbcMessage* message = &it->second;
-
-    return message;
-  }
-
-  NewEagle::DbcMessage* Dbc::GetMessageById(uint32_t id)
-  {
-    for(std::map<std::string, NewEagle::DbcMessage>::iterator it = _messages.begin(); it != _messages.end(); it++)
-    {
-      if (it->second.GetId() == id)
-      {
-        NewEagle::DbcMessage* message = &it->second;
-
-        return message;
-      }
-
-    }
-
-    return NULL;
-  }
-
-  uint16_t Dbc::GetMessageCount()
-  {
-    return _messages.size();
-  }
+  };
 }
+
+#endif // _NEW_EAGLE_DBC_H

@@ -32,7 +32,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
  
-#include <dbc/LineParser.h>
+#include <can_dbc_parser/LineParser.h>
 
 namespace NewEagle
 {

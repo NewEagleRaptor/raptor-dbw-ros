@@ -31,35 +31,78 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
-
-#ifndef _NEW_EAGLE_DBC_H
-#define _NEW_EAGLE_DBC_H
-
-#include <ros/ros.h>
+ 
+#ifndef _NEW_EAGLE_DBC_MESSAGE_H
+#define _NEW_EAGLE_DBC_MESSAGE_H
 
 #include <string>
-#include <ctype.h>
+#include <can_msgs/Frame.h>
 
-#include <dbc/DbcMessage.h>
+#include <can_dbc_parser/DbcSignal.h>
 
 namespace NewEagle
 {
-  class Dbc
+  struct DbcMessageComment
+  {
+    uint32_t Id;
+    std::string Comment;
+  };
+
+  enum IdType
+  {
+    STD = 0,
+    EXT = 1
+  };
+
+  typedef struct {
+    uint8_t :8;
+    uint8_t :8;
+    uint8_t :8;
+    uint8_t :8;
+    uint8_t :8;
+    uint8_t :8;
+    uint8_t :8;
+    uint8_t :8;
+  } EmptyData;
+
+  class DbcMessage
   {
     public:
-      Dbc();
-      ~Dbc();
+      DbcMessage();
+      DbcMessage(
+        uint8_t dlc,
+        uint32_t id,
+        IdType idType,
+        std::string name,
+        uint32_t rawId
+     );
 
-      void AddMessage(std::string messageName, NewEagle::DbcMessage message);
-      NewEagle::DbcMessage* GetMessage(std::string messageName);
-      NewEagle::DbcMessage* GetMessageById(uint32_t id);
-      uint16_t GetMessageCount();
-      std::map<std::string, NewEagle::DbcMessage>* GetMessages();
+     ~DbcMessage();
 
-    private:
-      std::map<std::string, NewEagle::DbcMessage> _messages;
+     uint8_t GetDlc();
+     uint32_t GetId();
+     IdType GetIdType();
+     std::string GetName();
+     can_msgs::Frame GetFrame();
+     uint32_t GetSignalCount();
+     void SetFrame(const can_msgs::Frame::ConstPtr& msg);
+     void AddSignal(std::string signalName, NewEagle::DbcSignal signal);
+     NewEagle::DbcSignal* GetSignal(std::string signalName);
+     void SetRawText(std::string rawText);
+     uint32_t GetRawId();
+     void SetComment(NewEagle::DbcMessageComment comment);
+     std::map<std::string, NewEagle::DbcSignal>* GetSignals();
+     bool AnyMultiplexedSignals();
 
+   private:
+     std::map<std::string, NewEagle::DbcSignal> _signals;
+     uint8_t _data[8];
+     uint8_t _dlc;
+     uint32_t _id;
+     IdType _idType;
+     std::string _name;
+     uint32_t _rawId;
+     NewEagle::DbcMessageComment _comment;
   };
 }
-
-#endif // _NEW_EAGLE_DBC_H
+#endif // _NEW_EAGLE_DBC_UTILITIES_H

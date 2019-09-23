@@ -70,11 +70,11 @@
 #include <std_msgs/Bool.h>
 #include <std_msgs/String.h>
 
-//#include <dbc/DbcUtilities.h>
-#include <dbc/DbcMessage.h>
-#include <dbc/DbcSignal.h>
-#include <dbc/Dbc.h>
-#include <dbc/DbcBuilder.h>
+//#include <can_dbc_parser/DbcUtilities.h>
+#include <can_dbc_parser/DbcMessage.h>
+#include <can_dbc_parser/DbcSignal.h>
+#include <can_dbc_parser/Dbc.h>
+#include <can_dbc_parser/DbcBuilder.h>
 
 #include <pdu_msgs/RelayCommand.h>
 #include <pdu_msgs/RelayState.h>
@@ -216,4 +216,3 @@ private:
 } // dbw_pacifica_can
 
 #endif // _DBW_NODE_H_
-

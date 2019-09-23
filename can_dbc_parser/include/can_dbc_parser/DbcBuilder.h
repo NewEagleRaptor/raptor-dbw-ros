@@ -39,7 +39,7 @@
 
 #include <string>
 
-#include <dbc/Dbc.h>
+#include <can_dbc_parser/Dbc.h>
 
 #include "LineParser.h"
 

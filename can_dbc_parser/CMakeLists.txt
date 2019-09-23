@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(dbc)
+project(can_dbc_parser)
 
 find_package(catkin REQUIRED COMPONENTS
   roscpp
@@ -17,7 +17,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_library(dbc
+add_library(can_dbc_parser
   src/DbcMessage.cpp
   src/DbcSignal.cpp
   src/Dbc.cpp
@@ -25,11 +25,11 @@ add_library(dbc
   src/DbcBuilder.cpp
 )
 
-target_link_libraries(dbc
+target_link_libraries(can_dbc_parser
   ${catkin_LIBRARIES}
 )
 
-add_dependencies(dbc
+add_dependencies(can_dbc_parser
   ${catkin_EXPORTED_TARGETS}
 )
 

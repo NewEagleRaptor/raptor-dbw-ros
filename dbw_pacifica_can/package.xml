@@ -18,9 +18,9 @@
   <depend>std_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>sensor_msgs</depend>
+  <depend>can_dbc_parser</depend>
   <depend>can_msgs</depend>
   <depend>dbw_pacifica_msgs</depend>
-  <depend>dbc</depend>
   <depend>pdu_msgs</depend>
 
   <exec_depend>roslaunch</exec_depend>

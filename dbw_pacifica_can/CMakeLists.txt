@@ -9,7 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   can_msgs
   dbw_pacifica_msgs
-  dbc
+  can_dbc_parser
   pdu_msgs
 )
 
