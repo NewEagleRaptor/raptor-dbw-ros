@@ -12,8 +12,7 @@ catkin_package(
     ${PROJECT_NAME}
 )
 
-include_directories(
-  include
+include_directories(include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -37,7 +36,7 @@ install(TARGETS ${PROJECT_NAME}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
 
-install(DIRECTORY include/
+install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
   FILES_MATCHING PATTERN "*.h"
 )
