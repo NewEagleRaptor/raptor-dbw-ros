@@ -10,6 +10,17 @@ ROS Melodic: [![Build Status](http://build.ros.org/buildStatus/icon?job=Kdoc__pa
 
 For more on New Eagle Raptor controllers see: https://store.neweagle.net/product/1793-196-1503-general-control-module-raptor/ 
 
+# Packages
+
+dbc - module for handling everything related to translating CAN messages to ROS
+dbw_pacifica_can - DBW CAN driver
+dbw_pacifica_joystick_demo - a demo that allows you to use a game controller to interact with the DBW ROS node 
+dbw_pacifica_joystick_speed_demo - a demo that allows you to use a game controller to interact with the DBW ROS node 
+dbw_pacifica_msgs - DBW ROS message definitions
+pacifica_dbw - the core DBW ROS node logic
+pdu
+pdu_msg - PDU ROS message definitions
+
 # Installing and building
 
 We are still working on releasing these packages into official ROS distros, so for now, you have to build them from a catkin workspace using these steps:
