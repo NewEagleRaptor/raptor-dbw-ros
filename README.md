@@ -12,7 +12,7 @@ For more on New Eagle Raptor controllers see: https://store.neweagle.net/product
 
 # Installing and building
 
-We are still working on releasing these packages into official ROS distros, so for now, you have to build them from a catkin workspace using these steps:
+We are still working on releasing these packages through the ROS buildfarm, so for now, you have to build them from a catkin workspace using these steps:
 
 1. Create and initialize a new catkin workspace if you don't already have one. Instructions below assume the workspace was created in catkin_ws.
 2. cd catkin_ws/src
