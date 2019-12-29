@@ -3,12 +3,14 @@
   <name>pacifica_dbw</name>
   <version>1.0.0</version>
   <description>
-    Drive-by-wire interface to the New Eagle Chrysler Pacifica DBW kit
+    Drive-by-wire interface to the New Eagle Raptor DBW kit
   </description>
 
   <license>BSD</license>
+  <url>http://wiki.ros.org/pacifica_dbw</url>
   <author email="rborchert@neweagle.net">Ryan Borchert</author>
   <maintainer email="rborchert@neweagle.net">Ryan Borchert</maintainer>
+
   <url type="website">http://www.neweagle.net</url>
   <url type="repository">https://github.com/NewEagleRaptor/pacifica-dbw-ros</url>
   <url type="bugtracker">https://github.com/NewEagleRaptor/pacifica-dbw-ros/issues</url>
