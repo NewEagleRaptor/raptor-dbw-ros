@@ -39,7 +39,6 @@ Prerequisites:
 * a game controller compatible with the ROS [joy driver](http://wiki.ros.org/joy)
 * a Kvaser CAN adapter
 
-1. Make sure there is a ROS master running (roscore)
-2. cd catkin_ws
-3. source devel/setup.bash
-4. roslaunch dbw_pacifica_joystick_demo joystick_demo.launch
+1. cd catkin_ws
+2. source devel/setup.bash
+3. roslaunch dbw_pacifica_joystick_demo joystick_demo.launch
