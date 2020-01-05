@@ -1,4 +1,4 @@
-# New Eagle DBW (drive-by-wire) ROS interface
+# New Eagle Raptor DBW (drive-by-wire) ROS interface
 
 This repository contains a collection of ROS packages, which allow DBW kit developers to quickly implement a generic ROS node for interacting with the New Eagle Raptor controller.
 
