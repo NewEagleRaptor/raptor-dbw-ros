@@ -6,7 +6,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   can_msgs
   pdu_msgs
-  dbc
+  can_dbc_parser
 )
 
 

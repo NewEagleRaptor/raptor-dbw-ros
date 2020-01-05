@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- DBW system -->
+  <node ns="vehicle" pkg="raptor_dbw_can" type="dbw_node" name="dbw" output="screen" >
+    <param name="dbw_dbc_file" textfile="$(find raptor_dbw_can)/New_Eagle_DBW_3.3.388.dbc" />
+    <remap from="can_tx" to="/can0/can_rx" />
+    <remap from="can_rx" to="/can0/can_tx" />
+  </node>
+
+  <arg name="can_hardware_id" default="18291" />
+  <arg name="can_circuit_id" default="0" />
+  <arg name="can_bit_rate" default="500000" />
+
+  <node ns="can0" pkg="kvaser_interface" type="kvaser_can_bridge" name="kvaser_can_bridge">
+    <param name="can_hardware_id" value="$(arg can_hardware_id)" />
+    <param name="can_circuit_id" value="$(arg can_circuit_id)" />
+    <param name="can_bit_rate" value="$(arg can_bit_rate)" />  
+  </node>
+
+  <!-- Joystick demo -->
+<arg name="ignore" default="false" />
+<arg name="enable" default="true" />
+<arg name="count" default="true" />
+<arg name="svel" default="0.0" />
+<node ns="vehicle" pkg="raptor_dbw_joystick_demo" type="joystick_demo" name="joystick_demo" output="screen">
+<param name="ignore" value="$(arg ignore)" />
+  <!-- Ignore driver overrides -->
+  <param name="enable" value="$(arg enable)" />
+  <!-- Enable buttons -->
+  <param name="count" value="$(arg count)" />
+  <!-- Watchdog counter -->
+  <param name="svel" value="$(arg svel)" />
+  <!-- Steering velocity limit -->
+</node>
+
+<!-- Joystick driver -->
+<arg name="dev" default="/dev/input/js0" />
+<node pkg="joy" type="joy_node" name="joy_node" output="screen">
+<param name="dev" value="$(arg dev)" />
+<param name="deadzone" value="0.01" />
+<param name="autorepeat_rate" value="50.0" />
+</node>
+
+</launch>
