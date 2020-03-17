@@ -10,7 +10,7 @@ jobs:
           command: |
             apt-get update -qq
             apt-get install -y software-properties-common
-            apt-add-repository -y ppa:jwhitleyastuff/kvaser-linux
+            apt-add-repository -y ppa:astuff/kvaser-linux
             apt-get update -qq
             apt-get install kvaser-canlib-dev
             source `find /opt/ros -name setup.bash | sort | head -1`
@@ -43,7 +43,7 @@ jobs:
           command: |
             apt-get update -qq
             apt-get install -y software-properties-common
-            apt-add-repository -y ppa:jwhitleyastuff/kvaser-linux
+            apt-add-repository -y ppa:astuff/kvaser-linux
             apt-get update -qq
             apt-get install kvaser-canlib-dev
             source `find /opt/ros -name setup.bash | sort | head -1`
