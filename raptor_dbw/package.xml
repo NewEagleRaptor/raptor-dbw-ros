@@ -19,8 +19,8 @@
   <exec_depend>raptor_dbw_joystick_demo</exec_depend>
   <exec_depend>raptor_dbw_joystick_speed_demo</exec_depend>
   <exec_depend>raptor_dbw_msgs</exec_depend>
-  <exec_depend>raptor_pdu</exec_depend>
-  <exec_depend>raptor_pdu_msgs</exec_depend>
+  <exec_depend>pdu</exec_depend>
+  <exec_depend>pdu_msgs</exec_depend>
   <exec_depend>can_dbc_parser</exec_depend>
 
   <export>
