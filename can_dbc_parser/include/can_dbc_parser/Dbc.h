@@ -31,62 +31,35 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
- 
-#ifndef NEWEAGLE_PDU_H_
-#define NEWEAGLE_PDU_H_
+
+#ifndef _NEW_EAGLE_DBC_H
+#define _NEW_EAGLE_DBC_H
 
 #include <ros/ros.h>
 
-// ROS messages
-#include <can_msgs/Frame.h>
-#include <pdu_msgs/FuseReport.h>
-#include <pdu_msgs/RelayReport.h>
-#include <pdu_msgs/RelayCommand.h>
-#include <std_msgs/Empty.h>
-#include <std_msgs/Bool.h>
-#include <std_msgs/String.h>
+#include <string>
+#include <ctype.h>
 
 #include <can_dbc_parser/DbcMessage.h>
-#include <can_dbc_parser/DbcSignal.h>
-#include <can_dbc_parser/Dbc.h>
-#include <can_dbc_parser/DbcBuilder.h>
 
 namespace NewEagle
 {
-  class pdu
+  class Dbc
   {
-    enum {
-      RELAY_STATUS_BASE_ADDR = 0x18ffa100,
-      FUSE_STATUS_BASE_ADDR = 0x18ffa000,
-      RELAY_COMMAND_BASE_ADDR = 0x18ef0000
-    };
-
     public:
-      pdu(ros::NodeHandle &node, ros::NodeHandle &priv_nh);
+      Dbc();
+      ~Dbc();
+
+      void AddMessage(std::string messageName, NewEagle::DbcMessage message);
+      NewEagle::DbcMessage* GetMessage(std::string messageName);
+      NewEagle::DbcMessage* GetMessageById(uint32_t id);
+      uint16_t GetMessageCount();
+      std::map<std::string, NewEagle::DbcMessage>* GetMessages();
 
     private:
-      uint32_t id_;
-      uint32_t relayCommandAddr_;
-      uint32_t relayStatusAddr_;
-      uint32_t fuseStatusAddr_;
+      std::map<std::string, NewEagle::DbcMessage> _messages;
 
-      uint32_t count_;
-
-      NewEagle::Dbc pduDbc_;
-      std::string pduFile_;
-
-      void recvCAN(const can_msgs::Frame::ConstPtr& msg);
-      void recvRelayCmd(const pdu_msgs::RelayCommand::ConstPtr& msg);
-
-      // Subscribed topics
-      ros::Subscriber sub_can_;
-      ros::Subscriber sub_relay_cmd_;
-
-      // Published topics
-      ros::Publisher pub_can_;
-      ros::Publisher fuse_report_pub_;
-      ros::Publisher relay_report_pub_;
   };
 }
 
-#endif /* NEWEAGLE_PDU_H_ */
+#endif // _NEW_EAGLE_DBC_H

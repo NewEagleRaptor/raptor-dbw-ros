@@ -32,61 +32,77 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
  
-#ifndef NEWEAGLE_PDU_H_
-#define NEWEAGLE_PDU_H_
+#ifndef _NEW_EAGLE_DBC_MESSAGE_H
+#define _NEW_EAGLE_DBC_MESSAGE_H
 
-#include <ros/ros.h>
-
-// ROS messages
+#include <string>
 #include <can_msgs/Frame.h>
-#include <pdu_msgs/FuseReport.h>
-#include <pdu_msgs/RelayReport.h>
-#include <pdu_msgs/RelayCommand.h>
-#include <std_msgs/Empty.h>
-#include <std_msgs/Bool.h>
-#include <std_msgs/String.h>
 
-#include <can_dbc_parser/DbcMessage.h>
 #include <can_dbc_parser/DbcSignal.h>
-#include <can_dbc_parser/Dbc.h>
-#include <can_dbc_parser/DbcBuilder.h>
 
 namespace NewEagle
 {
-  class pdu
+  struct DbcMessageComment
   {
-    enum {
-      RELAY_STATUS_BASE_ADDR = 0x18ffa100,
-      FUSE_STATUS_BASE_ADDR = 0x18ffa000,
-      RELAY_COMMAND_BASE_ADDR = 0x18ef0000
-    };
+    uint32_t Id;
+    std::string Comment;
+  };
 
+  enum IdType
+  {
+    STD = 0,
+    EXT = 1
+  };
+
+  typedef struct {
+    uint8_t :8;
+    uint8_t :8;
+    uint8_t :8;
+    uint8_t :8;
+    uint8_t :8;
+    uint8_t :8;
+    uint8_t :8;
+    uint8_t :8;
+  } EmptyData;
+
+  class DbcMessage
+  {
     public:
-      pdu(ros::NodeHandle &node, ros::NodeHandle &priv_nh);
+      DbcMessage();
+      DbcMessage(
+        uint8_t dlc,
+        uint32_t id,
+        IdType idType,
+        std::string name,
+        uint32_t rawId
+     );
 
-    private:
-      uint32_t id_;
-      uint32_t relayCommandAddr_;
-      uint32_t relayStatusAddr_;
-      uint32_t fuseStatusAddr_;
+     ~DbcMessage();
 
-      uint32_t count_;
+     uint8_t GetDlc();
+     uint32_t GetId();
+     IdType GetIdType();
+     std::string GetName();
+     can_msgs::Frame GetFrame();
+     uint32_t GetSignalCount();
+     void SetFrame(const can_msgs::Frame::ConstPtr& msg);
+     void AddSignal(std::string signalName, NewEagle::DbcSignal signal);
+     NewEagle::DbcSignal* GetSignal(std::string signalName);
+     void SetRawText(std::string rawText);
+     uint32_t GetRawId();
+     void SetComment(NewEagle::DbcMessageComment comment);
+     std::map<std::string, NewEagle::DbcSignal>* GetSignals();
+     bool AnyMultiplexedSignals();
 
-      NewEagle::Dbc pduDbc_;
-      std::string pduFile_;
-
-      void recvCAN(const can_msgs::Frame::ConstPtr& msg);
-      void recvRelayCmd(const pdu_msgs::RelayCommand::ConstPtr& msg);
-
-      // Subscribed topics
-      ros::Subscriber sub_can_;
-      ros::Subscriber sub_relay_cmd_;
-
-      // Published topics
-      ros::Publisher pub_can_;
-      ros::Publisher fuse_report_pub_;
-      ros::Publisher relay_report_pub_;
+   private:
+     std::map<std::string, NewEagle::DbcSignal> _signals;
+     uint8_t _data[8];
+     uint8_t _dlc;
+     uint32_t _id;
+     IdType _idType;
+     std::string _name;
+     uint32_t _rawId;
+     NewEagle::DbcMessageComment _comment;
   };
 }
-
-#endif /* NEWEAGLE_PDU_H_ */
+#endif // _NEW_EAGLE_DBC_UTILITIES_H

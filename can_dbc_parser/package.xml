@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>pdu</name>
+  <name>can_dbc_parser</name>
   <version>1.0.0</version>
   <description>
-    Interface for the New Eagle Multiplex Power Distribution Module (MPDM)
-    https://store.neweagle.net/product/multiplexed-power-distribution-module-mpdm/
+    DBC file interface.  Read a DBC file, unpack CAN messages and convert to engineering units, pack values into CAN messages for publishing.
   </description>
 
   <author email="rborchert@neweagle.net">Ryan Borchert</author>
@@ -13,12 +12,6 @@
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <depend>roscpp</depend>
-  <depend>std_msgs</depend>
-  <depend>can_msgs</depend>
-  <depend>pdu_msgs</depend>
-  <depend>can_dbc_parser</depend>
 
-  <export>
-  </export>
+  <depend>roscpp</depend>
 </package>

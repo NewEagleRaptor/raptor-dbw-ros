@@ -1,7 +1,8 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2018 New Eagle
+ *  Copyright (c) 2018-2019 New Eagle 
+ *  Copyright (c) 2015-2018, Dataspeed Inc.
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -14,7 +15,7 @@
  *     copyright notice, this list of conditions and the following
  *     disclaimer in the documentation and/or other materials provided
  *     with the distribution.
- *   * Neither the name of New Eagle nor the names of its
+ *   * Neither the name of Dataspeed Inc. nor the names of its
  *     contributors may be used to endorse or promote products derived
  *     from this software without specific prior written permission.
  *
@@ -31,62 +32,21 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
- 
-#ifndef NEWEAGLE_PDU_H_
-#define NEWEAGLE_PDU_H_
 
 #include <ros/ros.h>
+#include "DbwNode.h"
 
-// ROS messages
-#include <can_msgs/Frame.h>
-#include <pdu_msgs/FuseReport.h>
-#include <pdu_msgs/RelayReport.h>
-#include <pdu_msgs/RelayCommand.h>
-#include <std_msgs/Empty.h>
-#include <std_msgs/Bool.h>
-#include <std_msgs/String.h>
-
-#include <can_dbc_parser/DbcMessage.h>
-#include <can_dbc_parser/DbcSignal.h>
-#include <can_dbc_parser/Dbc.h>
-#include <can_dbc_parser/DbcBuilder.h>
-
-namespace NewEagle
+int main(int argc, char **argv)
 {
-  class pdu
-  {
-    enum {
-      RELAY_STATUS_BASE_ADDR = 0x18ffa100,
-      FUSE_STATUS_BASE_ADDR = 0x18ffa000,
-      RELAY_COMMAND_BASE_ADDR = 0x18ef0000
-    };
+  ros::init(argc, argv, "raptor_dbw");
+  ros::NodeHandle node;
+  ros::NodeHandle priv_nh("~");
 
-    public:
-      pdu(ros::NodeHandle &node, ros::NodeHandle &priv_nh);
+  // create DbwNode class
+  raptor_dbw_can::DbwNode n(node, priv_nh);
 
-    private:
-      uint32_t id_;
-      uint32_t relayCommandAddr_;
-      uint32_t relayStatusAddr_;
-      uint32_t fuseStatusAddr_;
+  // handle callbacks until shut down
+  ros::spin();
 
-      uint32_t count_;
-
-      NewEagle::Dbc pduDbc_;
-      std::string pduFile_;
-
-      void recvCAN(const can_msgs::Frame::ConstPtr& msg);
-      void recvRelayCmd(const pdu_msgs::RelayCommand::ConstPtr& msg);
-
-      // Subscribed topics
-      ros::Subscriber sub_can_;
-      ros::Subscriber sub_relay_cmd_;
-
-      // Published topics
-      ros::Publisher pub_can_;
-      ros::Publisher fuse_report_pub_;
-      ros::Publisher relay_report_pub_;
-  };
+  return 0;
 }
-
-#endif /* NEWEAGLE_PDU_H_ */

@@ -31,62 +31,65 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
- 
-#ifndef NEWEAGLE_PDU_H_
-#define NEWEAGLE_PDU_H_
 
-#include <ros/ros.h>
-
-// ROS messages
-#include <can_msgs/Frame.h>
-#include <pdu_msgs/FuseReport.h>
-#include <pdu_msgs/RelayReport.h>
-#include <pdu_msgs/RelayCommand.h>
-#include <std_msgs/Empty.h>
-#include <std_msgs/Bool.h>
-#include <std_msgs/String.h>
-
-#include <can_dbc_parser/DbcMessage.h>
-#include <can_dbc_parser/DbcSignal.h>
 #include <can_dbc_parser/Dbc.h>
-#include <can_dbc_parser/DbcBuilder.h>
 
 namespace NewEagle
 {
-  class pdu
+  ////
+  Dbc::Dbc()
   {
-    enum {
-      RELAY_STATUS_BASE_ADDR = 0x18ffa100,
-      FUSE_STATUS_BASE_ADDR = 0x18ffa000,
-      RELAY_COMMAND_BASE_ADDR = 0x18ef0000
-    };
+  }
 
-    public:
-      pdu(ros::NodeHandle &node, ros::NodeHandle &priv_nh);
+  Dbc::~Dbc()
+  {
+  }
 
-    private:
-      uint32_t id_;
-      uint32_t relayCommandAddr_;
-      uint32_t relayStatusAddr_;
-      uint32_t fuseStatusAddr_;
+  std::map<std::string, NewEagle::DbcMessage>* Dbc::GetMessages()
+  {
+    return &_messages;
 
-      uint32_t count_;
+  }
 
-      NewEagle::Dbc pduDbc_;
-      std::string pduFile_;
+  void Dbc::AddMessage(std::string messageName, NewEagle::DbcMessage message)
+  {
+    _messages.insert(std::pair<std::string, NewEagle::DbcMessage>(message.GetName(), message));
+  }
 
-      void recvCAN(const can_msgs::Frame::ConstPtr& msg);
-      void recvRelayCmd(const pdu_msgs::RelayCommand::ConstPtr& msg);
+  NewEagle::DbcMessage* Dbc::GetMessage(std::string messageName)
+  {
+    std::map<std::string, NewEagle::DbcMessage>::iterator it;
 
-      // Subscribed topics
-      ros::Subscriber sub_can_;
-      ros::Subscriber sub_relay_cmd_;
+    it = _messages.find(messageName);
 
-      // Published topics
-      ros::Publisher pub_can_;
-      ros::Publisher fuse_report_pub_;
-      ros::Publisher relay_report_pub_;
-  };
+    if (_messages.end() == it)
+    {
+      return NULL;
+    }
+
+    NewEagle::DbcMessage* message = &it->second;
+
+    return message;
+  }
+
+  NewEagle::DbcMessage* Dbc::GetMessageById(uint32_t id)
+  {
+    for(std::map<std::string, NewEagle::DbcMessage>::iterator it = _messages.begin(); it != _messages.end(); it++)
+    {
+      if (it->second.GetId() == id)
+      {
+        NewEagle::DbcMessage* message = &it->second;
+
+        return message;
+      }
+
+    }
+
+    return NULL;
+  }
+
+  uint16_t Dbc::GetMessageCount()
+  {
+    return _messages.size();
+  }
 }
-
-#endif /* NEWEAGLE_PDU_H_ */

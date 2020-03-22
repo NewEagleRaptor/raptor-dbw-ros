@@ -13,12 +13,12 @@ For more on New Eagle Raptor controllers see: https://store.neweagle.net/product
 # Packages
 
 * dbc - module for handling everything related to translating CAN messages to ROS
-* dbw_pacifica_can - DBW CAN driver
-* dbw_pacifica_joystick_demo - a demo that allows you to use a game controller to interact with the DBW ROS node 
-* dbw_pacifica_joystick_speed_demo - a demo that allows you to use a game controller to interact with the DBW ROS node 
-* dbw_pacifica_msgs - DBW ROS message definitions
-* pacifica_dbw - the core DBW ROS node logic
-* pdu
+* raptor_dbw_can - DBW CAN driver
+* raptor_dbw_joystick_demo - a demo that allows you to use a game controller to interact with the DBW ROS node 
+* raptor_dbw_joystick_speed_demo - a demo that allows you to use a game controller to interact with the DBW ROS node 
+* raptor_dbw_msgs - DBW ROS message definitions
+* raptor_dbw - ROS metapackage encapsulating the other packages in this group
+* pdu - power distribution unit (PDU) driver. The PDU is a separate CAN-enabled device that's part of New Eagle's product line.
 * pdu_msg - PDU ROS message definitions
 
 # Installing and building
@@ -44,4 +44,4 @@ Prerequisites:
 
 1. cd catkin_ws
 2. source devel/setup.bash
-3. roslaunch dbw_pacifica_joystick_demo joystick_demo.launch
+3. roslaunch raptor_dbw_joystick_demo joystick_demo.launch
