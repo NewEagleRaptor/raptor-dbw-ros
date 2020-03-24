@@ -10,8 +10,8 @@
   <author email="rborchert@neweagle.net">Ryan Borchert</author>
   <maintainer email="jlodi@neweagle.net">New Eagle</maintainer>
   <url type="website">http://www.neweagle.net</url>
-  <url type="repository">https://github.com/NewEagleRaptor/pacifica-dbw-ros</url>
-  <url type="bugtracker">https://github.com/NewEagleRaptor/pacifica-dbw-ros/issues</url>
+  <url type="repository">https://github.com/NewEagleRaptor/raptor-dbw-ros</url>
+  <url type="bugtracker">https://github.com/NewEagleRaptor/raptor-dbw-ros/issues</url>
 
   <buildtool_depend>catkin</buildtool_depend>
 
