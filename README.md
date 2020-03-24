@@ -12,7 +12,7 @@ For more on New Eagle Raptor controllers see: https://store.neweagle.net/product
 
 # Packages
 
-* dbc - module for handling everything related to translating CAN messages to ROS
+* can_dbc_parser - module for handling everything related to translating CAN messages to ROS
 * raptor_dbw_can - DBW CAN driver
 * raptor_dbw_joystick_demo - a demo that allows you to use a game controller to interact with the DBW ROS node 
 * raptor_dbw_joystick_speed_demo - a demo that allows you to use a game controller to interact with the DBW ROS node 
