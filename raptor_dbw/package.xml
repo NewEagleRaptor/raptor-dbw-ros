@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>raptor_dbw</name>
+  <version>1.0.0</version>
+  <description>
+    A ROS interface to the New Eagle Raptor drive-by-wire controller
+  </description>
+
+  <license>BSD</license>
+  <author email="rborchert@neweagle.net">Ryan Borchert</author>
+  <maintainer email="jlodi@neweagle.net">New Eagle</maintainer>
+  <url type="website">http://www.neweagle.net</url>
+  <url type="repository">https://github.com/NewEagleRaptor/raptor-dbw-ros</url>
+  <url type="bugtracker">https://github.com/NewEagleRaptor/raptor-dbw-ros/issues</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>raptor_dbw_can</exec_depend>
+  <exec_depend>raptor_dbw_joystick_demo</exec_depend>
+  <exec_depend>raptor_dbw_joystick_speed_demo</exec_depend>
+  <exec_depend>raptor_dbw_msgs</exec_depend>
+  <exec_depend>pdu</exec_depend>
+  <exec_depend>pdu_msgs</exec_depend>
+  <exec_depend>can_dbc_parser</exec_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+</package>

@@ -1,0 +1,9 @@
+<library path="lib/libraptor_dbw_can">
+  <class name="raptor_dbw_can/CanNodelet"
+         type="raptor_dbw_can::CanNodelet"
+         base_class_type="nodelet::Nodelet">
+    <description>
+      New Eagle Raptor drive-by-wire nodelet
+    </description>
+  </class>
+</library>

@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>raptor_dbw_can</name>
+  <version>1.0.0</version>
+  <description>
+    Drive-by-wire interface to the New Eagle Raptor DBW kit
+  </description>
+
+  <license>BSD</license>
+
+  <author email="rborchert@neweagle.net">Ryan Borchert</author>
+  <maintainer email="jlodi@neweagle.net">New Eagle</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>roscpp</depend>
+  <depend>nodelet</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>can_msgs</depend>
+  <depend>raptor_dbw_msgs</depend>
+  <depend>can_dbc_parser</depend>
+  <depend>pdu_msgs</depend>
+
+  <exec_depend>roslaunch</exec_depend>
+
+  <test_depend>roslaunch</test_depend>
+  <test_depend>kvaser_interface</test_depend>
+
+  <export>
+    <nodelet plugin="${prefix}/nodelets.xml" />
+  </export>
+
+</package>

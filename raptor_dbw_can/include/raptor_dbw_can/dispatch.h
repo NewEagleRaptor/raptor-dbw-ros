@@ -1,7 +1,8 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2018 New Eagle
+ *  Copyright (c) 2018-2019 New Eagle 
+ *  Copyright (c) 2015-2018, Dataspeed Inc.
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -14,7 +15,7 @@
  *     copyright notice, this list of conditions and the following
  *     disclaimer in the documentation and/or other materials provided
  *     with the distribution.
- *   * Neither the name of New Eagle nor the names of its
+ *   * Neither the name of Dataspeed Inc. nor the names of its
  *     contributors may be used to endorse or promote products derived
  *     from this software without specific prior written permission.
  *
@@ -31,62 +32,52 @@
  *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
- 
-#ifndef NEWEAGLE_PDU_H_
-#define NEWEAGLE_PDU_H_
 
-#include <ros/ros.h>
+#ifndef _RAPTOR_DBW_CAN_DISPATCH_H
+#define _RAPTOR_DBW_CAN_DISPATCH_H
+#include <stdint.h>
 
-// ROS messages
-#include <can_msgs/Frame.h>
-#include <pdu_msgs/FuseReport.h>
-#include <pdu_msgs/RelayReport.h>
-#include <pdu_msgs/RelayCommand.h>
-#include <std_msgs/Empty.h>
-#include <std_msgs/Bool.h>
-#include <std_msgs/String.h>
-
-#include <can_dbc_parser/DbcMessage.h>
-#include <can_dbc_parser/DbcSignal.h>
-#include <can_dbc_parser/Dbc.h>
-#include <can_dbc_parser/DbcBuilder.h>
-
-namespace NewEagle
+namespace raptor_dbw_can
 {
-  class pdu
-  {
-    enum {
-      RELAY_STATUS_BASE_ADDR = 0x18ffa100,
-      FUSE_STATUS_BASE_ADDR = 0x18ffa000,
-      RELAY_COMMAND_BASE_ADDR = 0x18ef0000
-    };
+typedef enum {
+  VIN_MUX_VIN0  = 0x00,
+  VIN_MUX_VIN1  = 0x01,
+  VIN_MUX_VIN2  = 0x02,
+} VinMux;
 
-    public:
-      pdu(ros::NodeHandle &node, ros::NodeHandle &priv_nh);
+typedef enum {
+  WHEEL_SPEED_MUX0  = 0x00,
+  WHEEL_SPEED_MUX1  = 0x01,
+  WHEEL_SPEED_MUX2  = 0x02,
+} WheelSpeedMux;
 
-    private:
-      uint32_t id_;
-      uint32_t relayCommandAddr_;
-      uint32_t relayStatusAddr_;
-      uint32_t fuseStatusAddr_;
+#undef BUILD_ASSERT
 
-      uint32_t count_;
+enum {
+  ID_BRAKE_CMD                  = 0x2F04,
+  ID_BRAKE_REPORT               = 0x1F04,
+  ID_ACCELERATOR_PEDAL_CMD      = 0x2F01,
+  ID_ACCEL_PEDAL_REPORT         = 0x1F02,
+  ID_STEERING_CMD               = 0x2F03,
+  ID_STEERING_REPORT            = 0x1F03,
+  ID_GEAR_CMD                   = 0x2F05,
+  ID_GEAR_REPORT                = 0x1F05,
+  ID_REPORT_WHEEL_SPEED         = 0x1F0B,
+  ID_REPORT_IMU                 = 0x1F0A,
+  ID_REPORT_TIRE_PRESSURE       = 0x1f07,
+  ID_REPORT_SURROUND            = 0x1f10,
+  ID_VIN                        = 0x1F08,
+  ID_REPORT_DRIVER_INPUT        = 0x1F0F,
+  ID_REPORT_WHEEL_POSITION      = 0x1F06,
+  ID_MISC_REPORT                = 0x1F01,
+  ID_LOW_VOLTAGE_SYSTEM_REPORT  = 0x1F11,
+  ID_BRAKE_2_REPORT             = 0x1F12,
+  ID_STEERING_2_REPORT          = 0x1F13,
+  ID_OTHER_ACTUATORS_REPORT     = 0x1F14,
+  ID_FAULT_ACTION_REPORT        = 0x1F15,
+  ID_HMI_GLOBAL_ENABLE_REPORT   = 0x3f01,
+};
 
-      NewEagle::Dbc pduDbc_;
-      std::string pduFile_;
+} //raptor_dbw_can
 
-      void recvCAN(const can_msgs::Frame::ConstPtr& msg);
-      void recvRelayCmd(const pdu_msgs::RelayCommand::ConstPtr& msg);
-
-      // Subscribed topics
-      ros::Subscriber sub_can_;
-      ros::Subscriber sub_relay_cmd_;
-
-      // Published topics
-      ros::Publisher pub_can_;
-      ros::Publisher fuse_report_pub_;
-      ros::Publisher relay_report_pub_;
-  };
-}
-
-#endif /* NEWEAGLE_PDU_H_ */
+#endif // _RAPTOR_DBW_CAN_DISPATCH_H
