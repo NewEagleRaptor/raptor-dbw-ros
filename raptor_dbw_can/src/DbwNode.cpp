@@ -630,29 +630,7 @@ void DbwNode::recvCAN(const can_msgs::Frame::ConstPtr& msg)
         }      
       }
       break;
-
-      case ID_HMI_GLOBAL_ENABLE_REPORT:
-      {
-        NewEagle::DbcMessage* message = dbwDbc_.GetMessageById(ID_HMI_GLOBAL_ENABLE_REPORT);
-
-        if (msg->dlc >= message->GetDlc()) {
-          message->SetFrame(msg);
-
-          raptor_dbw_msgs::HmiGlobalEnableReport hmiGlobalEnableReport;
-          hmiGlobalEnableReport.header.stamp = msg->header.stamp;
-
-          hmiGlobalEnableReport.enable_request = message->GetSignal("HMI_GlobalByWireEnblReq")->GetResult();
-
-          hmiGlobalEnableReport.disable_request = message->GetSignal("HMI_GlobalByWireDisblReq")->GetResult();
-          hmiGlobalEnableReport.checksum = message->GetSignal("HMI_GlobalEnblChecksum")->GetResult();
-          hmiGlobalEnableReport.ecu_build_number = message->GetSignal("HMI_SoftwareBuildNumber")->GetResult();
-          hmiGlobalEnableReport.rolling_counter = message->GetSignal("HMI_GlobalEnblRollingCntr")->GetResult();
-
-          pub_hmi_global_enable_report_.publish(hmiGlobalEnableReport);
-        }      
-      }
-      break;
-
+        
       case ID_BRAKE_CMD:
         //ROS_WARN("DBW system: Another node on the CAN bus is commanding the vehicle!!! Subsystem: Brake. Id: 0x%03X", ID_BRAKE_CMD);
         break;
