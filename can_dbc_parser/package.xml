@@ -13,5 +13,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <depend>can_msgs</depend>
   <depend>roscpp</depend>
 </package>
