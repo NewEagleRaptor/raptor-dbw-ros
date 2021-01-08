@@ -2,10 +2,14 @@ cmake_minimum_required(VERSION 2.8.3)
 project(can_dbc_parser)
 
 find_package(catkin REQUIRED COMPONENTS
+  can_msgs
   roscpp
 )
 
 catkin_package(
+  CATKIN_DEPENDS
+    can_msgs
+    roscpp
   INCLUDE_DIRS
     include
   LIBRARIES
