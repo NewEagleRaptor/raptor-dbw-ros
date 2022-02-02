@@ -187,12 +187,12 @@ namespace NewEagle
               if (it->second.GetRawId() == dbcAttribute.Id)
               {
                 std::map<std::string, NewEagle::DbcSignal>::iterator its;
-                DbcMessage msg = it->second;
+                DbcMessage& msg = it->second;
                 for (its = msg.GetSignals()->begin(); its != msg.GetSignals()->end(); ++its)
                 {
                   if (its->second.GetName() == dbcAttribute.SignalName)
                   {
-                    NewEagle::DbcSignal sig = its->second;
+                    NewEagle::DbcSignal& sig = its->second;
 
                     double gain = sig.GetGain();
                     double offset = sig.GetOffset();
@@ -239,12 +239,12 @@ namespace NewEagle
               if (it->second.GetRawId() == dbcSignalValueType.Id)
               {
                 std::map<std::string, NewEagle::DbcSignal>::iterator its;
-                DbcMessage msg = it->second;
+                DbcMessage& msg = it->second;
                 for (its = msg.GetSignals()->begin(); its != msg.GetSignals()->end(); ++its)
                 {
                   if (its->second.GetName() == dbcSignalValueType.SignalName)
                   {
-                    NewEagle::DbcSignal sig = its->second;
+                    NewEagle::DbcSignal& sig = its->second;
                     sig.SetDataType(dbcSignalValueType.Type);
                     break;
                   }
