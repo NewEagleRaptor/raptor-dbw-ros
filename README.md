@@ -25,7 +25,7 @@ For more on New Eagle Raptor controllers see: https://store.neweagle.net/product
 
 # Installing and building
 ## Official Release
-(Coming soon)
+This repository is no longer being actively developed & will not be officially released.
 
 ## Building from source
 While we are working on releasing these packages through the ROS buildfarm, you can build them from source using a catkin workspace and following these steps:
