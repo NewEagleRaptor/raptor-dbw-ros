@@ -2,6 +2,8 @@
 
 This repository contains a collection of ROS packages, which allow DBW kit developers to quickly implement a generic ROS node for interacting with the New Eagle Raptor controller.
 
+This ROS1 repository is NOT under active development. New Eagle recommends using ROS2 repository raptor-dbw-ros2.
+
 The current development branch is `master` and targets ROS `kinetic` and `melodic`.
 
 ROS Kinetic: [![Build Status](http://build.ros.org/buildStatus/icon?job=Kdoc__pacifica_dbw_ros__ubuntu_xenial_amd64)](http://build.ros.org/job/Kdoc__pacifica_dbw_ros__ubuntu_xenial_amd64/)
