@@ -52,9 +52,8 @@ namespace NewEagle
   {
   }
 
-  NewEagle::Dbc DbcBuilder::NewDbc(const std::string &dbcFile)
+  NewEagle::Dbc DbcBuilder::NewDbc(const std::string& dbcFile)
   {
-
     NewEagle::Dbc dbc;
 
     std::istringstream f(dbcFile);
@@ -71,13 +70,12 @@ namespace NewEagle
 
       NewEagle::LineParser parser(line);
 
-
       std::string identifier;
       try
       {
         identifier = parser.ReadCIdentifier();
       }
-      catch(std::exception& ex)
+      catch (std::exception& ex)
       {
         identifier = std::string();
       }
@@ -86,15 +84,15 @@ namespace NewEagle
       {
         try
         {
-          currentMessage =  ReadMessage(parser);
+          currentMessage = ReadMessage(parser);
           currentMessage.SetRawText(line);
           dbc.AddMessage(currentMessage.GetName(), currentMessage);
         }
-        catch(LineParserExceptionBase& exlp)
+        catch (LineParserExceptionBase& exlp)
         {
           ROS_WARN("LineParser Exception: [%s]", exlp.what());
         }
-        catch(std::exception& ex)
+        catch (std::exception& ex)
         {
           ROS_ERROR("DBC Message Parser Exception: [%s]", ex.what());
         }
@@ -108,11 +106,11 @@ namespace NewEagle
           NewEagle::DbcMessage* msg = dbc.GetMessage(currentMessage.GetName());
           msg->AddSignal(signal.GetName(), signal);
         }
-        catch(LineParserExceptionBase& exlp)
+        catch (LineParserExceptionBase& exlp)
         {
           ROS_WARN("LineParser Exception: [%s]", exlp.what());
         }
-        catch(std::exception& ex)
+        catch (std::exception& ex)
         {
           ROS_ERROR("DBC Signal Parser Exception: [%s]", ex.what());
         }
@@ -164,11 +162,11 @@ namespace NewEagle
             }
           }
         }
-        catch(LineParserExceptionBase& exlp)
+        catch (LineParserExceptionBase& exlp)
         {
           ROS_WARN("LineParser Exception: [%s]", exlp.what());
         }
-        catch(std::exception& ex)
+        catch (std::exception& ex)
         {
           ROS_ERROR("DBC Comment Parser Exception: [%s]", ex.what());
         }
@@ -212,11 +210,11 @@ namespace NewEagle
             }
           }
         }
-        catch(LineParserExceptionBase& exlp)
+        catch (LineParserExceptionBase& exlp)
         {
           ROS_WARN("LineParser Exception: [%s]", exlp.what());
         }
-        catch(std::exception& ex)
+        catch (std::exception& ex)
         {
           ROS_ERROR("DBC Signal Value Type Parser Exception: [%s]", ex.what());
         }
@@ -253,20 +251,192 @@ namespace NewEagle
             }
           }
         }
-        catch(LineParserExceptionBase& exlp)
+        catch (LineParserExceptionBase& exlp)
         {
           ROS_WARN("LineParser Exception: [%s]", exlp.what());
         }
-        catch(std::exception& ex)
+        catch (std::exception& ex)
         {
           ROS_ERROR("DBC Signal Value Type Parser Exception: [%s]", ex.what());
         }
-
       }
     }
 
     ROS_INFO("dbc.size() = %d", dbc.GetMessageCount());
 
     return dbc;
+  }
+
+  DbcSignalValueType ReadSignalValueType(LineParser parser)
+  {
+    NewEagle::DbcSignalValueType signalValueType;
+
+    signalValueType.Id = parser.ReadUInt("id");
+    signalValueType.SignalName = parser.ReadCIdentifier();
+    parser.SeekSeparator(':');
+    signalValueType.Type = parser.ReadUInt("DataType") == 1 ? NewEagle::FLOAT : NewEagle::DOUBLE;
+
+    return signalValueType;
+  }
+
+  DbcAttribute ReadAttribute(LineParser parser)
+  {
+    NewEagle::DbcAttribute attribute;
+
+    try
+    {
+      attribute.AttributeName = parser.ReadQuotedString();
+      if (attribute.AttributeName == "GenSigStartValue")
+      {
+        attribute.ObjectType = parser.ReadCIdentifier();
+        attribute.Id = parser.ReadUInt("id");
+        if (attribute.ObjectType == "SG_")
+        {
+          attribute.SignalName = parser.ReadCIdentifier();
+
+          std::ostringstream sstream;
+          sstream << parser.ReadDouble();
+          attribute.Value = sstream.str();
+        }
+      }
+    }
+    catch (std::exception& ex)
+    {
+      throw;
+    }
+
+    return attribute;
+  }
+
+  DbcMessageComment ReadMessageComment(LineParser parser)
+  {
+    NewEagle::DbcMessageComment comment;
+    comment.Id = parser.ReadUInt("id");
+    comment.Comment = parser.ReadQuotedString();
+
+    return comment;
+  }
+
+  DbcSignalComment ReadSignalComment(LineParser parser)
+  {
+    NewEagle::DbcSignalComment comment;
+    comment.Id = parser.ReadUInt("id");
+    comment.SignalName = parser.ReadCIdentifier();
+    comment.Comment = parser.ReadQuotedString();
+
+    return comment;
+  }
+
+  DbcMessage ReadMessage(LineParser parser)
+  {
+    uint32_t canId = parser.ReadUInt("message id");
+    IdType idType = ((canId & 0x80000000u) > 0) ? NewEagle::EXT : NewEagle::STD;
+    std::string name(parser.ReadCIdentifier("message name"));
+    parser.SeekSeparator(':');
+    uint8_t dlc = parser.ReadUInt("size");
+    std::string sendingNode(parser.ReadCIdentifier("transmitter"));
+    uint32_t id = (uint32_t)(canId & 0x3FFFFFFFu);
+
+    NewEagle::DbcMessage msg(dlc, id, idType, name, canId);
+    return msg;
+  }
+
+  DbcSignal ReadSignal(LineParser parser)
+  {
+    std::string name = parser.ReadCIdentifier();
+    char mux = parser.ReadNextChar("mux");
+    NewEagle::MultiplexerMode multiplexMode = NewEagle::NONE;
+    int32_t muxSwitch = 0;
+
+    switch (mux)
+    {
+      case ':':
+        multiplexMode = NewEagle::NONE;
+        break;
+      case 'M':
+        multiplexMode = NewEagle::MUX_SWITCH;
+        parser.SeekSeparator(':');
+        break;
+      case 'm':
+        multiplexMode = NewEagle::MUX_SIGNAL;
+        muxSwitch = parser.ReadInt();
+        parser.SeekSeparator(':');
+        break;
+      default:
+        throw std::runtime_error("Synxax Error: Expected \':\' " + parser.GetPosition());
+    }
+
+    int32_t startBit = parser.ReadUInt("start bit");
+
+    parser.SeekSeparator('|');
+
+    uint8_t length = (uint8_t)parser.ReadUInt("size");
+    parser.SeekSeparator('@');
+
+    char byteOrder = parser.ReadNextChar("byte order");
+
+    NewEagle::ByteOrder endianness;
+
+    switch (byteOrder)
+    {
+      case '1':
+        endianness = NewEagle::LITTLE_END;
+        break;
+      case '0':
+        endianness = NewEagle::BIG_END;
+        break;
+      default:
+        throw std::runtime_error("Synxax Error: Byte Order - Expected 0 or 1, got " + byteOrder);
+    }
+
+    char valType = parser.ReadNextChar("value type");
+    NewEagle::SignType sign;
+
+    switch (valType)
+    {
+      case '+':
+        sign = NewEagle::UNSIGNED;
+        break;
+      case '-':
+        sign = NewEagle::SIGNED;
+        break;
+      default:
+        throw std::runtime_error("Synxax Error: Value Type - Expected + or -, got " + valType);
+    }
+
+    // Set the default data type: INT.
+    //  Might be changed what parsing SIG_VALTYPE_
+    NewEagle::DataType type = NewEagle::INT;
+
+    parser.SeekSeparator('(');
+    double gain = parser.ReadDouble("factor");
+    parser.SeekSeparator(',');
+    double offset = parser.ReadDouble("offset");
+    parser.SeekSeparator(')');
+
+    parser.SeekSeparator('[');
+    double minimum = parser.ReadDouble("minimum");
+    parser.SeekSeparator('|');
+    double maximum = parser.ReadDouble("maximum");
+    parser.SeekSeparator(']');
+
+    // Need to include Min, Max, DataType, MuxSwitch, Unit, Receiver
+    // Find a way to include the DLC...
+    NewEagle::DbcSignal* signal;
+
+    if (NewEagle::MUX_SIGNAL == multiplexMode)
+    {
+      // NewEagle::DbcSignal signal(8, gain, offset, startBit, endianness, length, sign, name, multiplexMode, muxSwitch);
+      signal =
+          new NewEagle::DbcSignal(8, gain, offset, startBit, endianness, length, sign, name, multiplexMode, muxSwitch);
+    }
+    else
+    {
+      // NewEagle::DbcSignal signal(8, gain, offset, startBit, endianness, length, sign, name, multiplexMode);
+      signal = new NewEagle::DbcSignal(8, gain, offset, startBit, endianness, length, sign, name, multiplexMode);
+    }
+
+    signal->SetDataType(type);
+    return NewEagle::DbcSignal(*signal);
   }
 }
